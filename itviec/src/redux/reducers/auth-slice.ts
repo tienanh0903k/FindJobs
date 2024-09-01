@@ -2,13 +2,13 @@ import authApi from '@/api/auth';
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 
 
-interface CustomResponse extends Response {
-    access_token: string
-}
+// interface CustomResponse extends Response {
+//     access_token: string
+// }
 
 
 interface AuthState {
-	user: UserType | null;
+	currentUser: UserType | null;
 	isLoggedIn: boolean;
 }
 
@@ -21,7 +21,7 @@ interface UserType {
   
   const initialState: AuthState = {
     // user: JSON.parse(localStorage.getItem('user') || 'null'),
-    user: null,
+    currentUser: null,
     isLoggedIn: false,
   };
   
@@ -34,7 +34,8 @@ export const fetchLogin = createAsyncThunk<UserType, any>('auth/login', async (d
 		const response = await authApi.login(data);
         const result = await response.json(); 
 
-        console.log('Access Token:', result);  
+        //console.log('Access Token:', result); 
+		await authApi.setCookie(result.access_token)
         localStorage.setItem('user', JSON.stringify(result))
       
 
@@ -51,13 +52,13 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		loginSuccess: (state, action) => {
-			state.user = action.payload;
+			state.currentUser = action.payload;
 			state.isLoggedIn = true;
 		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchLogin.fulfilled, (state, action) => {
-			state.user = action.payload;
+			state.currentUser = action.payload;
             state.isLoggedIn = true;
             // console.log("Result", action.payload);
 

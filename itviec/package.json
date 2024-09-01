@@ -17,6 +17,9 @@
     "@mui/material": "^5.16.7",
     "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.2.7",
+    "dotenv": "^16.4.5",
+    "jose": "^5.8.0",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.2.4",
     "notistack": "^3.0.1",
     "react": "^18",
@@ -28,6 +31,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
