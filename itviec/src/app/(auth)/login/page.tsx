@@ -30,7 +30,7 @@ const LoginForm = () => {
 			const response = await dispatch(fetchLogin(data));
 			const isSuccess = unwrapResult(response);
 			if (isSuccess) {
-				enqueueSnackbar('Đăng nhập thành công', {
+					enqueueSnackbar('Đăng nhập thành công', {
 					autoHideDuration: 1000,
 					variant: 'success',
 					anchorOrigin: { vertical: 'top', horizontal: 'right' }

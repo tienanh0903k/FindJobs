@@ -5,11 +5,11 @@ import { FiEdit } from 'react-icons/fi';
 
 export const ProfileInfo = () => {
 	return (
-		<div className="w-full h-screen p-1">
-			<div className="grid grid-cols-12 gap-4">
-				<div className="col-span-3 h-fit bg-white p-2 border rounded-sm border-gray-200 shadow-md">
+		<div className="w-full min-h-screen p-2">
+			<div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+				<div className="col-span-1 sm:col-span-3 h-fit bg-white p-2 border rounded-sm border-gray-200 shadow-md">
 					<p className="font-semibold text-sm text-gray-600 mb-2">Độ hoàn thiện hồ sơ</p>
-					<div className="flex justify-around items-center">
+					<div className="flex flex-col sm:flex-row justify-around items-center">
 						<div className="relative w-16 h-16">
 							<svg
 								className="absolute inset-0"
@@ -38,7 +38,7 @@ export const ProfileInfo = () => {
 								/>
 							</svg>
 						</div>
-						<div className="text-center">
+						<div className="text-center sm:text-left mt-2 sm:mt-0">
 							<strong className="text-xl">Tương đối</strong>
 							<h3 className="text-2xl font-bold text-blue-600 mt-1">38%</h3>
 							<strong className="ml-1">hoàn thành</strong>
@@ -49,70 +49,24 @@ export const ProfileInfo = () => {
 
 					<h3 className="font-bold">Nâng cấp hồ sơ lên mức Rất tốt để tải CV</h3>
 					<div className="flex flex-col items-center space-y-2">
-						<div className="w-full">
-							<button className="flex items-center p-2 rounded-md font-semibold text-blue-600 border-none">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="1em"
-									height="1em"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill="currentColor"
-										d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
-									/>
-								</svg>
-								<span className="ml-2">Thêm Thông tin cá nhân</span>
-							</button>
-						</div>
-						<div className="w-full">
-							<button className="flex items-center p-2 rounded-md font-semibold text-blue-600 border-none">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="1em"
-									height="1em"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill="currentColor"
-										d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
-									/>
-								</svg>
-								<span className="ml-2">Thêm Thông tin cá nhân</span>
-							</button>
-						</div>
-						<div className="w-full">
-							<button className="flex items-center p-2 rounded-md font-semibold text-blue-600 border-none">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="1em"
-									height="1em"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill="currentColor"
-										d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
-									/>
-								</svg>
-								<span className="ml-2">Thêm Thông tin cá nhân</span>
-							</button>
-						</div>
-						<div className="w-full">
-							<button className="flex items-center p-2 rounded-md font-semibold text-blue-600 border-none">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="1em"
-									height="1em"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill="currentColor"
-										d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
-									/>
-								</svg>
-								<span className="ml-2">Thêm Thông tin cá nhân</span>
-							</button>
-						</div>
+						{[...Array(4)].map((_, index) => (
+							<div key={index} className="w-full">
+								<button className="flex items-center p-2 rounded-md font-semibold text-blue-600 border-none">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="1em"
+										height="1em"
+										viewBox="0 0 20 20"
+									>
+										<path
+											fill="currentColor"
+											d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2zm-1 11a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16"
+										/>
+									</svg>
+									<span className="ml-2">Thêm Thông tin cá nhân</span>
+								</button>
+							</div>
+						))}
 					</div>
 
 					<hr className="my-4 border border-b-1 border-gray-200"></hr>
@@ -121,7 +75,7 @@ export const ProfileInfo = () => {
 						<Image
 							src="https://itviec.com/assets/profile/cv-d4db00ef4c885c25e437715236babd64c7cbb960ddf4771e69e55dd8169dd5ba.svg"
 							alt="CV Icon"
-							width={40} // tùy chỉnh kích thước hình ảnh nếu cần
+							width={40}
 							height={40}
 						/>
 						<div className="text-sm text-gray-600">
@@ -138,12 +92,12 @@ export const ProfileInfo = () => {
 						</a>
 					</div>
 				</div>
-				<div className="col-span-9 h-full bg-white p-2 border rounded-sm border-gray-200 shadow-md">
-                <div className="w-full mx-auto p-4">
+				<div className="col-span-1 sm:col-span-9 h-full bg-white p-2 border rounded-sm border-gray-200 shadow-md">
+					<div className="w-full mx-auto p-4">
 						{/* Personal Information Section */}
-						<section className="relative border  bg-white p-4 mb-4 shadow-sm">
+						<section className="relative border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Thông tin cá nhân</h2>
-							<div className="flex items-center">
+							<div className="flex flex-col sm:flex-row items-center">
 								<div className="w-24 h-24">
 									<img
 										className="rounded-full object-cover"
@@ -151,38 +105,34 @@ export const ProfileInfo = () => {
 										alt="Profile"
 									/>
 								</div>
-								<div className="ml-4">
+								<div className="mt-2 sm:mt-0 sm:ml-4 text-center sm:text-left">
 									<h3 className="text-lg font-semibold">Nguyen Tien Anh</h3>
 									<p className="text-gray-700">johndoe@example.com</p>
 									<p className="text-gray-700">0123456789</p>
 								</div>
 							</div>
-							<button className="text-white  mt-4 absolute top-0 right-2 border-none">
+							<button className="text-white mt-4 absolute top-0 right-2 border-none">
 								<FiEdit className="text-blue-500 font-bold" />
 							</button>
 						</section>
 
 						{/* Skills Section */}
-						<section className="border  bg-white p-4 mb-4 shadow-sm">
+						<section className="border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Kỹ năng</h2>
 							<div className="flex flex-wrap gap-2">
-								<span className="bg-emerald-200 text-emerald-800 py-1 px-3 ">
-									ReactJS
-								</span>
-								<span className="bg-emerald-200 text-emerald-800 py-1 px-3 ">
-									TypeScript
-								</span>
-								<span className="bg-emerald-200 text-emerald-800 py-1 px-3 ">
-									JavaScript
-								</span>
-								<span className="bg-emerald-200 text-emerald-800 py-1 px-3 ">
-									NodeJS
-								</span>
+								{['ReactJS', 'TypeScript', 'JavaScript', 'NodeJS'].map((skill) => (
+									<span
+										key={skill}
+										className="bg-emerald-200 text-emerald-800 py-1 px-3"
+									>
+										{skill}
+									</span>
+								))}
 							</div>
 						</section>
 
 						{/* Education Section */}
-						<section className="border  bg-white p-4 mb-4 shadow-sm">
+						<section className="border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Học vấn</h2>
 							<div>
 								<h3 className="text-lg font-semibold">
@@ -194,16 +144,26 @@ export const ProfileInfo = () => {
 						</section>
 
 						{/* Projects Section */}
-						<section className="border  bg-white p-4 mb-4 shadow-sm">
+						<section className="border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Dự án</h2>
-							<div>
-								<h3 className="text-lg font-semibold">Project A</h3>
-								<p className="text-gray-700">Description of project A...</p>
-							</div>
-							<div className="mt-4">
-								<h3 className="text-lg font-semibold">Project B</h3>
-								<p className="text-gray-700">Description of project B...</p>
-							</div>
+							{['Project A', 'Project B'].map((project, index) => (
+								<div key={index} className="mt-4">
+									<h3 className="text-lg font-semibold">{project}</h3>
+									<p className="text-gray-700">Description of {project}</p>
+								</div>
+							))}
+						</section>
+
+						{/* Work Experience Section */}
+						<section className="border bg-white p-4 mb-4 shadow-sm">
+							<h2 className="text-xl font-semibold mb-4">Kinh nghiệm làm việc</h2>
+							{['Company A', 'Company B'].map((company, index) => (
+								<div key={index} className="mt-4">
+									<h3 className="text-lg font-semibold">{company}</h3>
+									<p className="text-gray-700">Position at {company}</p>
+									<p className="text-gray-700">Responsibilities at {company}</p>
+								</div>
+							))}
 						</section>
 					</div>
 				</div>
@@ -211,3 +171,5 @@ export const ProfileInfo = () => {
 		</div>
 	);
 };
+
+export default ProfileInfo;
