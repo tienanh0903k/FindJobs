@@ -13,6 +13,12 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
+  
+  @IsString()
+  @IsNotEmpty()
+  role: string;
+
+
   @IsString()
   @IsOptional()
   phone?: string;

@@ -22,7 +22,7 @@ export class User {
   @Prop({
     required: true,
   })
-  userType: string
+  role: string
 
 
   @Prop()
