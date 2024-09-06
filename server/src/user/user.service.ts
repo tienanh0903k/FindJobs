@@ -15,7 +15,8 @@ export class UserService {
     const user = await this.userModels.create({
       userName: dataUser.userName,
       email: dataUser.email,
-      password: hashed
+      password: hashed,
+      role: dataUser.role
     })
     console.log(dataUser);
     return {
@@ -59,5 +60,16 @@ export class UserService {
     return this.userModels.findOne(
       { email: username }
     )
+  }
+
+  //find user by token
+  async findUserById(userId: string) {
+    return this.userModels.findById(userId).exec();
+  }
+
+  //set token
+   // Hàm cập nhật refresh token cho user
+   async updateUserRefreshToken(userId: string, refreshToken: string): Promise<void> {
+    await this.userModels.updateOne({ _id: userId }, { refreshToken }).exec();
   }
 }

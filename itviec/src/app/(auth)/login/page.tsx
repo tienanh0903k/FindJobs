@@ -1,24 +1,19 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { fetchLogin } from '@/redux/reducers/auth-slice';
 import { useAppDispatch } from '@/hook/useDispatch';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useSnackbar } from 'notistack'
-
-
-interface LoginFormValues {
-	username: string;
-	password: string;
-}
+import { useSnackbar } from 'notistack';
+import { LoginFormValues } from '@/app/types/interface';
 
 const LoginForm = () => {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
-	const { enqueueSnackbar } = useSnackbar()
-
+	const { enqueueSnackbar } = useSnackbar();
+	const [isLoading, setIsLoading] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -26,20 +21,23 @@ const LoginForm = () => {
 	} = useForm<LoginFormValues>();
 
 	const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+		setIsLoading(true);
 		try {
 			const response = await dispatch(fetchLogin(data));
 			const isSuccess = unwrapResult(response);
 			if (isSuccess) {
-					enqueueSnackbar('Đăng nhập thành công', {
+				enqueueSnackbar('Đăng nhập thành công', {
 					autoHideDuration: 1000,
 					variant: 'success',
-					anchorOrigin: { vertical: 'top', horizontal: 'right' }
-				  })
+					anchorOrigin: { vertical: 'top', horizontal: 'right' },
+				});
 				router.push('/');
 			}
-			console.log("Ket qua tra ve ->",response);
+			console.log('Ket qua tra ve ->', response);
 		} catch (error) {
 			console.error('Login error:', error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -78,8 +76,16 @@ const LoginForm = () => {
 				error={!!errors.password}
 			/>
 
-			<Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-				Đăng nhập
+			<Button
+				type="submit"
+				variant="contained"
+				color="primary"
+				fullWidth
+				sx={{ mt: 2 }}
+				disabled={isLoading} 
+				startIcon={isLoading && <CircularProgress size={20} />} 
+			>
+				{isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
 			</Button>
 		</Box>
 	);
