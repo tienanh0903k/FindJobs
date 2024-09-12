@@ -1,5 +1,6 @@
-import authApi from '@/api/auth';
-import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
+import authApi from '@/api/authApi';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { AxiosResponse } from 'axios';
 
 
 // interface CustomResponse extends Response {
@@ -19,12 +20,13 @@ interface ProfileType {
 	_id: string
 }
 
-interface UserType {
+export interface UserType {
 	_id: string;
 	role: string;
 	email: string;
 	user?: ProfileType
 	access_token?: string;
+	refresh_token?: string;
 }
   
   const initialState: AuthState = {
@@ -57,11 +59,10 @@ export const fetchLogin = createAsyncThunk<UserType, { username: string; passwor
 	'auth/login',
 	async ({ username, password }, { rejectWithValue }) => {
 	  try {
-		const result = await authApi.loginClient(username, password);
-		const data = await result.json();
-  
+		const response: AxiosResponse<UserType> = await authApi.loginClient(username, password);
+  		const { data } = response;
+		//set localstorege
 		localStorage.setItem('user', JSON.stringify(data));
-  
 		return data;
 	  } catch (error: any) {
 		return rejectWithValue(error.message || 'Login failed');

@@ -23,8 +23,8 @@ const LoginForm = () => {
 	const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
 		setIsLoading(true);
 		try {
-			const response = await dispatch(fetchLogin(data));
-			const isSuccess = unwrapResult(response);
+			const resultAction = await dispatch(fetchLogin(data));
+			const isSuccess = unwrapResult(resultAction);
 			if (isSuccess) {
 				enqueueSnackbar('Đăng nhập thành công', {
 					autoHideDuration: 1000,
@@ -33,9 +33,14 @@ const LoginForm = () => {
 				});
 				router.push('/');
 			}
-			console.log('Ket qua tra ve ->', response);
+			console.log('Kết quả trả về ->', isSuccess);
 		} catch (error) {
 			console.error('Login error:', error);
+			enqueueSnackbar('Đăng nhập thất bại', {
+				autoHideDuration: 3000,
+				variant: 'error',
+				anchorOrigin: { vertical: 'top', horizontal: 'right' },
+			});
 		} finally {
 			setIsLoading(false);
 		}
@@ -82,8 +87,8 @@ const LoginForm = () => {
 				color="primary"
 				fullWidth
 				sx={{ mt: 2 }}
-				disabled={isLoading} 
-				startIcon={isLoading && <CircularProgress size={20} />} 
+				disabled={isLoading}
+				startIcon={isLoading && <CircularProgress size={20} />}
 			>
 				{isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
 			</Button>

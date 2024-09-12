@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('user')
 export class UserController {
@@ -14,7 +16,8 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
+  @Roles('HR')
+  @UseGuards(AuthGuard, RolesGuard)  
   findAll() {
     return this.userService.findAll();
   }

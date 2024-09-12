@@ -99,7 +99,7 @@ export class AuthService {
         secret: this.configService.get<string>('JWT_REFRESH_TOKEN'),
       });
 
-      const user = await this.usersService.findUserById(decoded.id);
+      const user = await this.usersService.findUserById(decoded.sub);
       if (!user) {
         throw new UnauthorizedException('Người dùng không tồn tại');
       }
