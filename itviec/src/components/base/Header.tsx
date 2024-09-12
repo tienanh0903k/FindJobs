@@ -6,11 +6,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import authApi from '@/api/auth';
+import authApi from '@/api/authApi';
 import { useRouter } from 'next/navigation';
 export const Header: React.FC = () => {
 	const router = useRouter();
 
+	const [isLoading, setIsLoading] = useState(true);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 	//console.log(currentUser);
@@ -20,6 +21,12 @@ export const Header: React.FC = () => {
 		};
 		window.addEventListener('scroll', handleScroll);
 		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 500);
 	}, []);
 
 	//handle logout
@@ -67,40 +74,52 @@ export const Header: React.FC = () => {
 					</ul>
 					<ul className="flex space-x-4 justify-end" style={{ flexBasis: '50%' }}>
 						<li className="relative group">
-							{' '}
-							{currentUser ? (
-								<div className="flex items-center gap-1 cursor-pointer">
-									<Image
-										className="rounded-full"
-										src={AVT}
-										alt="User Avatar"
-										width={25}
-										height={25}
-									/>
-									{/* DROPLIST */}
-									<div className="hidden group-hover:block absolute left-0 top-4 mt-2 w-40 bg-white shadow-lg">
-										<a
-											href="/profile"
-											className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-										>
-											Thông tin cá nhân
-										</a>
-										<a
-											className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-											onClick={(e) => {
-												e.preventDefault();
-												handleLogout();
-											}}
-										>
-											Đăng xuất
-										</a>
+							{/* Container for user info and dropdown */}
+							<div className="flex items-center gap-1 cursor-pointer">
+								{isLoading ? ( // Kiểm tra nếu đang tải
+									<div className="flex items-center gap-2">
+										<div className="w-6 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+										<div className="w-24 h-4 bg-gray-300 rounded-md animate-pulse"></div>
 									</div>
-								</div>
-							) : (
-								<Link href="/login" className="text-white">
-									Đăng nhập
-								</Link>
-							)}
+								) : currentUser ? ( // Nếu đã có currentUser
+									<>
+										<Image
+											className="rounded-full"
+											src={AVT}
+											alt="User Avatar"
+											width={25}
+											height={25}
+										/>
+										<p className="text-white text-sm">
+											Xin chào, {currentUser.user?.name}
+										</p>
+										{/* Dropdown menu */}
+										<div className="absolute right-[-20px] top-full mt-2 w-40 bg-white shadow-lg opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100">
+											<Link
+												href="/profile"
+												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+											>
+												Thông tin cá nhân
+											</Link>
+											<button
+												type="button"
+												className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+												onClick={(e) => {
+													e.preventDefault();
+													handleLogout();
+												}}
+											>
+												Đăng xuất
+											</button>
+										</div>
+									</>
+								) : (
+									// Nếu chưa có currentUser (chưa đăng nhập)
+									<Link href="/login" className="text-white">
+										Đăng nhập
+									</Link>
+								)}
+							</div>
 						</li>
 						<li>
 							<select className="bg-transparent text-white border-none focus:ring-0">

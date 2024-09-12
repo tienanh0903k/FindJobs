@@ -8,7 +8,7 @@ const authPaths: string[] = ['/login', '/register'];
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const sessionToken = request.cookies.get('sessionToken')?.value;
-	console.log('Token:', sessionToken);
+	//console.log('Token:', sessionToken);
 
 	if (privatePaths.includes(pathname)) {
 		if (!sessionToken) {
@@ -16,15 +16,18 @@ export async function middleware(request: NextRequest) {
 		}
 
 		const decoded = await decodeToken(sessionToken);
+		console.log('giai ma:', decoded);
 
-		if (decoded?.role === 'admin') {
+		if (decoded?.role === 'ADMIN') {
 			if (pathname === '/profile') {
 				return NextResponse.next();
 			}
 			if (pathname !== '/admin') {
 				return NextResponse.redirect(new URL('/admin', request.url));
 			}
-		} else {
+		} 
+		
+		else {
 			if (pathname === '/admin') {
 				return NextResponse.redirect(new URL('/profile', request.url));
 			}

@@ -19,7 +19,8 @@
 
 
 
-import authApi from '@/api/auth';
+// import authApi from '@/api/auth';
+import authApi from '@/api/authApi';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -33,13 +34,19 @@ const cookieStore = cookies();
       return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
     }
 
-    const result = await authApi.login({ username, password });
-    const data = await result.json();
+    const res = await authApi.login({ username, password });
+    const data = res.data
     console.log("Dữ liệu trả về:", data);
+    // Dữ liệu trả về: {
+    //   access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpZW5hbmhAZ21haWwuY29tIiwic3ViIjoiNjZjOWZiOTZkYTEzMjJmOTVkMzI4ODVmIiwiaWF0IjoxNzI1ODUyOTA3LCJleHAiOjE3MjU4NTY1MDd9.SjkMrGM50iw8W9qceG9SiEE48OG4GFGpbsL83uUkIwE',
+    //   refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpZW5hbmhAZ21haWwuY29tIiwic3ViIjoiNjZjOWZiOTZkYTEzMjJmOTVkMzI4ODVmIiwiaWF0IjoxNzI1ODUyOTA3LCJleHAiOjE3MjYwMjU3MDd9.2u9BUuP8aZh0GuVhh10A8FncVuXyZQ5ypArDjfIa9Wc',
+    //   user: { _id: '66c9fb96da1322f95d32885f', name: 'tien anh' }
+    // }
+    // ReferenceError: data is not defined
 
-    if (!result.ok) {
-      return NextResponse.json({ error: data.message || 'Login failed' }, { status: result.status });
-    }
+    // if (!res.ok) {
+    //   return NextResponse.json({ error: data.message || 'Login failed' }, { status: result.status });
+    // }
 
     // const accessTokenCookie = `sessionToken=${data.access_token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400`;
 
@@ -57,7 +64,7 @@ const cookieStore = cookies();
 		path: '/',             
 		httpOnly: true,       
 		sameSite: 'strict',   
-		maxAge: 10         
+		maxAge:  3600         
 	  });
   
 	
