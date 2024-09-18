@@ -24,7 +24,7 @@ axiosClient.interceptors.response.use(
 	},
 	(error) => {
 		if (error.response) {
-			console.error('Lõi :', error.response); // Log lỗi từ server
+			console.error('Lỗi:', error.response); // Log lỗi từ server
 		} else {
 			console.error('Error Message:', error.message); // Log lỗi chung
 		}

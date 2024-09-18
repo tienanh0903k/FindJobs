@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type PermissionsDocument = HydratedDocument<Permissions>;
 
+
 @Schema()
 export class Permission {
     @Prop({required: true})

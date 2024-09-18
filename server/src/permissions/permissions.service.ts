@@ -16,4 +16,8 @@ export class PermissionsService {
             permission
           };
     }
+
+    async getAll() {
+        return await this.permissionModels.find();
+    }
 }
