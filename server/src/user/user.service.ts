@@ -72,4 +72,19 @@ export class UserService {
    async updateUserRefreshToken(userId: string, refreshToken: string): Promise<void> {
     await this.userModels.updateOne({ _id: userId }, { refreshToken }).exec();
   }
+
+
+
+
+
+  //------------------- get permission by user id------------------------------
+  async getPermissionsByUserId(userId: string) {
+    const user = await this.userModels.findById(userId).populate({
+      path: 'roles',
+      // Nếu cần thêm thông tin liên quan đến permissions trong roles
+      // populate: { path: 'permissions' } // chỉ sử dụng nếu 'roles' cũng có tham chiếu tới 'permissions'
+    })
+
+    console.log(user);
+  }
 }

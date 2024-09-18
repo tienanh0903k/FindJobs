@@ -5,11 +5,13 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dtos/login.dto';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
+import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
+    private roleService: RolesService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -59,7 +61,33 @@ export class AuthService {
 
   async login(data: LoginDto) {
     const { username, password } = data;
-    const user = await this.usersService.findOneByName(username);
+    // const user = await this.usersService.findOneByName(username);
+    // const user = await this.usersService
+    //   .findOneByName(username)
+    //   .populate({
+    //     path: 'role',
+    //     model: 'Roles',
+    //     populate: {
+    //       path: 'permissions',
+    //       model: 'Permission',
+    //     },
+    //   })
+    //   .exec();
+    const user: any = await this.usersService
+      .findOneByName(username)
+      .populate({
+        path: 'role',
+        model: 'Roles',
+        populate: {
+          path: 'permissions',
+          model: 'Permission',
+          select: 'name apiPath method module',
+        },
+      })
+      .exec();
+      // Property 'permissions' does not exist on type 'string'.ts(2339)
+    console.log("--thong tin user:", user.role.permissions);
+    
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -77,19 +105,25 @@ export class AuthService {
     const payload = {
       username: user.email,
       sub: user._id,
-      role: user.role,
+      role: user.role.name,
     };
 
     const token = this.jwtService.sign(payload);
+
+    // const role = await this.roleService.getRoleById(user.role);
+
+    // Định dạng lại permissions theo yêu cầu
+    // const permissions = role.permissions;
 
     return {
       access_token: token,
       refresh_token,
       user: {
         _id: user._id,
-        role: user.role,
+        role: user.role.name,
         name: user.userName,
       },
+      permissions: user.role.permissions,
     };
   }
 
@@ -123,7 +157,6 @@ export class AuthService {
         user._id.toString(),
         refresh_token,
       );
-
       return {
         access_token: newAccessToken,
         refresh_token,

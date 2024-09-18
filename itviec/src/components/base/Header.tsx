@@ -13,8 +13,8 @@ export const Header: React.FC = () => {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [isScrolled, setIsScrolled] = useState(false);
-	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
-	//console.log(currentUser);
+	const currentUser: any = useSelector((state: RootState) => state.auth.currentUser);
+	console.log("NGUOI DUNG HT---",currentUser);
 	useEffect(() => {
 		const handleScroll = () => {
 			window.scrollY > 100 ? setIsScrolled(true) : setIsScrolled(false);
@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
 	const handleLogout = async () => {
 		try {
 			const res = await authApi.logOut();
-			console.log(res);
+			//console.log(res);
 			localStorage.removeItem('user');
 			router.push('/login');
 		} catch (error) {
@@ -76,12 +76,12 @@ export const Header: React.FC = () => {
 						<li className="relative group">
 							{/* Container for user info and dropdown */}
 							<div className="flex items-center gap-1 cursor-pointer">
-								{isLoading ? ( // Kiểm tra nếu đang tải
+								{isLoading ? ( 
 									<div className="flex items-center gap-2">
 										<div className="w-6 h-6 bg-gray-300 rounded-full animate-pulse"></div>
 										<div className="w-24 h-4 bg-gray-300 rounded-md animate-pulse"></div>
 									</div>
-								) : currentUser ? ( // Nếu đã có currentUser
+								) : currentUser ? (
 									<>
 										<Image
 											className="rounded-full"
@@ -95,12 +95,22 @@ export const Header: React.FC = () => {
 										</p>
 										{/* Dropdown menu */}
 										<div className="absolute right-[-20px] top-full mt-2 w-40 bg-white shadow-lg opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100">
+											
 											<Link
 												href="/profile"
 												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 											>
 												Thông tin cá nhân
 											</Link>
+											{(currentUser?.user?.role === 'ADMIN' ||
+												currentUser?.user?.role === 'HR') && (
+												<Link
+													href="/admin/dashboard"
+													className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+												>
+													Trang quản trị
+												</Link>
+											)}
 											<button
 												type="button"
 												className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"

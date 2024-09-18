@@ -20,4 +20,4 @@ export class Roles {
    
 }
 
-export const UserSchema = SchemaFactory.createForClass(Roles);
+export const RolesSchema = SchemaFactory.createForClass(Roles);
