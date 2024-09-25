@@ -17,3 +17,16 @@ export async function decodeToken(token: string) {
 export function formatDate(date: any, locale = 'en-US', options: any) {
 	return new Date(date).toLocaleDateString(locale, options);
 }
+
+export const getMethodColor = (method: string) => {
+	switch (method.toUpperCase()) {
+	  case 'GET':
+		return 'green'; 
+	  case 'POST':
+		return 'orange';
+	  case 'DELETE':
+		return 'red';  
+	  default:
+		return 'gray'; 
+	}
+  };

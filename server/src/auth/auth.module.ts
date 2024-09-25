@@ -6,13 +6,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesModule } from 'src/roles/roles.module';
+import { PermissionsModule } from 'src/permissions/permissions.module';
 
 
 @Module({
   controllers: [AuthController],
   imports: [
-    forwardRef(() => UserModule),
+    PermissionsModule,
     RolesModule,
+    forwardRef(() => UserModule),
     JwtModule.registerAsync({
       imports: [ConfigModule], 
       useFactory: async (configService: ConfigService) => ({

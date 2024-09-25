@@ -24,6 +24,11 @@ export class User {
   })
   role: string
 
+  @Prop({
+    type: String,
+  })
+  avatar: string;
+
 
   @Prop()
   phone: string;

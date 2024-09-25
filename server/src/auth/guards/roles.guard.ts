@@ -23,10 +23,10 @@ export class RolesGuard implements CanActivate {
         throw new ForbiddenException('User or roles not defined');
       }
     // const userFromDb = await this.userService.findOne(user.id);
-    console.log(user);
+    //console.log(user);
 
     // return requiredRoles.some((role) => user.roles.split(',').include(role));
-    console.log(requiredRoles.some((role) => user.role?.includes(role)));
+    //console.log(requiredRoles.some((role) => user.role?.includes(role)));
     return requiredRoles.some((role) => user.role?.includes(role));
   }
 }

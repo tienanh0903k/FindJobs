@@ -10,7 +10,7 @@ import { fetchRoleId } from '@/redux/reducers/role-slice';
 
 export default function RolePage() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  
+  const [isLoading, setIsLoading] = useState(false);
   const [permission, setPermission] = useState<{ module: string; permissions: any[] }[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
 
@@ -18,24 +18,15 @@ export default function RolePage() {
   // Cấu hình cột cho bảng
   const columns = [
     {
-      title: 'Module',
-      dataIndex: 'module',
-      key: 'module',
-    },
-    {
-      title: 'Tên Quyền',
+      title: 'Tên Quyền', 
       dataIndex: 'name',
       key: 'name',
     },
+   
     {
-      title: 'Phương thức',
-      dataIndex: 'method',
-      key: 'method',
-    },
-    {
-      title: 'API Path',
-      dataIndex: 'apiPath',
-      key: 'apiPath',
+      title: 'Mô tả về quyền',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: 'Hành động',
@@ -58,17 +49,24 @@ export default function RolePage() {
         ]);
 
         // Cập nhật trạng thái với dữ liệu từ API
-        setPermission(groupByPermission(permissionsRes.data));
+        //set loading is true
+        setIsLoading(true);
         setRoles(rolesRes.data);
+        setPermission(groupByPermission(permissionsRes.data));
+
       } catch (error) {
         console.error('Error fetching data:', error);
+      }
+      finally {
+        //set loading is false
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  console.log("-----------data------------", permission);
+  // console.log("-----------data------------", permission);
 
   const groupByPermission = (data: any) => {
 		return _(data)
@@ -89,7 +87,6 @@ export default function RolePage() {
   };
 
   const handleSavePermission = (permission: any) => {
-    // Xử lý lưu quyền ở đây
     console.log('Saved Permission:', permission);
     handleCloseModal();
   };
@@ -107,6 +104,7 @@ export default function RolePage() {
     <div>
       <Table
         rowKey="_id"
+        loading={isLoading}  
         columns={columns}
         dataSource={roles}
         scroll={{ x: true }}

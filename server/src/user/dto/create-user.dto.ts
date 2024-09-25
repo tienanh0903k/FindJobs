@@ -27,6 +27,10 @@ export class CreateUserDto {
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  avatar?: string;
+
   @IsArray()
   @IsOptional()
   education?: {

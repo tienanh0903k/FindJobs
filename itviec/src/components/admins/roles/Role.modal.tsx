@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space, Col, Card, Collapse, Switch } from 'antd';
 import { useAppSelector } from '@/hook/useSelector';
+import { useDispatch } from 'react-redux';
+import { resetCurrentRole } from '@/redux/reducers/role-slice';
+import { getMethodColor } from '@/lib/helper';
 
 const { Panel } = Collapse;
 
@@ -14,6 +17,7 @@ interface IModalProps {
 const ModalRole = ({ visible, onClose, onSave, permissionList }: IModalProps) => {
 	const [form] = Form.useForm();
 	const singleRole = useAppSelector((state) => state.roles.currentRole);
+	const dispatch = useDispatch();
 
 	// useEffect(() => {
 	// 	if (permission) {
@@ -33,11 +37,16 @@ const ModalRole = ({ visible, onClose, onSave, permissionList }: IModalProps) =>
 				console.log('Validate Failed:', info);
 			});
 	};
-
+	//console.log("role", singleRole);
+	console.log('list permision', permissionList);
 	return (
 		<Modal
-			title={singleRole ? 'Sửa Quyền' : 'Thêm Quyền'}
+			title={singleRole?._id ? 'Sửa Quyền' : 'Thêm Quyền'}
 			open={visible}
+			afterClose={() => {
+				form.resetFields();
+				dispatch(resetCurrentRole({}));
+			}}
 			onCancel={onClose}
 			footer={null}
 		>
@@ -50,34 +59,62 @@ const ModalRole = ({ visible, onClose, onSave, permissionList }: IModalProps) =>
 					<Input />
 				</Form.Item>
 				<Form.Item
-					name="method"
-					label="Phương thức"
+					name="method" 
+					label="Mô tả"
 					rules={[{ required: true, message: 'Vui lòng chọn phương thức!' }]}
 				>
 					<Input />
 				</Form.Item>
-				<Form.Item
-					name="apiPath"
-					label="API Path"
-					rules={[{ required: true, message: 'Vui lòng nhập API Path!' }]}
-				>
-					<Input />
-				</Form.Item>
-
 				<Card size="small" bordered={false}>
 					<Collapse>
-						<Panel header="Quyền API" key="1">
-							{permissionList?.map((item: any, index: any) => (
-								<Form.Item
-									label={item?.module}
-									key={index}
-									name={item.key}
-									valuePropName="checked"
-								>
-									<Switch defaultChecked={item.defaultChecked} />
-								</Form.Item>
+						<Collapse.Panel header="Quyền API" key="1">
+							{permissionList?.map((item: any, moduleIndex: number) => (
+								<div key={moduleIndex}>
+									<Collapse>
+										<Collapse.Panel
+											header={`Quyền API cho ${item.module}`}
+											key={`module-${moduleIndex}`}
+										>
+											{item.permissions.map(
+												(permission: any, permissionIndex: number) => (
+													<Form.Item
+														label={permission.name} // Sử dụng tên quyền làm nhãn
+														key={`permission-${moduleIndex}-${permissionIndex}`} // Tạo key duy nhất
+														name={permission.key} // Sử dụng key của quyền
+														valuePropName="checked"
+													>
+														<div
+															style={{
+																display: 'flex',
+																alignItems: 'center',
+															}}
+														>
+															<span
+																style={{
+																	fontWeight: 'bold',
+																	marginRight: '8px',
+																	color: getMethodColor(permission.method)
+																}}
+															>
+																{permission.method}
+															</span>{' '}
+															<span style={{ marginRight: '8px' }}>
+																{permission.apiPath}
+															</span>
+															<Switch
+																defaultChecked={
+																	permission.defaultChecked
+																}
+															/>
+														</div>
+													</Form.Item>
+												),
+											)}
+										</Collapse.Panel>
+									</Collapse>
+								</div>
 							))}
-						</Panel>
+						</Collapse.Panel>
 					</Collapse>
 				</Card>
 
