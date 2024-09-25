@@ -7,11 +7,13 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { PermissionsService } from 'src/permissions/permissions.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
+    private permissionService: PermissionsService,
   ) {}
   
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -26,7 +28,16 @@ export class AuthGuard implements CanActivate {
         secret
       });
 
+      //get permission from role
+      // const permission = await this.permissionService.getPermissionsByUserId(payload.role);
+      // console.log(permission);
+      const permission = await this.permissionService.getPermissionsByUser(payload.sub);
+      console.log("--", permission);
+      
+      
+
       request['user'] = payload;
+      request['userPermissions'] = permission;
     } catch {
       throw new UnauthorizedException();
     }

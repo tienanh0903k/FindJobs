@@ -92,6 +92,19 @@ const LoginForm = () => {
 			>
 				{isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
 			</Button>
+
+			<div className="flex items-center my-4">
+				<div className="flex-grow border-t border-gray-300"></div>
+				<span className="flex-shrink mx-4 text-gray-500 text-sm uppercase">OR</span>
+				<div className="flex-grow border-t border-gray-300"></div>
+			</div>
+
+			<Typography variant="body2" color="text.secondary" gutterBottom>
+                Bạn chưa có tài khoản?{' '}
+                <a href="#" className="text-it-blue">
+                    Đăng ký ngay
+                </a>
+            </Typography>
 		</Box>
 	);
 };

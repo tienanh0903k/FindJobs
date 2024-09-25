@@ -20,7 +20,7 @@ const authApi: AuthApi = {
 	// login: (body: LoginBodyType) => httpClient.post('/auth/login', body),
 	
 	login: (body: LoginBodyType) => {
-		return axiosClient.post(`${URL_BACKEND}/auth/login`, body)
+		return axiosClient.post(`${URL_BACKEND}/api/auth/login`, body)
 	},
 
 	// loginClient: async (username: string, password: string) => {

@@ -34,7 +34,17 @@ export const fetchRoleId = createAsyncThunk(
 const roleSlice = createSlice({
 	name: 'auth',
 	initialState,
-	reducers: {},
+	reducers: {
+        resetCurrentRole: (state, action) => {
+            state.currentRole = {
+                _id: '',
+                name: '',
+                description: '',
+                isActive: false,
+                permissions: []
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchRoleId.pending, (state, action) => {
             state.isFetching = true;
@@ -56,7 +66,7 @@ const roleSlice = createSlice({
 })
 
 export const {
-
+    resetCurrentRole
 } = roleSlice.actions;
 
 export default roleSlice.reducer
