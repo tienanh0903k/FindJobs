@@ -26,7 +26,9 @@ export default function RootLayout({
 				</header> */}
 				{/* <AppProvider initialToken={sessionToken}> */}
 					<Header />
-					{children}
+					<div className="mt-[65px]">
+						{children}
+					</div>
 				{/* </AppProvider> */}
 			</div>
 	);
