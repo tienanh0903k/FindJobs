@@ -10,7 +10,7 @@ async function getInfoMe() {
   const cookieStore = cookies();
   const token = cookieStore.get('sessionToken')?.value || '';
 
-  const res = await fetch('http://localhost:3001/user/me', {
+  const res = await fetch('http://localhost:3001/api/user/me', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,

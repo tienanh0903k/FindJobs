@@ -1,0 +1,71 @@
+.gradient-background {
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: -30px;
+    height: 100%;
+    background-color: #f7f7f7;
+    z-index: -10;
+  }
+  
+  .gradient-background::before {
+    content: '';
+    width: 120vw;
+    position: absolute;
+    left: -12%;
+    top: 0;
+    height: 400px;
+    background: linear-gradient(to left, #121212, #54151C);
+    border-radius: 0 0 70% 50%;
+  }
+  
+  
+  .job-show-header {
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 0; 
+    z-index: 100;
+}
+
+/* Handles the sticky class for the header */
+.header {
+  background-color: rgb(137, 0, 0);
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.sticky {
+  position: sticky;
+  top: 50px;
+  z-index: 50;
+}
+
+.scroll-active {
+  /* height: 80px; */
+}
+  
+.ribbon-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  width: 150px;
+  height: 150px;
+  z-index: 10;
+}
+
+.ribbon {
+  position: absolute;
+  top: 20px;
+  right: -40px;
+  transform: rotate(45deg);
+  background: #e3342f;
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 0;
+  width: 200px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}

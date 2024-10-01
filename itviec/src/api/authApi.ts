@@ -32,7 +32,7 @@ const authApi: AuthApi = {
         return await axiosClient.post(`${URL_NEXT}/api/auth/login`, { username, password });
     },
 
-	// ---POST: /auth/login--
+	// ---POST: /auth/login--	
 	setCookie: async (token: string) => {
 		return await httpClient.post(
 			'/api/auth/login',
