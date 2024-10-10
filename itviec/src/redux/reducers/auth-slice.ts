@@ -1,4 +1,5 @@
 import authApi from '@/api/authApi';
+import { AuthState, UserType } from '@/app/types/interface';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 
@@ -6,29 +7,6 @@ import { AxiosResponse } from 'axios';
 // interface CustomResponse extends Response {
 //     access_token: string
 // }
-
-
-interface AuthState {
-	currentUser: UserType | null;
-	isLoggedIn: boolean;
-}
-
-
-interface ProfileType {
-	avatar: string; 
-	fullName: string;
-	_id: string
-}
-
-export interface UserType {
-	_id: string;
-	role: string;
-	email: string;
-	user?: ProfileType
-	access_token?: string;
-	refresh_token?: string;
-}
-  
   const initialState: AuthState = {
     // user: JSON.parse(localStorage.getItem('user') || 'null'),
     currentUser: null,
