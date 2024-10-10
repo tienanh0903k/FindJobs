@@ -1,30 +1,55 @@
 // components/AdminLayout.tsx
-'use client'; // Đảm bảo đây là thành phần Client-Side
+'use client'; 
 
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, MenuProps, theme } from 'antd';
 import 'antd/dist/reset.css'; 
 import { RootStyleRegistry } from '@/components/admins/RootStyleRegistry';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Sử dụng usePathname
+import { useAppSelector } from '@/hook/useSelector';
+import { IPermissionItem } from '@/app/types/interface';
+import { ALL_MODULES, ALL_PERMISSIONS } from '@/constants';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 // Các mục menu
-const items = [
-  { key: '/', label: <Link href="/">Home</Link> },
-  { key: '/admin/roles', label: <Link href="/admin/roles">Roles</Link> },
-  { key: '/admin/dashboard', label: <Link href="/admin/dashboard">Dashboard</Link> },
-];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
   const pathname = usePathname(); 
   const [activeMenu, setActiveMenu] = useState<string>(pathname);
 
+  const [menuItems, setMenuItems] = useState<MenuProps['items']>();
+
+  //useSelector 
+  const listUserPermission = useAppSelector(state => state.auth.currentUser?.permissions);
+
+ // console.log('listUserPermission', listUserPermission);
   useEffect(() => {
     setActiveMenu(pathname);
   }, [pathname]);
+
+  useEffect(() => {
+    if (listUserPermission) {
+      const view_Role = listUserPermission.find((item: IPermissionItem)=> {
+        //console.log(item);
+        return item.apiPath === ALL_PERMISSIONS.ROLES.GET_PAGINATE.apiPath && item.module === ALL_MODULES.ROLES &&
+          item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATE.method
+      })
+
+      
+      const items = [
+        { key: '/', label: <Link href="/">Home</Link> },
+        
+        { key: '/admin/dashboard', label: <Link href="/admin/dashboard">Dashboard</Link> },
+  
+        ...(view_Role ? [{ key: '/admin/roles', label: <Link href="/admin/roles">Roles</Link> }] : []),
+      ];
+      setMenuItems(items);
+
+    }  
+  }, [listUserPermission]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -37,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           theme="dark"
           mode="inline"
           selectedKeys={[activeMenu]} // Thiết lập trạng thái active
-          items={items}
+          items={menuItems}
         />
       </Sider>
       <Layout>
