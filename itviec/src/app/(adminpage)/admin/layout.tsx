@@ -34,8 +34,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (listUserPermission) {
       const view_Role = listUserPermission.find((item: IPermissionItem)=> {
         //console.log(item);
-        return item.apiPath === ALL_PERMISSIONS.ROLES.GET_PAGINATE.apiPath && item.module === ALL_MODULES.ROLES &&
-          item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATE.method
+        return item.apiPath === ALL_PERMISSIONS.ROLES.GET_PAGINATE.apiPath && item.module === ALL_MODULES.ROLES && item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATE.method
       })
 
       
@@ -81,7 +80,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               minHeight: 360,
             }}
           >
-            <RootStyleRegistry>{children}</RootStyleRegistry>
+            {children}
+            {/* <RootStyleRegistry>{children}</RootStyleRegistry> */}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

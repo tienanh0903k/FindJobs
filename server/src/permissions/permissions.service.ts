@@ -56,7 +56,7 @@ export class PermissionsService {
       // // 3. Trả về danh sách quyền (permissions) của user
       // return role.permissions;
       const user: any = await this.userModel
-      .findOne({ _id: id }) 
+      .findOne({ _id: id })   
       .populate({
         path: 'role',
         model: 'Roles',

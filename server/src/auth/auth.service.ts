@@ -179,4 +179,20 @@ export class AuthService {
   async isValidPassword(password: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(password, hash);
   }
+
+  //-------------oAuthLogin---------------------
+  async oAuthLogin(user) {
+    if (!user) {
+      throw new Error('User not found!!!');
+    }
+
+    const payload = {
+      email: user.email,
+      name: user.name,
+    };
+
+    const jwt = await this.jwtService.sign(payload);
+
+    return { jwt };
+  }
 }

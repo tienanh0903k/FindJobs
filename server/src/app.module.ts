@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { GoogleStrategy } from './auth/passport/google.strategy';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -28,8 +30,9 @@ import { UploadsModule } from './uploads/uploads.module';
     PermissionsModule,
     RolesModule,
     UploadsModule,
+    MessageModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GoogleStrategy],
 })
 export class AppModule {}

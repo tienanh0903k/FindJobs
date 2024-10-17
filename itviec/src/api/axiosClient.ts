@@ -24,11 +24,14 @@ axiosClient.interceptors.response.use(
 	},
 	(error) => {
 		if (error.response) {
-			console.error('Lỗi:', error.response); // Log lỗi từ server
-		} else {
-			console.error('Error Message:', error.message); // Log lỗi chung
-		}
-		return Promise.reject(error);
+			if (error.response.status === 401) { 
+			  localStorage.removeItem('user'); 
+			}
+			console.error('Lỗi:', error.response);		
+		  } else {
+			console.error('Error Message:', error.message);
+		  }
+		  return Promise.reject(error);
 	},
 );
   

@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import { FaUserCheck } from 'react-icons/fa';
 import { FaLocationDot } from "react-icons/fa6";
 import { FaLaptopCode } from "react-icons/fa";
+import { MapLocation } from '@/components/client/Companies/Location';
 
 const Companies = () => {
 	const commentRef = useRef<HTMLDivElement | null>(null); //use scrollIntoView
@@ -172,6 +173,9 @@ const Companies = () => {
 								<p>Mô tả công việc 2...</p>
 							</div>
 							{/* Thêm các việc làm khác tại đây */}
+						</div>
+						<div className="space-y-4">
+							<MapLocation />
 						</div>
 					</div>
 				</div>
