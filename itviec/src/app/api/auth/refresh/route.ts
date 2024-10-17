@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const result = await authApi.refreshToken({ refreshToken });
     const data = await result.json();
-    console.log('data:----', data);
+    //console.log('data:----', data);
 
     if (!result.ok) {
       return NextResponse.json({ error: data.message || 'Refresh token failed' }, { status: result.status });

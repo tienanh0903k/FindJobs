@@ -16,6 +16,8 @@ import { PermissionsModule } from 'src/permissions/permissions.module';
   ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService],
+  exports: [UserService,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
+  ],
 })
 export class UserModule {}

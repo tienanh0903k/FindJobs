@@ -60,12 +60,12 @@ const cookieStore = cookies();
     //   sameSite: 'strict',  // Cài đặt chế độ sameSite cho bảo mật
     //   maxAge: 5000,          // Thời gian sống của refresh_token là 10 giây
     // });
-	cookieStore.set('sessionToken', data.access_token, {
+cookieStore.set('sessionToken', data.access_token, {
 		path: '/',             
 		httpOnly: true,       
 		sameSite: 'strict',   
-		maxAge:  3600         
-	  });
+		maxAge:  3600      
+});
   
 	
 	  cookieStore.set('refreshToken', data.refresh_token, {

@@ -10,7 +10,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 export const metadata: Metadata = {
 	title: {
 		template: '%s | ',
-		default: 'NTA',
+		default: 'Tim viec Online',
 	},
 };
 

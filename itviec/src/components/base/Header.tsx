@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isScrolled, setIsScrolled] = useState(false);
 
-	const currentUser: any = useSelector((state: RootState) => state.auth.currentUser);
+	const currentUser: any = useSelector((state: RootState) => state.auth?.currentUser);
 	//console.log("NGUOI DUNG HT---",currentUser);
 
 	const { notifications, unreadCount, showNotifications, toggleNotifications } = useNotifyCustom();

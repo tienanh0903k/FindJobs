@@ -1,11 +1,13 @@
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
 const SearchHome = () => {
+	const t = useTranslations()
 	return (
 		<div className="text-white bg-custom-gradient p-8 rounded-lg shadow-xl">
 			<div className="mx-auto max-w-[70%]">
 				<h1 className="text-3xl font-bold mb-4">
-					910 Việc Làm IT Chất Dành Cho Tien Anh Nguyen
+					{t('home.search')}
 				</h1>
 				<form className="flex items-center max-w-[95%] gap-2">
 					<select className="bg-white text-black placeholder-black px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400">

@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesModule } from 'src/roles/roles.module';
 import { PermissionsModule } from 'src/permissions/permissions.module';
+import { GoogleStrategy } from './passport/google.strategy';
 
 
 @Module({
@@ -24,7 +25,7 @@ import { PermissionsModule } from 'src/permissions/permissions.module';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard, GoogleStrategy],
   exports: [AuthService, AuthGuard, JwtModule],
 })
 export class AuthModule {}
