@@ -9,10 +9,22 @@ import 'swiper/css/grid';
 import { ItemJobs } from '../Jobs/ItemJobs';
 import { useTranslations } from 'next-intl';
 import { IJobSlideProps } from '@/app/types/interface';
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react';
 
 // Property 'posts' does not exist on type 'IJobSlideProps[]'.ts(2339)
 
 const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
+	const [mounted, setMounted] = useState<boolean>(false);
+
+	const router = useRouter();
+	const handleClick = (id: string) => {
+		router.push(`/jobs/${id}`);
+	}
+	useEffect(() => {
+		setMounted(true);  
+	}, []);
+
 	const t = useTranslations();
 	return (
 		<div className="w-full mx-auto md:py-4 lg:py-2">
@@ -49,11 +61,9 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 				>
 					{posts && posts.length > 0 ? (
 						posts.map((job: any) => (
-							<SwiperSlide key={job._id}>
-								{/* Type '{ list: IPost[]; }' is not assignable to type 'IntrinsicAttributes & ItemJobsProps'.
-								Property 'list' does not exist on type 'IntrinsicAttributes & ItemJobsProps'.ts(2322) */}
+							<SwiperSlide key={job._id} onClick={() => handleClick(job._id)}>
 								<ItemJobs job={job} />
-							</SwiperSlide>
+						  	</SwiperSlide>
 						))
 					) : (
 						<SwiperSlide>

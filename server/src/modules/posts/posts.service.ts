@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './schemas/post.schemas';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { AnyObject, Model } from 'mongoose';
 import { Companies } from '../companies/schemas/company.schema';
 
 @Injectable()
@@ -31,6 +31,17 @@ export class PostsService {
     const jobPosting = await this.postsModel.find({
       userId: id,
     });
+    return jobPosting;
+  }
+
+  /**
+   * Get by id onclick detail post
+   */
+  async findById(id: string): Promise<AnyObject> {
+    const jobPosting = await this.postsModel.findOne({
+      _id: id,
+    });
+
     return jobPosting;
   }
 

@@ -5,7 +5,9 @@ const URL_BACKEND = 'http://localhost:3001';
 
 interface IPostsApi {
 	getMyPost(): Promise<AxiosResponse<any>>;
-    getPostForHome: () => Promise<IPost[]>}
+    getPostForHome: () => Promise<IPost[]>;
+	getPostById: (id: string) => Promise<IPost>;
+}
 
 const postsApi: IPostsApi = {
 	getMyPost: async () => {
@@ -18,5 +20,10 @@ const postsApi: IPostsApi = {
 		const response = await axiosClient.get(`${URL_BACKEND}/api/posts/home`);
         return response.data
 	},
+
+	getPostById: async (id: string) => {
+		const response = await axiosClient.get(`${URL_BACKEND}/api/posts/${id}`);
+		return response.data
+	}
 };
 export default postsApi;
