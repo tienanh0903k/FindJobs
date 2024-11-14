@@ -47,7 +47,7 @@ export const EmployerCard = () => {
 				   <GoDotFill className='text-green-500'/>
 					1 Việc làm
 					<svg className="w-5 h-5 ml-1 text-gray-700">
-						<use href="https://itviec.com/assets/feather-icons-sprite-520cd3770a1002f7c87bd1ba253464228ad112abb4c34d81c8cda9f937487a49.svg#chevron-right" />
+						{/* <use href="https://itviec.com/assets/feather-icons-sprite-520cd3770a1002f7c87bd1ba253464228ad112abb4c34d81c8cda9f937487a49.svg#chevron-right" /> */}
 					</svg>
 				</div>
 			</div>

@@ -3,14 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserModule } from './user/user.module';
-import { CompaniesModule } from './companies/companies.module';
-import { AuthModule } from './auth/auth.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { RolesModule } from './roles/roles.module';
-import { UploadsModule } from './uploads/uploads.module';
-import { GoogleStrategy } from './auth/passport/google.strategy';
-import { MessageModule } from './message/message.module';
+import { UserModule } from './modules/user/user.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { PermissionsModule } from './modules/permissions/permissions.module';
+import { RolesModule } from './modules/roles/roles.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
+import { MessageModule } from './modules/message/message.module';
+import { GoogleStrategy } from './modules/auth/passport/google.strategy';
+import { PostsModule } from './modules/posts/posts.module';
+
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { MessageModule } from './message/message.module';
     RolesModule,
     UploadsModule,
     MessageModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

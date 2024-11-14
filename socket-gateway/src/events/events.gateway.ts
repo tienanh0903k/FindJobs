@@ -6,12 +6,12 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   ConnectedSocket,
-} from '@nestjs/websockets';;
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: "http://localhost:3000",
+    origin: 'http://localhost:3000',
   },
 })
 @WebSocketGateway()
@@ -35,7 +35,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('addUser')
-  handleAddUser(@MessageBody() data: { userId: number }, @ConnectedSocket() client: Socket) {
+  handleAddUser(
+    @MessageBody() data: { userId: number },
+    @ConnectedSocket() client: Socket,
+  ) {
     const { userId } = data;
     if (client && client.id) {
       this.userSocketMap.set(userId, client.id);
@@ -47,7 +50,14 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('send_message')
-  handleSendMessage(@MessageBody() data: { sender_id: number; receive_id: number; message: string }) {
+  handleSendMessage(
+    @MessageBody()
+    data: {
+      sender_id: number;
+      receive_id: number;
+      message: string;
+    },
+  ) {
     const { sender_id, receive_id, message } = data;
     const receiverSocketId = this.userSocketMap.get(receive_id);
 
