@@ -30,6 +30,12 @@ export class PostsController {
   }
 
 
+  // @Get()
+  // getAllPost() {
+  //   return this.postsService.findAll();
+  // }
+
+
   /** 
    * GET: api/posts
    * get post preview in home page
@@ -43,10 +49,13 @@ export class PostsController {
    * GET: api/posts/:id
    * get post detail
    */
-  // @Get(':id')
-  // getPost(@Param('id') id: string) {
+  @Get(':id')
+  async getPost(@Param('id') id: string) {
+    const post = await this.postsService.findById(id); 
+    if (!post) {
+      throw new Error('Post not found');  
+    }
+    return post; 
+  }
 
-  // }
-
-  
 }

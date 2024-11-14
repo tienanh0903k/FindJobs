@@ -60,6 +60,7 @@ export interface IPost {
 	companyName: string;
 	location: string;
 	salary: string;
+	level: string;
 	workingHours: string;
 	deadline: string;
 	contactInfo: string;

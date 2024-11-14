@@ -5,12 +5,34 @@ import classNames from 'classnames/bind';
 import styles from './styles.module.css';
 import { ItemJobs, ItemJobsTest } from '@/components/client/Jobs/ItemJobs';
 import ApplyModal from '@/components/client/Jobs/ModalApply/Formapply';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import postsApi from '@/api/postsApi';
+import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
 const JobListing = () => {
+	const { id } = useParams<{ id: string }>();
 	const [isScrollActive, setIsScrollActive] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
+	
+
+	// const fetch = async (id) => {
+	// 	const data =  await  postsApi.getPostById(id);
+	// 	console.log('-data', data);
+	// 	return data
+	// }
+	
+	const { data, error, isLoading, isError } = useQuery({
+		queryKey: ['job', id], 
+		queryFn: async () => {
+			if (!id) throw new Error('ID is required'); 
+			const data = await postsApi.getPostById(id); 
+			console.log('-data', data);
+			return data;
+		}
+	});
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -20,6 +42,9 @@ const JobListing = () => {
 		window.addEventListener('scroll', handleScroll);
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
+
+
+	
 
 	const handleApply = async (data: FormData) => {
 		try {
@@ -52,25 +77,29 @@ const JobListing = () => {
 							<div className="w-full ml-4 overflow-hidden">
 								<h3 className="text-lg text-gray-500 font-semibold">Frontend Developer</h3>
 								<h1 className="font-semibold text-lg md:text-xl leading-snug">
-									Nhân Viên Hành Chính Nhân Sự (1 Năm Kinh Nghiệm Trở Lên)
+									{data?.position}
 								</h1>
 								<div className="flex flex-wrap gap-6 mt-2">
 									<div className="flex items-center">
 										<span>💰</span>
 										<h4 className="text-base text-gray-500  font-semibold">
-											Mức lương: 8 - 12 triệu
+											Mức lương: {data?.salary}
 										</h4>
 									</div>
 									<div className="flex items-center">
 										<span>🗓️</span>
 										<h4 className="text-base  text-gray-500 font-semibold">
-											Hạn nộp hồ sơ: 15/10/2024
+											Hạn nộp hồ sơ: {
+												moment(data?.deadline).format('DD/MM/YYYY')
+											}
 										</h4>
 									</div>
 									<div className="flex items-center">
 										<span>📍</span>
 										<h4 className="text-base  text-gray-500 font-semibold">
-											Khu vực tuyển: Hà Nội
+											Khu vực tuyển: {
+												data?.location
+											}
 										</h4>
 									</div>
 								</div>
@@ -110,9 +139,6 @@ const JobListing = () => {
 								<button className="px-4 py-2 font-semibold text-gray-600">Công ty</button>
 							</div>
 							<div className="px-2">
-								{/* {[...Array(30)].map((_, index) => (
-                  <p key={index} className="text-gray-700 mt-4">Đây là nội dung thử nghiệm số {index + 1}. Lorem ipsum dolor sit amet.</p>
-                ))} */}
 								<div className="text-2xl font-semibold p-2">Thông tin chung</div>
 								<div className="bg-[#F5F3FF] px-4 pt-5 pb-1 mb-6">
 									<div className="md:flex md:border-b border-[#DDD6FE] mb-4">
@@ -120,7 +146,7 @@ const JobListing = () => {
 											<span>I</span>
 											<h3 className="ml-3">
 												<p className="mr-1 text-se-neutral-64 text-12">Ngày đăng</p>
-												<p className="text-14">25/09/2024</p>
+												<p className="text-14">{moment(data?.postedDate).format('DD/MM/YYYY')}</p>
 											</h3>
 										</div>
 										<div className="flex items-center mb-4 md:w-[33%]">
@@ -134,7 +160,7 @@ const JobListing = () => {
 											<span>I</span>
 											<h3 className="ml-3">
 												<p className="mr-1 text-se-neutral-64 text-12">Cấp bậc</p>
-												<p className="text-14">Chuyên gia</p>
+												<p className="text-14">{data?.level}</p>
 											</h3>
 										</div>
 									</div>
@@ -143,7 +169,7 @@ const JobListing = () => {
 											<span>I</span>
 											<h3 className="ml-3">
 												<p className="mr-1 text-se-neutral-64 text-12">Số lượng tuyển</p>
-												<p className="text-14">25</p>
+												<p className="text-14">{data?.numberOfPositions}</p>
 											</h3>
 										</div>
 										<div className="flex items-center mb-4 md:w-[33%]">
@@ -166,14 +192,21 @@ const JobListing = () => {
 											<span>I</span>
 											<h3 className="ml-3">
 												<p className="mr-1 text-se-neutral-64 text-12">Yêu cầu bằng cấp</p>
-												<p className="text-14">Đại học</p>
+												<p className="text-14">{data?.requirements}</p>
 											</h3>
 										</div>
-										<div className="flex items-center mb-4 md:w-[67%]">
+										<div className="flex items-center mb-4 md:w-[33%]">
 											<span>I</span>
 											<h3 className="ml-3">
-												<p className="mr-1 text-se-neutral-64 text-12">Ngành nghề</p>
-												<p className="text-14">25/09/2024</p>
+												<p className="mr-1 text-se-neutral-64 text-12">Email liên hệ</p>
+												<p className="text-14">{data?.contactInfo}</p>
+											</h3>
+										</div>
+										<div className="flex items-center mb-4 md:w-[33%]">
+											<span>I</span>
+											<h3 className="ml-3">
+												<p className="mr-1 text-se-neutral-64 text-12">Trang thai</p>
+												<p className="text-14">{data?.status}</p>
 											</h3>
 										</div>
 									</div>
@@ -274,7 +307,7 @@ const JobListing = () => {
 
 						<div className="lg:w-1/4 p-4">
 							<div className="px-4 md:px-0 top-4 pb-2">
-								{[...Array(10)].map((_, index) => (
+								{[...Array(6)].map((_, index) => (
 									<div key={index} className="my-2">
 										<ItemJobsTest />
 									</div>

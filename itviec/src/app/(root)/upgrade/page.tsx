@@ -94,11 +94,6 @@ const UpgradeAccount: React.FC = () => {
       key: 'basic',
     },
     {
-      title: 'Đã xác thực',
-      dataIndex: 'verified',
-      key: 'verified',
-    },
-    {
       title: 'Pro',
       dataIndex: 'pro',
       key: 'pro',
@@ -121,7 +116,7 @@ const UpgradeAccount: React.FC = () => {
       />
 
       <div className="mt-8 flex justify-center">
-        <Button type="primary" size="large">Nâng cấp</Button>
+        <Button type="primary" size="large">Nâng Cấp lên Pro</Button>
       </div>
     </div>
   );

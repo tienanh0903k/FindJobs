@@ -12,6 +12,8 @@ import { UploadsModule } from './modules/uploads/uploads.module';
 import { MessageModule } from './modules/message/message.module';
 import { GoogleStrategy } from './modules/auth/passport/google.strategy';
 import { PostsModule } from './modules/posts/posts.module';
+import { ResumeModule } from './modules/resume/resume.module';
+import { ApplicationModule } from './modules/application/application.module';
 
 
 @Module({
@@ -34,6 +36,8 @@ import { PostsModule } from './modules/posts/posts.module';
     UploadsModule,
     MessageModule,
     PostsModule,
+    ResumeModule,
+    ApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],
