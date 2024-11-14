@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation';
 import { useNotifyCustom } from '@/hook/Notification/useNotification';
 import setLanguageValue from '@/app/api/auth/set-language/route';
 import { useTranslations } from 'next-intl';
+import { Dropdown, Menu } from 'antd';
+
 export const Header: React.FC = () => {
 	const router = useRouter();
 
@@ -79,12 +81,12 @@ export const Header: React.FC = () => {
 						</li>
 						<li>
 							<Link href="/about" className="text-gray-400 hover:text-gray-700">
-							{t('header.item2')}
+								{t('header.item2')}
 							</Link>
 						</li>
 						<li>
 							<Link href="/services" className="text-gray-400 hover:text-gray-700">
-							{t('header.item3')}
+								{t('header.item3')}
 							</Link>
 						</li>
 					</ul>
@@ -136,35 +138,50 @@ export const Header: React.FC = () => {
 											width={25}
 											height={25}
 										/>
-										<p className="text-white text-sm">Xin chào, {currentUser.user?.name}</p>
-										{/* Dropdown menu */}
-										<div className="absolute right-[-20px] top-full mt-2 w-40 bg-white shadow-lg opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100">
-											<Link
-												href="/profile"
-												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+
+										{/* Use the greeting text as the dropdown trigger */}
+										<Dropdown
+											overlay={
+												<Menu>
+													<Menu.Item key="profile">
+														<Link href="/profile" className="text-gray-700 hover:bg-gray-100">
+															Thông tin cá nhân
+														</Link>
+													</Menu.Item>
+													{(currentUser?.user?.role === 'ADMIN' ||
+														currentUser?.user?.role === 'HR') && (
+														<Menu.Item key="admin">
+															<Link
+																href="/admin/dashboard"
+																className="text-gray-700 hover:bg-gray-100"
+															>
+																Trang quản trị
+															</Link>
+														</Menu.Item>
+													)}
+													<Menu.Item key="logout">
+														<button
+															type="button"
+															className="block w-full text-gray-700 hover:bg-gray-100 text-left"
+															onClick={(e) => {
+																e.preventDefault();
+																handleLogout();
+															}}
+														>
+															Đăng xuất
+														</button>
+													</Menu.Item>
+												</Menu>
+											}
+											trigger={['click']}
+										>
+											<a
+												className="flex items-center text-white"
+												onClick={(e) => e.preventDefault()}
 											>
-												Thông tin cá nhân
-											</Link>
-											{(currentUser?.user?.role === 'ADMIN' ||
-												currentUser?.user?.role === 'HR') && (
-												<Link
-													href="/admin/dashboard"
-													className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-												>
-													Trang quản trị
-												</Link>
-											)}
-											<button
-												type="button"
-												className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-												onClick={(e) => {
-													e.preventDefault();
-													handleLogout();
-												}}
-											>
-												Đăng xuất
-											</button>
-										</div>
+												<span className="text-sm">Xin chào, {currentUser.user?.name}</span>
+											</a>
+										</Dropdown>
 									</>
 								) : (
 									// Nếu chưa có currentUser (chưa đăng nhập)
@@ -174,10 +191,12 @@ export const Header: React.FC = () => {
 								)}
 							</div>
 						</li>
+
 						<li>
-							<select 
-								onChange={handleLanguageChange} 
-								className="bg-transparent text-white border-none focus:ring-0">
+							<select
+								onChange={handleLanguageChange}
+								className="bg-transparent text-white border-none focus:ring-0"
+							>
 								<option className="text-black" value="en">
 									EN
 								</option>
