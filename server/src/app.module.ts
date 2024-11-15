@@ -14,6 +14,7 @@ import { GoogleStrategy } from './modules/auth/passport/google.strategy';
 import { PostsModule } from './modules/posts/posts.module';
 import { ResumeModule } from './modules/resume/resume.module';
 import { ApplicationModule } from './modules/application/application.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 
 @Module({
@@ -38,6 +39,7 @@ import { ApplicationModule } from './modules/application/application.module';
     PostsModule,
     ResumeModule,
     ApplicationModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],
