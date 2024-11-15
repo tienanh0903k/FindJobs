@@ -14,6 +14,7 @@ export default function RolePage() {
   const [permission, setPermission] = useState<{ module: string; permissions: any[] }[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
 
+
   const dispatch = useAppDispatch();
   // Cấu hình cột cho bảng
   const columns = [

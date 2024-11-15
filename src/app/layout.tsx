@@ -6,6 +6,8 @@ import SnackBarProvider from '@/redux/provider/Snackbar';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { TokenProvider } from '@/context/ExpireProvider';
+import { TanStackProviders } from '@/context/TanstackProvider';
 
 export const metadata: Metadata = {
 	title: {
@@ -22,10 +24,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		<html lang={locale}>
 			<NextIntlClientProvider messages={messages}>
 				<body>
-					<AntdRegistry>
+					<AntdRegistry> 
 						{/* //tao 1 ReduxProvider de truyen vao layout root de tranh viet client vao server compoent */}
 						<SnackBarProvider>
-							<ReduxProvider>{children}</ReduxProvider>
+							<ReduxProvider>
+								<TanStackProviders>
+								<TokenProvider>
+									{children}
+								</TokenProvider>
+								</TanStackProviders>
+							</ReduxProvider>
 						</SnackBarProvider>
 					</AntdRegistry>
 				</body>

@@ -1,5 +1,6 @@
 import authApi from '@/api/authApi';
 import { AuthState, UserType } from '@/app/types/interface';
+import { decodeToken } from '@/lib/helper';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 
@@ -36,17 +37,31 @@ import { AxiosResponse } from 'axios';
 export const fetchLogin = createAsyncThunk<UserType, { username: string; password: string }>(
 	'auth/login',
 	async ({ username, password }, { rejectWithValue }) => {
-	  try {
-		const response: AxiosResponse<UserType> = await authApi.loginClient(username, password);
-  		const { data } = response;
-		//set localstorege
-		localStorage.setItem('user', JSON.stringify(data));
-		return data;
-	  } catch (error: any) {
-		return rejectWithValue(error.message || 'Login failed');
-	  }
-	}
-  );
+		try {
+			const response: AxiosResponse<UserType> = await authApi.loginClient(username, password);
+			const { data } = response;
+			//console.log('data', data);
+			//set localstorege
+			const token = data.access_token || '';
+			if (!token) {
+				throw new Error('Token không hợp lệ hoặc không có thời gian hết hạn.');
+			}
+			const payload = await decodeToken(token);
+
+			const expirationTime = payload?.exp ? payload.exp * 1000 : null;
+			if (expirationTime) {
+				localStorage.setItem('TokenExpiresAt', expirationTime.toString());
+			} else {
+				throw new Error('Token không hợp lệ hoặc không có thời gian hết hạn.');
+			}
+			localStorage.setItem('user', JSON.stringify(data));
+
+			return data;
+		} catch (error: any) {
+			return rejectWithValue(error.message || 'Login failed');
+		}
+	},
+);
 
 
 const authSlice = createSlice({

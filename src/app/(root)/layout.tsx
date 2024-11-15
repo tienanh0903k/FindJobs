@@ -4,6 +4,7 @@ import '../globals.css';
 import {Header} from '@/components/base/Header';
 import { cookies } from 'next/headers';
 import { AppProvider } from '@/context/AppProvider';
+import { ModalProvider } from '@/context/ModalProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,10 +27,12 @@ export default function RootLayout({
 					<Header />
 				</header> */}
 				{/* <AppProvider initialToken={sessionToken}> */}
+			
 					<Header />
-					<div className="mt-[65px]">
-						{children}
-					</div>
+						<div className="mt-[65px]">
+							{children}
+						</div>
+					
 				{/* </AppProvider> */}
 			</div>
 	);

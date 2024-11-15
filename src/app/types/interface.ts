@@ -35,3 +35,47 @@ export interface IPermissionItem {
 	method: string;
 	module: string
 }
+
+//------------ Companies types---------------//
+export interface ICompany {
+	_id: string;
+	name: string;
+	description: string;
+	address: string;
+	coordinates: string;
+	followers: number;
+	rating: number;
+	logo: string;
+	total_employee: number;
+	image: string;
+  }
+
+
+//------------ Jobs Post types---------------//
+export interface IPost {
+	_id: string;
+	position: string;
+	description: string;
+	requirements: string;
+	companyName: string;
+	location: string;
+	salary: string;
+	level: string;
+	workingHours: string;
+	deadline: string;
+	contactInfo: string;
+	status: string;
+	postedDate: string;
+	experience: string;
+	numberOfPositions: number;
+	tags: string[];
+	isHot: boolean;
+	companyId: ICompany;
+	userId: string;
+}
+
+
+export interface IJobSlideProps {
+	posts: IPost[]; 
+}
+  

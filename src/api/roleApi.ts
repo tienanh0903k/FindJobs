@@ -7,6 +7,8 @@ const roleApi = {
     //get role by id
     getRoleById: (id: string) => axiosClient.get(`${URL_BACKEND}/api/roles/${id}`),
 
+    getRoleForAdmin: (id: string) => axiosClient.get(`${URL_BACKEND}/api/roles/${id}/permissions`),  
+
     getRoles: () => axiosClient.get(`${URL_BACKEND}/api/roles`),
 
     getPermission: () => axiosClient.get(`${URL_BACKEND}/api/permissions`),

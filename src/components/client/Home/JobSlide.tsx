@@ -8,14 +8,27 @@ import 'swiper/css/pagination';
 import 'swiper/css/grid';
 import { ItemJobs } from '../Jobs/ItemJobs';
 import { useTranslations } from 'next-intl';
+import { IJobSlideProps } from '@/app/types/interface';
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react';
 
-const JobSlide = () => {
-  const t = useTranslations();
+// Property 'posts' does not exist on type 'IJobSlideProps[]'.ts(2339)
+
+const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
+	const [mounted, setMounted] = useState<boolean>(false);
+
+	const router = useRouter();
+	const handleClick = (id: string) => {
+		router.push(`/jobs/${id}`);
+	}
+	useEffect(() => {
+		setMounted(true);  
+	}, []);
+
+	const t = useTranslations();
 	return (
 		<div className="w-full mx-auto md:py-4 lg:py-2">
-			<h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-        {t('home.title')}
-      </h2>
+			<h2 className="text-2xl font-bold text-center text-gray-800 mb-6">{t('home.title')}</h2>
 
 			<div className="relative bg-white rounded-lg p-2">
 				<Swiper
@@ -28,46 +41,35 @@ const JobSlide = () => {
 					navigation
 					modules={[Grid, Pagination, Navigation]}
 					className="mySwiper"
-          breakpoints={{
-            // Màn hình nhỏ (điện thoại)
-            320: {
-              slidesPerView: 1,  // Hiển thị 1 slide
-              grid: { rows: 1 },  // Hiển thị 1 hàng
-            },
-            // Màn hình trung bình (tablet)
-            640: {
-              slidesPerView: 2,  // Hiển thị 2 slide
-              grid: { rows: 2 },  // Hiển thị 2 hàng
-            },
-            // Màn hình lớn (laptop)
-            1024: {
-              slidesPerView: 3,  // Hiển thị 3 slide
-              grid: { rows: 2 },  // Hiển thị 2 hàng
-            },
-          }}
+					breakpoints={{
+						// Màn hình nhỏ (điện thoại)
+						320: {
+							slidesPerView: 1, // Hiển thị 1 slide
+							grid: { rows: 1 }, // Hiển thị 1 hàng
+						},
+						// Màn hình trung bình (tablet)
+						640: {
+							slidesPerView: 2, // Hiển thị 2 slide
+							grid: { rows: 2 }, // Hiển thị 2 hàng
+						},
+						// Màn hình lớn (laptop)
+						1024: {
+							slidesPerView: 3, // Hiển thị 3 slide
+							grid: { rows: 2 }, // Hiển thị 2 hàng
+						},
+					}}
 				>
-					{/* Các slide với component ItemJobs */}
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
-					<SwiperSlide>
-						<ItemJobs />
-					</SwiperSlide>
+					{posts && posts.length > 0 ? (
+						posts.map((job: any) => (
+							<SwiperSlide key={job._id} onClick={() => handleClick(job._id)}>
+								<ItemJobs job={job} />
+						  	</SwiperSlide>
+						))
+					) : (
+						<SwiperSlide>
+							<div>No jobs available</div>
+						</SwiperSlide>
+					)}
 				</Swiper>
 			</div>
 		</div>
