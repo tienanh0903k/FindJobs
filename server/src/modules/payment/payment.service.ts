@@ -14,7 +14,7 @@ interface IOrder {
   callback_url: string;
   description: string;
   bank_code: string;
-  mac?: string; // Thêm thuộc tính mac
+  mac?: string; 
 }
 
 @Injectable()
@@ -34,9 +34,9 @@ export class PaymentService {
       app_user: 'user123',
       app_time: Date.now(),
       item: JSON.stringify([]), // Bạn có thể thêm sản phẩm vào đây
-      embed_data: JSON.stringify({ redirecturl: 'https://phongthuytaman.com' }),
+      embed_data: JSON.stringify({ redirecturl: 'http://localhost:3000/payment-success' }),
       amount: 50000,
-      callback_url: 'https://5e53-58-187-58-30.ngrok-free.app/api/payment/callback',
+      callback_url: 'https://ea3c-113-185-48-229.ngrok-free.app/api/payment/callback',
       description: `Lazada - Payment for the order #${transID}`,
       bank_code: '',
     };

@@ -10,8 +10,7 @@ export class ApplicationService {
         @InjectModel(Application.name) private applicationModel: Model<Application>,
         private readonly uploadsService: UploadsService,
       ) {}
-    
-    
+
       async uploadApplication(file: Express.Multer.File, applicationData) {
         if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.mimetype)) {
           throw new BadRequestException('Chỉ chấp nhận file PDF hoặc DOCX');

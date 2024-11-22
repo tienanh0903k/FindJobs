@@ -7,21 +7,20 @@ type ModalProps = {
   visible: boolean;
   close: () => void;
   children: React.ReactNode;
-  title?: string; // Tùy chọn tiêu đề
+  title?: string;
+  footer?: React.ReactNode; 
+  [key: string]: any;
 };
 
-const ModalGlobal = ({ visible, close, children, title }: ModalProps) => {
+const ModalGlobal = ({ visible, close, children, title, footer , className, ...props }: ModalProps) => {
   return (
     <Modal
-      visible={visible}
+      open={visible} 
       onCancel={close}
       title={title}
-      footer={[
-        <Button key="close" onClick={close}>
-          Close
-        </Button>
-      ]}
-      className="custom-modal" // Có thể thêm các lớp tùy chỉnh ở đây
+      footer={null}
+      className={className}
+      {...props}
     >
       {children}
     </Modal>

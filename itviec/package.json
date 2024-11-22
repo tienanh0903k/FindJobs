@@ -46,6 +46,7 @@
     "react-redux": "^9.1.2",
     "socket.io-client": "^4.8.0",
     "swiper": "^11.1.14",
+    "swr": "^2.2.5",
     "tailwind-merge": "^2.5.3",
     "zod": "^3.23.8",
     "zustand": "^4.5.5"
