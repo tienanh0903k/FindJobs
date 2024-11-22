@@ -12,7 +12,9 @@ interface IProfileProps {
 	data: any;
 }
 
-export default function Profile({ data }: IProfileProps) {
+export default function Profile(
+	// { data }: IProfileProps
+) {
 	const [value, setValue] = useState('1');
 
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {

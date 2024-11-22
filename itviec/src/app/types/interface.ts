@@ -78,4 +78,27 @@ export interface IPost {
 export interface IJobSlideProps {
 	posts: IPost[]; 
 }
+
+
+
+//------------ USER TYPE---------------//
+
+export interface IUserType {
+	_id: string;
+	password: string;
+	awards: any[]; 
+	certifications: any[]; 
+	create_at: string; 
+	email: string;
+	position: string;
+	projects: any[]; 
+	avatar: string;
+	role: string;
+	skills: any[]; 
+	update_at: string; 
+	userName: string;
+	fullName: string;
+	workExperience: any[]; 
+}
+  
   
