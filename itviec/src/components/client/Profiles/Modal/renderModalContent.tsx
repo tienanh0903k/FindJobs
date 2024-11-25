@@ -1,6 +1,7 @@
 import { ModalType } from '../ProfileInfo';
 
 import dynamic from 'next/dynamic';
+import SkillsModal from './SkillsModal';
 
 
 const ExperienceModal = dynamic(() => import('./ExperienceModal'), { ssr: false });
@@ -15,6 +16,9 @@ const RenderModalContent = (modalType: ModalType, onClose: () => void) => {
   switch (modalType) {
     case ModalType.PERSONAL:
       return <PersonalModal onClose={onClose} />;
+
+    case ModalType.SKILLS:
+      return <SkillsModal onClose={onClose}/>
     
     case ModalType.EXPERIENCE:
       return <>
