@@ -1,78 +1,77 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, List } from 'antd';
+import { Modal, Input, Tag, Button, Form, Select } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
-const SkillsModal = ({
-	skills,
-	onClose,
-	onSave,
-}: {
-	skills: string[];
-	onClose: () => void;
-	onSave: (updatedSkills: string[]) => void;
-}) => {
-	const [skillInput, setSkillInput] = useState(''); // Input cho kỹ năng mới
-	const [skillList, setSkillList] = useState([...skills]); // Danh sách kỹ năng
+const SkillsModal = ({onClose }: { onClose: () => void }) => {
+  const [skills, setSkills] = useState<string[]>([]); // Danh sách kỹ năng đã chọn
+  const [input, setInput] = useState(''); // Biến lưu giá trị nhập
+  const [inputVisible, setInputVisible] = useState(false); // Điều khiển hiển thị input nhập
 
-	const addSkill = () => {
-		if (skillInput && !skillList.includes(skillInput)) {
-			setSkillList([...skillList, skillInput]);
-			setSkillInput('');
-		}
-	};
+  // Thêm kỹ năng vào danh sách khi nhấn Enter
+  const handleInputConfirm = () => {
+    if (input && !skills.includes(input)) {
+      setSkills([...skills, input]);
+    }
+    setInputVisible(false);
+    setInput('');
+  };
 
-	const removeSkill = (skill: string) => {
-		setSkillList(skillList.filter((item) => item !== skill));
-	};
+  // Mở input nhập khi nhấn vào nút "Thêm kỹ năng"
+  const handleShowInput = () => {
+    setInputVisible(true);
+  };
 
-	const handleSave = () => {
-		onSave(skillList);
-		onClose();
-	};
+  // Xóa kỹ năng khỏi danh sách
+  const handleClose = (removedSkill: string) => {
+    const newSkills = skills.filter(skill => skill !== removedSkill);
+    setSkills(newSkills);
+  };
 
-	return (
-		<div>
-			<h2 className="text-xl font-semibold mb-4">Chỉnh sửa Kỹ năng</h2>
-			<Form layout="vertical">
-				{/* Input thêm kỹ năng */}
-				<Form.Item label="Kỹ năng mới">
-					<Input
-						placeholder="Nhập kỹ năng"
-						value={skillInput}
-						onChange={(e) => setSkillInput(e.target.value)}
-						onPressEnter={addSkill}
-					/>
-				</Form.Item>
-				<Button type="primary" onClick={addSkill} disabled={!skillInput}>
-					Thêm
-				</Button>
+  return (
 
-				{/* Danh sách kỹ năng */}
-				<h3 className="mt-4">Danh sách Kỹ năng</h3>
-				<List
-					dataSource={skillList}
-					renderItem={(skill) => (
-						<List.Item
-							actions={[
-								<Button danger size="small" onClick={() => removeSkill(skill)}>
-									Xóa
-								</Button>,
-							]}
-						>
-							{skill}
-						</List.Item>
-					)}
-				/>
-			</Form>
+      <Form layout="vertical">
+        <Form.Item label="Kỹ năng">
+          <div>
+            {skills.map((skill, index) => (
+              <Tag
+                key={index}
+                closable
+                onClose={() => handleClose(skill)}
+                style={{ marginBottom: 8 }}
+              >
+                {skill}
+              </Tag>
+            ))}
 
-			{/* Nút Lưu và Hủy */}
-			<div className="mt-4 flex justify-end gap-2">
-				<Button onClick={onClose}>Hủy</Button>
-				<Button type="primary" onClick={handleSave}>
-					Lưu
-				</Button>
-			</div>
-		</div>
-	);
+            {inputVisible ? (
+              <Input
+                type="text"
+                size="small"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onBlur={handleInputConfirm}
+                onPressEnter={handleInputConfirm}
+                style={{ width: 78 }}
+              />
+            ) : (
+              <Button
+                size="small"
+                onClick={handleShowInput}
+                icon={<PlusOutlined />}
+                type="dashed"
+              >
+                Thêm kỹ năng
+              </Button>
+            )}
+          </div>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" onClick={onClose}>
+            Lưu
+          </Button>
+        </Form.Item>
+      </Form>
+  );
 };
 
 export default SkillsModal;

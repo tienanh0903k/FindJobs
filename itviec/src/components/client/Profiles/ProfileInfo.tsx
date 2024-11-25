@@ -279,20 +279,27 @@ export const ProfileInfo = () => {
 							</div>
 							<button
 								className="absolute text-white mt-4 top-0 right-2 border-none"
-								onClick={() => openModal(ModalType.EDUCATION)}
+								onClick={() => openModal(ModalType.SKILLS)}
 							>
 								<FiEdit className="text-blue-500 font-bold" />
 							</button>
 						</section>
 
 						{/* Education Section */}
-						<section className="border bg-white p-4 mb-4 shadow-sm">
+						<section className="relative border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Học vấn</h2>
 							<div>
 								<h3 className="text-lg font-semibold">Đại học Công nghệ Thông tin</h3>
 								<p className="text-gray-700">Cử nhân Khoa học Máy tính</p>
 								<p className="text-gray-700">2016 - 2020</p>
 							</div>
+
+							<button
+								className="absolute text-white mt-4 top-0 right-2 border-none"
+								onClick={() => openModal(ModalType.EDUCATION)}
+							>
+								<FiEdit className="text-blue-500 font-bold" />
+							</button>
 						</section>
 
 						{/* Projects Section */}
@@ -331,7 +338,7 @@ export const ProfileInfo = () => {
 							close={closeModal}
 							title={getModalTitle(modalType)}
 						>
-							{RenderModalContent(modalType as ModalType, closeModal)}
+							{RenderModalContent(modalType as ModalType, closeModal)}	
 						</ModalGlobal>
 					</div>
 				</div>
