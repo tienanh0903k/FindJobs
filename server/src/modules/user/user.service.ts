@@ -80,11 +80,35 @@ export class UserService {
     })
   }
 
-  async update(updateUserDto: UpdateUserDto) {
-    return await this.userModels.updateOne({_id: updateUserDto._id}, {
-      ...updateUserDto
-    })
+  /**
+   * Update user
+   * @param updateUserDto - Data to update
+   * @returns Updated user
+   */
+  async updateUserInfo(id: string, updateUserDto: UpdateUserDto) {
+    const updateFields = {};
+  
+    Object.keys(updateUserDto).forEach((key) => {
+      if (updateUserDto[key] !== undefined && updateUserDto[key] !== null) {
+        updateFields[key] = updateUserDto[key];
+      }
+    });
+
+  
+    const updated = await this.userModels.findOneAndUpdate(
+      { _id: id }, 
+      { $set: updateFields },
+      {
+        new: true, 
+        runValidators: true,
+      }
+    ).exec();
+  
+    return updated;
   }
+  
+
+  
 
   remove(id: number) {
     return `This action removes a #${id} user`;

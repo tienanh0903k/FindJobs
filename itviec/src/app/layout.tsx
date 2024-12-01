@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import ReduxProvider from '@/redux/provider/ReduxProvider';
-import { SnackbarProvider } from 'notistack';
 import SnackBarProvider from '@/redux/provider/Snackbar';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { NextIntlClientProvider } from 'next-intl';

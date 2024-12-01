@@ -74,4 +74,16 @@ export class CreateUserDto {
     description: string;
     awardedDate: Date;
   }[];
+
+
+   @IsString()
+   @IsNotEmpty()
+   position: string; 
+ 
+   @IsString()
+   @IsNotEmpty()
+   fullName: string;
+   @IsString()
+   @IsNotEmpty()
+   introduction: string; 
 }

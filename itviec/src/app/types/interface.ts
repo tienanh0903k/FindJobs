@@ -99,6 +99,13 @@ export interface IUserType {
 	userName: string;
 	fullName: string;
 	workExperience: any[]; 
+	introduction: string;
 }
   
-  
+export interface IUserQuery{
+	data: IUserType | undefined;
+	isFetching: boolean;
+	isSuccess: boolean;
+	isError: boolean;
+	error: any
+}
