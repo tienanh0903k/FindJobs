@@ -3,14 +3,12 @@
 import ModalGlobal from '@/components/base/ModalGlobal';
 import useModal from '@/hook/useModal';
 import React, { useEffect, useState } from 'react';
-import { FiEdit } from 'react-icons/fi';
-import PersonalModal from './Modal/PersonalModal';
-import SkillsModal from './Modal/SkillsModal';
+import { FiEdit, FiPlus, FiTrash } from 'react-icons/fi';
 import RenderModalContent from './Modal/renderModalContent';
-import { Skeleton, Tooltip } from 'antd';
+import { Progress, Skeleton, Tooltip } from 'antd';
 import userApi from '@/api/userApi';
-import { useQuery } from '@tanstack/react-query';
-import { IUserType } from '@/app/types/interface';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { IUserQuery, IUserType } from '@/app/types/interface';
 import Image from '@/components/base/Image';
 import { getModalTitle } from '@/lib/helper';
 
@@ -26,10 +24,13 @@ export enum ModalType {
 }
 
 export const ProfileInfo = () => {
-	const { modalType, visible, openModal, closeModal } = useModal();
-
+	const { modalType, visible,  modalData, openModal, closeModal } = useModal();
+	const [formData, setFormData] = useState<IUserType | null>(null);
+	
 	//call skill by user
 	const [skills, setSkills] = useState(['ReactJS', 'TypeScript', 'JavaScript', 'NodeJS']);
+	const [percent, setPercent] = useState(0);
+
 
 	//get api get me
 	// const [data, setData] = useState<IUserType>();
@@ -47,24 +48,64 @@ export const ProfileInfo = () => {
 	// 	fetchMe();
 	// }, []);
 
-	// app-index.js:33 Query data cannot be undefined. Please make sure to return a value other than undefined from your query function. Affected query key: ["me"]
+
 	//useQuery
-	const { data, isFetching, isSuccess, isError, error } = useQuery({
+	const { data, isFetching, isSuccess, isError, error }: IUserQuery = useQuery({
 		queryKey: ['me'],
 		queryFn: async () => {
 			try {
-				const response = await userApi.getMe();
-
-				if (!response || !response.data) {
-					throw new Error('Dữ liệu bị undefined');
-				}
-
-				return response.data;
+				const { data } = await userApi.getMe();
+				if (!data) throw new Error('User not found');
+				return data;
 			} catch (err) {
 				console.error(err);
+				throw err;
 			}
 		},
+
+		refetchOnWindowFocus: false,
 	});
+
+
+	//mutation
+	const mutation = useMutation({
+		mutationFn: userApi.updateMe,
+		onSuccess: (data) => {
+			console.log(data);
+		},
+		onError: (error) => {
+			console.log(error);
+		},
+	  })
+
+
+	const handleSave = async (data: any) => {
+		setFormData(prev => {
+			console.log("prev", prev);
+			return {
+				...prev,
+				...data
+			}
+		})
+		try {
+			await mutation.mutateAsync(data);
+			console.log("Updated user:", data);
+		} catch (error) {
+			console.error('Error updating user:', error);
+		}
+		
+	} 
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setPercent(37.9);
+		  }, 1500);
+
+		return () => clearTimeout(timer);
+	}, [])
+
+	console.log("parent", formData);
+
 
 	return (
 		<div className="w-full min-h-screen p-2">
@@ -72,30 +113,10 @@ export const ProfileInfo = () => {
 				<div className="col-span-1 sm:col-span-3 h-fit bg-white p-2 border rounded-sm border-gray-200 shadow-md">
 					<p className="font-semibold text-sm text-gray-600 mb-2">Độ hoàn thiện hồ sơ</p>
 					<div className="flex flex-col sm:flex-row justify-around items-center">
-						<div className="relative w-16 h-16">
-							<svg
-								className="absolute inset-0"
-								viewBox="0 0 100 100"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<circle cx="50" cy="50" r="45" stroke="gray" strokeWidth="10" fill="none" />
-								<circle
-									cx="50"
-									cy="50"
-									r="45"
-									stroke="red"
-									strokeWidth="10"
-									fill="none"
-									strokeDasharray="283"
-									strokeDashoffset="175"
-									style={{ transition: 'stroke-dashoffset 0.3s' }}
-									transform="rotate(270 50 50)"
-								/>
-							</svg>
-						</div>
+						<Progress strokeColor="red" type="circle" percent={37.9} size={80} />
 						<div className="text-center sm:text-left mt-2 sm:mt-0">
 							<strong className="text-xl">Tương đối</strong>
-							<h3 className="text-2xl font-bold text-blue-600 mt-1">38%</h3>
+							<h3 className="text-2xl font-bold text-blue-600 mt-1">{percent}%</h3>
 							<strong className="ml-1">hoàn thành</strong>
 						</div>
 					</div>
@@ -248,20 +269,24 @@ export const ProfileInfo = () => {
 						<section className="relative min-h-[100px] border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Thông tin giới thiệu</h2>
 							<div
-								className={`text-gray-800 ${data?.introduce ? 'text-gray-500' : ''} ${
+								className={`text-gray-800 ${data?.introduction ? 'text-gray-500' : ''} ${
 									isFetching ? 'animate-pulse bg-gray-300' : ''
 								}`}
-								style={{ height: isFetching ? '20px' : 'auto' }} 
+								style={{ height: isFetching ? '20px' : 'auto' }}
 							>
 								{isFetching ? (
-									<div className="h-4 bg-gray-300 rounded w-3/4" /> 
+									<div className="h-4 bg-gray-300 rounded w-3/4" />
 								) : (
-									data?.introduce || 'Chưa cung cấp thông tin giới thiệu'
+									data?.introduction || 'Chưa cung cấp thông tin giới thiệu'
 								)}
 							</div>
 							<button
 								className="text-white mt-4 absolute top-0 right-2 border-none"
-								onClick={() => openModal(ModalType.INTRODUCE)}
+								onClick={() =>{
+									openModal(ModalType.INTRODUCE, {
+										introduction: data?.introduction
+									})
+								}}
 							>
 								<FiEdit className="text-blue-500 font-bold" />
 							</button>
@@ -303,14 +328,34 @@ export const ProfileInfo = () => {
 						</section>
 
 						{/* Projects Section */}
-						<section className="border bg-white p-4 mb-4 shadow-sm">
+						<section className="relative border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Dự án</h2>
-							{['Project A', 'Project B'].map((project, index) => (
-								<div key={index} className="mt-4">
-									<h3 className="text-lg font-semibold">{project}</h3>
-									<p className="text-gray-700">Description of {project}</p>
+							{data?.projects.map((project: any, index: any) => (
+								<div key={index} className="mt-4 relative">
+									<h3 className="text-lg font-semibold">{project.name}</h3>
+									<p className="text-gray-700">Description of {project.description}</p>
+									<div className="absolute top-0 right-0 flex space-x-2">
+										<button
+											className="text-blue-500 hover:text-blue-700 focus:outline-none"
+											// onClick={() => openModal(ModalType.PROJECTS, project)}
+										>
+											<FiEdit className="font-bold" />
+										</button>
+										<button
+											className="text-red-500 hover:text-red-700 focus:outline-none"
+											
+										>
+											<FiTrash className="font-bold" />
+										</button>
+									</div>
 								</div>
 							))}
+							<button
+								className="absolute text-white mt-4 top-0 right-2 border-none"
+								onClick={() => openModal(ModalType.PROJECTS)}
+							>
+								<FiPlus className="text-blue-500 font-bold" />
+							</button>
 						</section>
 
 						{/* Work Experience Section */}
@@ -333,12 +378,8 @@ export const ProfileInfo = () => {
 							</Tooltip>
 						</section>
 
-						<ModalGlobal
-							visible={visible}
-							close={closeModal}
-							title={getModalTitle(modalType)}
-						>
-							{RenderModalContent(modalType as ModalType, closeModal)}	
+						<ModalGlobal visible={visible} close={closeModal} title={getModalTitle(modalType)}>
+							{RenderModalContent(modalType as ModalType, closeModal, modalData , handleSave)}
 						</ModalGlobal>
 					</div>
 				</div>
@@ -348,3 +389,4 @@ export const ProfileInfo = () => {
 };
 
 export default ProfileInfo;
+

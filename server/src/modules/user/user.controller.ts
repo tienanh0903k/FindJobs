@@ -76,10 +76,28 @@ export class UserController {
     };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(updateUserDto);
+
+
+  /**
+   * Update user information
+   * @param req - Request
+   * @param updateUserDto - Data to update
+   * @returns Updated user
+   */
+  @Patch('me')
+  @UseGuards(AuthGuard)
+  update(@Req() req: any, @Body() updateUserDto: UpdateUserDto) {
+    const userId = req.user.sub;
+    const isPermissions = req.userPermissions;
+
+    if (!isPermissions && !userId) {
+      throw new NotFoundException(
+        `Ban khong co quyen cap nhat thong tin nguoi dung`,
+      );
+    }
+    return this.userService.updateUserInfo(userId, updateUserDto);
   }
+
 
   @Delete(':id')
   remove(@Param('id') id: string) {

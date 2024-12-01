@@ -132,6 +132,21 @@ export class User {
     description: string;
     awardedDate: Date;
   }[];
+
+  @Prop({
+    required: true,
+  })
+  position: string;
+
+  @Prop({
+    required: true,
+  })
+  fullName: string;
+
+  @Prop({
+    required: true,
+  })
+  introduction: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

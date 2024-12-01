@@ -22,6 +22,11 @@ const userApi = {
                 'Content-Type': 'multipart/form-data'
             }
         })
+    },
+
+    //update user me 
+    updateMe: (data: any) => {
+        return axiosClient.patch(`${URL_BACKEND}/api/user/me`, data)
     }
 }
 
