@@ -15,7 +15,8 @@ import { PostsModule } from './modules/posts/posts.module';
 import { ResumeModule } from './modules/resume/resume.module';
 import { ApplicationModule } from './modules/application/application.module';
 import { PaymentModule } from './modules/payment/payment.module';
-
+import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.module';
+// import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 @Module({
   imports: [
@@ -29,6 +30,12 @@ import { PaymentModule } from './modules/payment/payment.module';
       }),
       inject: [ConfigService],
     }),
+
+      // ElasticsearchModule.registerAsync({
+      //   useFactory: () => ({
+      //     node: 'http://localhost:9200',
+      //   }),
+      // }),
     UserModule,
     CompaniesModule,
     AuthModule,
@@ -40,6 +47,8 @@ import { PaymentModule } from './modules/payment/payment.module';
     ResumeModule,
     ApplicationModule,
     PaymentModule,
+    ElasticSearchModule
+    // ElasticsearchModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

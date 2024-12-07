@@ -1,26 +1,36 @@
-import { Controller, Get, Post, Body, Req, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Param, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 // import { AuthGuard } from '../auth/guards/auth.guard';
+import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly elasticsearchDataService: ElasticSearchService,
+  ) {}
 
-//---------------------------------------POST---------------------------------------------
+  @Post('seed-user')
+  async seedUserData() {
+    await this.elasticsearchDataService.seedUserData();
+    return { message: 'User data seeded successfully!' };
+  }
+
+  //---------------------------------------POST---------------------------------------------
   /**
-   * 
+   *
    * POST: api/posts/
    */
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto);
   }
-//---------------------------------------GET---------------------------------------------
+  //---------------------------------------GET---------------------------------------------
   /**
    * GET: api/posts/me
-   * @param req 
-   * @returns 
+   * @param req
+   * @returns
    */
   @Get('me')
   // @UseGuards(AuthGuard)
@@ -29,14 +39,12 @@ export class PostsController {
     return this.postsService.findOne(req.user.sub);
   }
 
-
   // @Get()
   // getAllPost() {
   //   return this.postsService.findAll();
   // }
 
-
-  /** 
+  /**
    * GET: api/posts
    * get post preview in home page
    */
@@ -51,11 +59,25 @@ export class PostsController {
    */
   @Get(':id')
   async getPost(@Param('id') id: string) {
-    const post = await this.postsService.findById(id); 
+    const post = await this.postsService.findById(id);
     if (!post) {
-      throw new Error('Post not found');  
+      throw new Error('Post not found');
     }
-    return post; 
+    return post;
   }
 
+  /**
+   * POST: api/posts/search
+   */
+  @Post('search')
+  async search(@Query('query') query: any) {
+    try {
+      const result = await this.postsService.searchPosts(query);
+      console.log(query);
+      return result;
+    } catch (error) {
+      console.error('Lỗi tìm kiếm bài đăng:', error);
+      throw error;
+    }
+  }
 }
