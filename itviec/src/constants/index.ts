@@ -84,3 +84,27 @@ export const ALL_MODULES = {
 	USERS: 'USERS',
 	SUBSCRIBERS: 'SUBSCRIBERS',
 };
+
+
+
+
+export const CHAT_HISTORY = [
+	{ keyword: 'fpt', jobsCount: 849 },
+	{ keyword: 'net intern', jobsCount: 86 },
+	{ keyword: 'net', jobsCount: 162 },
+	{ keyword: 'rikai', jobsCount: 6 },
+	{ keyword: 'fpt intern', jobsCount: 0 },
+	{ keyword: 'front end developer', jobsCount: 313 },
+	{ keyword: 'hr intern', jobsCount: 153 },
+	{ keyword: 'thực tập sinh it', jobsCount: 11 },
+	{ keyword: 'internship', jobsCount: 2288 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+];

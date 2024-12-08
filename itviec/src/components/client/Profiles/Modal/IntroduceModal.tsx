@@ -7,7 +7,7 @@ const IntroduceModal = ({ data, closeModal, handleSave,  ...props }: { data: any
     const [introduce, setIntroduce] = useState<string>('');
 
 	const handleSaveIntroduce = () => {
-		handleSave({ introduce });
+		handleSave({ introduction: introduce });
 		closeModal();
 	};
 
