@@ -8,9 +8,11 @@ import postsApi from "@/api/postsApi";
 
 export default async function Home() {
   const posts: IPost[] = await postsApi.getPostForHome();
+  console.log('posts', posts);
+
   return (
     <main className="mt-[64px]">
-      <SearchHome />
+      <SearchHome />  
       <JobSlide posts={posts} />
       <Employers />
     </main>

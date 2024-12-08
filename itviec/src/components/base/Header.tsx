@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Logo from '../../../public/img/Logo.png';
 import AVT from '../../../public/img/phuongphong.png';
 import { FaBell } from 'react-icons/fa';
-
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';

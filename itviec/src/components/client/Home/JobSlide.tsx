@@ -9,7 +9,7 @@ import 'swiper/css/grid';
 import { ItemJobs } from '../Jobs/ItemJobs';
 import { useTranslations } from 'next-intl';
 import { IJobSlideProps } from '@/app/types/interface';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 // Property 'posts' does not exist on type 'IJobSlideProps[]'.ts(2339)
@@ -20,21 +20,21 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 	const router = useRouter();
 	const handleClick = (id: string) => {
 		router.push(`/jobs/${id}`);
-	}
+	};
 	useEffect(() => {
-		setMounted(true);  
+		setMounted(true);
 	}, []);
 
 	const t = useTranslations();
 	return (
 		<div className="w-full mx-auto md:py-4 lg:py-2">
-			<h2 className="text-2xl font-bold text-center text-gray-800 mb-6">{t('home.title')}</h2>
+			<h2 className="text-2xl mt-6 font-bold text-center text-gray-800 mb-6">{t('home.title')}</h2>
 
 			<div className="relative bg-white rounded-lg p-2">
 				<Swiper
 					slidesPerView={3}
 					grid={{
-						rows: 2,
+						rows: 3,
 						fill: 'row',
 					}}
 					spaceBetween={30}
@@ -42,20 +42,17 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 					modules={[Grid, Pagination, Navigation]}
 					className="mySwiper"
 					breakpoints={{
-						// Màn hình nhỏ (điện thoại)
 						320: {
-							slidesPerView: 1, // Hiển thị 1 slide
-							grid: { rows: 1 }, // Hiển thị 1 hàng
+							slidesPerView: 1,
+							grid: { rows: 1 }, // 1 column on small screens
 						},
-						// Màn hình trung bình (tablet)
 						640: {
-							slidesPerView: 2, // Hiển thị 2 slide
-							grid: { rows: 2 }, // Hiển thị 2 hàng
+							slidesPerView: 2,
+							grid: { rows: 2 }, // 2 columns on medium screens
 						},
-						// Màn hình lớn (laptop)
 						1024: {
-							slidesPerView: 3, // Hiển thị 3 slide
-							grid: { rows: 2 }, // Hiển thị 2 hàng
+							slidesPerView: 3,
+							grid: { rows: 3 }, // 3 columns on large screens
 						},
 					}}
 				>
@@ -63,7 +60,7 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 						posts.map((job: any) => (
 							<SwiperSlide key={job._id} onClick={() => handleClick(job._id)}>
 								<ItemJobs job={job} />
-						  	</SwiperSlide>
+							</SwiperSlide>
 						))
 					) : (
 						<SwiperSlide>

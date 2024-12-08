@@ -7,10 +7,11 @@ import { FiEdit, FiPlus, FiTrash } from 'react-icons/fi';
 import RenderModalContent from './Modal/renderModalContent';
 import { Progress, Skeleton, Tooltip } from 'antd';
 import userApi from '@/api/userApi';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { IUserQuery, IUserType } from '@/app/types/interface';
 import Image from '@/components/base/Image';
-import { getModalTitle } from '@/lib/helper';
+import { getModalTitle } from '@/lib/helper'
+
 
 export enum ModalType {
 	PERSONAL = 'personal',
@@ -24,6 +25,7 @@ export enum ModalType {
 }
 
 export const ProfileInfo = () => {
+	const queryClient = useQueryClient();
 	const { modalType, visible,  modalData, openModal, closeModal } = useModal();
 	const [formData, setFormData] = useState<IUserType | null>(null);
 	
@@ -71,6 +73,9 @@ export const ProfileInfo = () => {
 	const mutation = useMutation({
 		mutationFn: userApi.updateMe,
 		onSuccess: (data) => {
+			queryClient.invalidateQueries({
+				queryKey: ['me'],
+			});
 			console.log(data);
 		},
 		onError: (error) => {
@@ -106,7 +111,7 @@ export const ProfileInfo = () => {
 
 	console.log("parent", formData);
 
-
+	
 	return (
 		<div className="w-full min-h-screen p-2">
 			<div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
@@ -276,8 +281,14 @@ export const ProfileInfo = () => {
 							>
 								{isFetching ? (
 									<div className="h-4 bg-gray-300 rounded w-3/4" />
-								) : (
-									data?.introduction || 'Chưa cung cấp thông tin giới thiệu'
+								) 
+								: 
+								(
+									<div
+										dangerouslySetInnerHTML={{
+										__html: data?.introduction || 'Chưa cung cấp thông tin giới thiệu',
+										}}
+									/>
 								)}
 							</div>
 							<button

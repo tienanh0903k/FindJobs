@@ -4,7 +4,6 @@ import { Post } from './schemas/post.schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { AnyObject, Model } from 'mongoose';
 import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
-// import { Companies } from '../companies/schemas/company.schema';
 
 @Injectable()
 export class PostsService implements OnModuleInit {

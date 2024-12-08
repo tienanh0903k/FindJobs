@@ -79,3 +79,17 @@ export const getModalTitle = (modalType: any) => {
 			return '';
 	}
 };
+
+
+
+/**
+ * Truncates a given string to a certain length.
+ * @param {string} str The string to be truncated.
+ * @param {number} num The maximum length of the string.
+ * @returns {string} The truncated string.
+ * @example
+ */
+export const truncateString = (str: any, num: any) => {
+    if (!str) return '';
+    return str.length > num ? str.slice(0, num) + '...' : str;
+};
