@@ -17,6 +17,7 @@ import { ApplicationModule } from './modules/application/application.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.module';
 // import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.modul
     ResumeModule,
     ApplicationModule,
     PaymentModule,
-    ElasticSearchModule
+    ElasticSearchModule,
+    MailModule
     // ElasticsearchModule,
   ],
   controllers: [AppController],
