@@ -2,12 +2,21 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
+  Get,
+  HttpException,
+  HttpStatus,
   Post,
+  Query,
+  Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApplicationService } from './application.service';
+import { CreateApplocationDto } from './dto/create-application.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('application')
 export class ApplicationController {
@@ -37,4 +46,38 @@ export class ApplicationController {
 
     return await this.applicationService.uploadApplication(file, resumeData);
   }
+
+
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getApplications(
+    @Req() req: any,
+    @Query('searchTerm') searchTerm: string = '',
+    @Query('status') status?: string
+  ) {
+    try {
+      console.log('getApplications running...')  
+      // Gọi hàm getApplicationsByHR từ service
+      const applications = await this.applicationService.getApplicationsByHR(req.user.sub, searchTerm, status);
+
+      // Trả kết quả cho client
+      return { applications };
+    } catch (error) {
+      throw new ForbiddenException('Bạn không có đơn ứng tuyển.');
+    }
+  }
+
+
+
+  @Post()
+  async createApplication(@Body() data: CreateApplocationDto) {
+    try {
+      return await this.applicationService.createApplication(data);
+    } catch (error) {
+       console.error('Error creating application:', error);
+        throw new HttpException('Error creating application', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }

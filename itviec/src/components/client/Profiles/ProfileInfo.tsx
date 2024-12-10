@@ -165,7 +165,7 @@ export const ProfileInfo = () => {
 					<div className="bg-white my-4">
 						<a
 							className="bg-red-700 p-2 w-full block text-center text-white"
-							href="/ho-so-cv/mau-cv"
+							href="/custom-resume"
 						>
 							Xem và Tải CV
 						</a>

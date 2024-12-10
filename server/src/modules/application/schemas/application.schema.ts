@@ -14,7 +14,7 @@ export class Application {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'JobListing', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Post', required: true })
   jobId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
