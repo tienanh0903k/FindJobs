@@ -1,5 +1,7 @@
 'use client';
 
+
+
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -13,6 +15,23 @@ const PaymentSuccess = () => {
       idtrans: searchParams.get('apptransid'),
     };
   }, [searchParams]);
+
+
+
+  	// const [data, setData] = useState<IUserType>();
+	// useEffect(() => {
+	// 	const fetchMe = async () => {
+	// 		try {
+	// 			const response = await userApi.getMe();
+	// 			const data = await response;
+	// 			console.log(data);
+	// 			setData(data)
+	// 		} catch (error) {
+	// 			console.error('Error fetching me:', error);
+	// 		}
+	// 	}
+	// 	fetchMe();
+	// }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

@@ -1,3 +1,17 @@
+
+
+/**
+ * ************************API ****************************-
+ */
+
+export const URL_NEXT = 'http://localhost:3000'
+export const URL_BACKEND = 'http://localhost:3001'
+
+
+/**
+ * **************************MENU *****************************
+ */
+
 export const menuItems = [
 	{
 		text: 'Dashboard',
@@ -107,4 +121,24 @@ export const CHAT_HISTORY = [
 	{ keyword: 'intern web', jobsCount: 1 },
 	{ keyword: 'intern web', jobsCount: 1 },
 	{ keyword: 'intern web', jobsCount: 1 },
+];
+
+
+
+
+
+
+export const templates = [
+	{
+		id: 1,
+		name: 'Elegant',
+		imageUrl:
+			'https://marketplace.canva.com/EAFRuCp3DcY/1/0/1131w/canva-black-white-minimalist-cv-resume-f5JNR-K5jjw.jpg',
+	},
+	{
+		id: 2,
+		name: 'Minimal',
+		imageUrl:
+			'https://cdn1.vieclam24h.vn/images/assets/img/cv8-202122.png',
+	}
 ];

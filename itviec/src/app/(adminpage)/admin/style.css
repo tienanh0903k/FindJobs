@@ -1,0 +1,14 @@
+.ant-menu .ant-menu-item-selected {
+    background-color: #00b14f
+}
+
+
+.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
+background-color: #00b14f
+;
+}
+
+.custom-table .ant-table-thead > tr > th {
+    background-color: #00b14f; 
+    color: white;  
+  }

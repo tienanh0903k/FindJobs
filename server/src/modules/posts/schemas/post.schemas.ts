@@ -48,8 +48,8 @@ export class Post {
     @Prop({ type: [String], required: true })
     tags: string[]; // Tag liên quan đến công việc
 
-    @Prop({ default: false }) // Mặc định là false
-    isHot: boolean; // T
+    @Prop({ default: false })
+    isHot: boolean; 
 
 
     @Prop({ required: true, ref: 'Companies', type: Types.ObjectId })

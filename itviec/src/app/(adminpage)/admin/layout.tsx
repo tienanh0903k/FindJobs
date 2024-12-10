@@ -1,9 +1,9 @@
-// components/AdminLayout.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Layout, Menu, MenuProps, theme } from 'antd';
 import 'antd/dist/reset.css';
+import './style.css';
 import { RootStyleRegistry } from '@/components/admins/RootStyleRegistry';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Sử dụng usePathname
