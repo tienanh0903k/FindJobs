@@ -11,6 +11,8 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 import '../style.css'
+import Access from '@/components/admins/permission/Access';
+import { ALL_PERMISSIONS } from '@/constants';
 
 const ApplicationPage: React.FC = () => {
 
@@ -143,11 +145,17 @@ const ApplicationPage: React.FC = () => {
 				key: 'action',
 				render: (_: any, record: any) => (
 					<div className="flex">
+
+
 						<Button type="default" style={{ marginLeft: '8px', color: 'green' }}>
 							<SaveOutlined />
 						</Button>
 
-						<Button
+						<Access
+							permission={ALL_PERMISSIONS.APPLICATION.UPDATE}
+							hideChildren={true}
+						>
+							<Button
 							type="default"
 							onClick={() => {
 								setIsVisible(!isVisible);
@@ -156,6 +164,8 @@ const ApplicationPage: React.FC = () => {
 						>
 							<EditOutlined />
 						</Button>
+						</Access>
+						
 						<Button type="default" onClick={() => console.log('Edit:', record)}>
 							<DeleteOutlined style={{ fontSize: '20px', color: '#F44336' }} />
 						</Button>

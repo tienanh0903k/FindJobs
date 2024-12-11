@@ -23,6 +23,7 @@ const JobListing = () => {
 	// 	console.log('-data', data);
 	// 	return data
 	// }
+	const { id: jobId } = useParams<{ id: string }>();
 	
 	const { data, error, isLoading, isError } = useQuery({
 		queryKey: ['job', id], 
@@ -45,24 +46,23 @@ const JobListing = () => {
 
 
 	
-
-	const handleApply = async (data: FormData) => {
+	const handleApply = async (formData: FormData) => {
 		try {
-			const response = await fetch('/api/apply', {
-				method: 'POST',
-				body: data,
-			});
-
-			if (response.ok) {
-				alert('Nộp hồ sơ thành công!');
-				setIsModalVisible(false); // Đóng modal
-			} else {
-				console.error('Nộp hồ sơ thất bại.');
-			}
+		  const response = await fetch('http://localhost:3001/api/application/upload', {
+			method: 'POST',
+			body: formData,
+		  });
+	
+		  if (response.ok) {
+			alert('Nộp hồ sơ thành công!');
+			setIsModalVisible(false);
+		  } else {
+			console.error('Nộp hồ sơ thất bại.');
+		  }
 		} catch (error) {
-			console.error('Lỗi khi nộp hồ sơ:', error);
+		  console.error('Lỗi khi nộp hồ sơ:', error);
 		}
-	};
+	  };
 
 	return (
 		<div className="h-[1500px] w-full relative">
@@ -316,6 +316,7 @@ const JobListing = () => {
 						</div>
 
 						<ApplyModal
+							jobId={jobId}
 							visible={isModalVisible}
 							onCancel={() => setIsModalVisible(false)}
 							onApply={handleApply}
