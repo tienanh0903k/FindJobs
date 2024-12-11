@@ -102,13 +102,6 @@
 
 
 
-
-
-
-
-
-
-
 const SubResume = ({
   userData
 }: any) => {

@@ -1,0 +1,7 @@
+*.txt
+document/
+node_modules/*
+
+
+config.json
+!node_modules/package.json

@@ -17,7 +17,7 @@ export class MailController {
       subject: 'Chúc mừng bạn đã ứng tuyển thành công, chúc mừng!',
       template: 'applied',
     });
-
+    
     console.log('running through here');
   }
 }

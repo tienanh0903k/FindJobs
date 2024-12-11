@@ -67,11 +67,11 @@ export const ALL_PERMISSIONS = {
 		UPDATE: { method: 'PATCH', apiPath: '/api/permissions/:id', module: 'PERMISSIONS' },
 		DELETE: { method: 'DELETE', apiPath: '/api/permissions/:id', module: 'PERMISSIONS' },
 	},
-	RESUMES: {
-		GET_PAGINATE: { method: 'GET', apiPath: '/api/resumes', module: 'RESUMES' },
-		CREATE: { method: 'POST', apiPath: '/api/resumes', module: 'RESUMES' },
-		UPDATE: { method: 'PATCH', apiPath: '/api/resumes/:id', module: 'RESUMES' },
-		DELETE: { method: 'DELETE', apiPath: '/api/resumes/:id', module: 'RESUMES' },
+	APPLICATION: {
+		GET_PAGINATE: { method: 'GET', apiPath: '/api/application', module: 'APPLICATION' },
+		CREATE: { method: 'POST', apiPath: '/api/application', module: 'APPLICATION' },
+		UPDATE: { method: 'POST', apiPath: '/api/application/:id', module: 'APPLICATION' },
+		DELETE: { method: 'DELETE', apiPath: '/api/application/:id', module: 'APPLICATION' },
 	},
 	ROLES: {
 		GET_PAGINATE: { method: 'GET', apiPath: '/api/roles', module: 'ROLES' },
