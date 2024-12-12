@@ -1,23 +1,135 @@
 'use client';
 import { Appreciate } from '@/components/client/Companies/Rating';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaUserCheck } from 'react-icons/fa';
 import { FaLocationDot } from "react-icons/fa6";
 import { FaLaptopCode } from "react-icons/fa";
 import { MapLocation } from '@/components/client/Companies/Location';
+import Image from '@/components/base/Image';
+import companyApi from '@/api/companyApi';
+import { useParams } from 'next/navigation';
+import { followApi } from '@/api/followApi';
+import { useCurrentUser } from '@/hook/useCurrentUser';
+import { ICompany } from '@/app/types/interface';
+import { useTranslations } from 'next-intl';
+import { message } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
 
 const Companies = () => {
+	const params = useParams<{ id: string }>();
+	const [isFollow, setIsFollow] = useState(false);
+	const [company, setCompany] = useState<ICompany>();
+	const [isLoading , setIsLoading] = useState(true);
+	const currentUser: any = useCurrentUser();
+	const t = useTranslations();
+
+	console.log('----status----', isFollow)
+
 	const commentRef = useRef<HTMLDivElement | null>(null); //use scrollIntoView
 	const handleScrollToComment = () => {
 		//console.log('ref', commentRef.current);
 		commentRef.current?.scrollIntoView({ behavior:'smooth' });
 	};
 
-	const [isFollow, setIsFollow] = useState(false);
+	//*********side effect*************
+	useEffect(() => {
+		fetchInfoCompany();
+	}, [params.id]);
 
-	const toggleFollow = () => {
-		setIsFollow(!isFollow);
+
+	useEffect(() => {
+		setIsLoading(true);
+		const fetchFollowStatus = async () => {
+			if (!currentUser) return;
+
+			try {
+				const data = await followApi.isFollow({
+					companyId: params.id,
+					userId: currentUser?._id,
+				});
+				const timer = setTimeout(() => {
+					setIsLoading(false);
+					setIsFollow(data);
+				}, 2000);
+
+				return () => clearTimeout(timer);
+			} catch (error) {
+				console.error('Error fetching follow status:', error);
+				setIsFollow(false); 
+			}
+		};
+
+		fetchFollowStatus();
+	}, [params.id, currentUser]);
+	  
+
+
+	
+	const fetchInfoCompany = async () => {
+		const data = await companyApi.getCompanyById(params.id);
+		setCompany(data || {});
+	}
+
+
+	// const checkIsFollow = async () => {
+	// 	if (!!currentUser === false) {
+	// 		return;
+	// 	};	
+	// 	const res = await followApi.isFollow({ companyId: params.id, userId: currentUser?._id });
+	// 	setIsFollow(res.data);
+	// }
+
+	//event action
+
+	// const handleFollow = async () => {
+	// 	if (!currentUser) {
+	// 		return;
+	// 	}
+	// 	const res = await followApi.follow({ companyId: params.id, userId: currentUser?._id });
+	// 	setIsFollow(res.data);
+	// }
+
+
+
+	const toggleFollow = async () => {
+		try {
+			if (isFollow) {
+				await followApi.unFollow({
+					companyId: String(params.id),
+					userId: currentUser?._id,
+				});
+				message.success({
+					content: 'Unfollowed successfully',
+					duration: 2,
+					icon: <CheckOutlined />,
+				});
+				setIsFollow(false);
+				setCompany((prev) =>
+					prev && prev.followers !== undefined ? { ...prev, followers: prev.followers - 1 } : prev,
+				);
+			} else {
+				const response = await followApi.follow({
+					companyId: String(params.id),
+					userId: currentUser?._id,
+				});
+				message.success({
+					content: 'Followed successfully',
+					duration: 2,
+					icon: <CheckOutlined />,
+				});
+				setIsFollow(true);
+				setCompany((prev) =>
+					prev && prev.followers !== undefined ? { ...prev, followers: prev.followers + 1 } : prev,
+				);
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	};
+
+
+	//console.log('company', company);
+
 
 	return (
 		<main className="min-h-screen mt-[72px] bg-gray-100">
@@ -26,47 +138,86 @@ const Companies = () => {
 					<div className="col-span-2">
 						<div className="flex items-center space-x-4">
 							<div className="logo w-36 h-36 bg-white border-2 border-gray-300 rounded-sm overflow-hidden flex items-center justify-center">
-								<img
-									src="https://media.licdn.com/dms/image/v2/C560BAQFRxbxHAl5oew/company-logo_200_200/company-logo_200_200/0/1630668147018/fpt_corporation_logo?e=2147483647&v=beta&t=WW03ljSGZoL6rHvwTqGDIlWDqttr8Jii1yHjHnFm8Xk"
+								<Image
+									src={
+										company?.logo ||
+										'https://media.licdn.com/dms/image/v2/C560BAQFRxbxHAl5oew/company-logo_200_200/company-logo_200_200/0/1630668147018/fpt_corporation_logo?e=2147483647&v=beta&t=WW03ljSGZoL6rHvwTqGDIlWDqttr8Jii1yHjHnFm8Xk'
+									}
 									alt="ANDPAD VietNam Co., Ltd Vietnam Big Logo"
 									className="w-full h-full object-cover"
 								/>
 							</div>
 
 							<div className="flex flex-col w-full text-white">
-								<h1 className="text-lg font-semibold">ANDPAD VietNam Co., Ltd</h1>
+								<h1 className="text-lg font-semibold">{company?.name}</h1>
 								<div className="flex space-x-4">
 									<div className="flex items-center space-x-1">
-										<span><FaLocationDot /></span>
-										<div className="text-sm">Ho Chi Minh - Ha Noi</div>
+										<span>
+											<FaLocationDot />
+										</span>
+										<div className="text-sm">{company?.address}</div>
 									</div>
 									<div className="flex items-center space-x-1">
-										<span><FaLaptopCode /></span>
+										<span>
+											<FaLaptopCode />
+										</span>
 										<div className="text-sm">3 việc làm đang tuyển dụng </div>
 									</div>
 									<div className="flex items-center space-x-1">
 										<div>
 											<FaUserCheck />
 										</div>
-										<div className="text-sm">3 Follower</div>
+										<div className="text-sm">{company?.followers} Follower</div>
 									</div>
 								</div>
-								<div className="flex space-x-4 mt-4">
+								{/* <div className="flex space-x-4 mt-4">
 									<button
 										onClick={handleScrollToComment}
 										className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
 									>
-										Đánh giá
+										{t('company.btnReview')}
 									</button>
 
-									<button
-										onClick={toggleFollow}
-										className={`${
-											isFollow ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
-										} text-white py-2 px-4 rounded`}
-									>
-										{isFollow ? 'Đang theo dõi' : 'Theo dõi 230'}
-									</button>
+									{currentUser && (
+										<button
+											onClick={toggleFollow}
+											className={`${
+												isFollow ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+											} text-white py-2 px-4 rounded`}
+										>
+											{isFollow ? 'Đang theo dõi' : 'Theo dõi'}
+										</button>
+									)}
+								</div> */}
+
+								<div className="flex space-x-4 mt-4">
+									{isLoading ? (
+										<div className="w-28 h-10 bg-gray-300 rounded animate-pulse" />
+									) : (
+										<button
+											onClick={handleScrollToComment}
+											className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+										>
+											{t('company.btnReview')}
+										</button>
+									)}
+
+									{isLoading ? (
+										<div className="w-28 h-10 bg-gray-300 rounded animate-pulse" />
+									) : (
+										currentUser && (
+											<button
+												onClick={toggleFollow}
+												className={`${
+													isFollow
+														? 'bg-red-500 hover:bg-red-600'
+														: 'bg-green-500 hover:bg-green-600'
+												} text-white py-2 px-4 rounded`}
+											>
+												{isFollow ? t('company.following') : t('company.unfollow')}
+											</button>
+										)
+									)}
 								</div>
 							</div>
 						</div>
@@ -101,7 +252,16 @@ const Companies = () => {
 						{/* Thông tin chung */}
 						<div className="border p-4 bg-white rounded-md shadow-sm">
 							<h2 className="text-lg font-semibold">Thông tin chung</h2>
-							<p>... Nội dung thông tin chung ở đây ...</p>
+							<p>
+								The global leading technology, outsourcing and IT services group headquartered in
+								Vietnam with nearly US$2 billion in revenue and more than 27000 employees. Qualified
+								with CMMI Level 5 & ISO 27001:2013, ASPICE LEVEL 3, FPT Software delivers
+								world-class services in Smart factory, Digital platform, RPA, AI, IoT, Enterprise
+								Mobilization, Cloud, AR/VR, Embedded System, Managed service, Testing, Platform
+								modernization, Business Applications, Application Service, BPO and more services
+								globally from delivery centers across the United States, Japan, Europe, Korea,
+								China, Australia, Vietnam and the Asia Pacific.{' '}
+							</p>
 						</div>
 
 						{/* Giới thiệu công ty */}
@@ -111,20 +271,18 @@ const Companies = () => {
 							</h2>
 							<div className="">
 								No.1 Construction Tech Company in Japan
-								<p>
-									Our parent company, ANDPAD Inc., is No.1 cloud-based construction tech company in
-									Japan and providing the construction project management service with more than
-									410,000 users. ANDPAD covers from communication, site schedule arrangement,
-									quality check, order control to management improvement in the construction
-									industry.
-								</p>
-								<p>
+								<p
+									dangerouslySetInnerHTML={{
+										__html: company && company.description ? company.description : '',
+									}}
+								/>{' '}
+								{/* <p>
 									ANDPAD Vietnam is part of ANDPAD Inc. and was established in early January 2022 in
 									Vietnam Software engineers and development team in ANDPAD Vietnam enjoy dynamic
 									roles of SaaS product development within an international working environment, not
 									consuming tasks but more on creative engineering works for clients and users in
 									the construction industry.
-								</p>
+								</p> */}
 							</div>
 						</div>
 

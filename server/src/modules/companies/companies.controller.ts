@@ -39,8 +39,14 @@ export class CompaniesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.companiesService.findOne(+id);
+    return this.companiesService.findOneCompany(id);
   }
+
+  //get companies by name
+  // @Get('top')
+  // findTopCompany() {
+  //   return this.companiesService.getCompaniesHome();
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {

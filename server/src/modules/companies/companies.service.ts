@@ -13,6 +13,19 @@ export class CompaniesService {
     private readonly uploadsService: UploadsService,
   ) {}
 
+
+  
+/**
+ * Creates a new company entry in the database.
+ * 
+ * @param createCompanyDto - The data transfer object containing the company details.
+ * @param image - An optional image file to be uploaded and associated with the company.
+ * @returns The result of the company creation operation.
+ * 
+ * If an image is provided, it will be uploaded to a designated file storage service,
+ * and the returned URL will be saved in the company's details. Any errors during 
+ * the image upload process will be logged to the console.
+ */
   async create(
     createCompanyDto: CreateCompanyDto,
     image?: Express.Multer.File,
@@ -62,15 +75,11 @@ export class CompaniesService {
   }
 
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findOneCompany(id: string) {
+    return this.companyModels.findById(id);
   }
 
 
-
-  // update(id: number, updateCompanyDto: UpdateCompanyDto) {
-  //   return `This action updates a #${id} company`;
-  // }
 
   remove(id: number) {
     return `This action removes a #${id} company`;

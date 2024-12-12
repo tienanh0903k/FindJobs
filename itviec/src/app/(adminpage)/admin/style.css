@@ -12,3 +12,7 @@ background-color: #00b14f
     background-color: #00b14f; 
     color: white;  
   }
+
+.ant-btn.ant-btn-primary {
+    background-color: #00b14f;
+  }

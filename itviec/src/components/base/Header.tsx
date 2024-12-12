@@ -90,7 +90,7 @@ export const Header: React.FC = () => {
 						</li>
 					</ul>
 					<ul className="flex space-x-4 justify-end" style={{ flexBasis: '50%' }}>
-						<li className="relative">
+						{/* <li className="relative">
 							<button className="relative text-white" onClick={toggleNotifications}>
 								<FaBell className="h-6 w-6" />
 								{unreadCount > 0 && (
@@ -100,7 +100,6 @@ export const Header: React.FC = () => {
 								)}
 							</button>
 
-							{/* Dropdown danh sách thông báo */}
 							{showNotifications && (
 								<div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg overflow-hidden">
 									<div className="py-2">
@@ -117,6 +116,38 @@ export const Header: React.FC = () => {
 										)}
 									</div>
 								</div>
+							)}
+						</li> */}
+						<li className="relative">
+							{currentUser && (
+								<>
+									<button className="relative text-white" onClick={toggleNotifications}>
+										<FaBell className="h-6 w-6" />
+										{unreadCount > 0 && (
+											<span className="absolute top-0 right-0 inline-block w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
+												{unreadCount}
+											</span>
+										)}
+									</button>
+
+									{showNotifications && (
+										<div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg overflow-hidden">
+											<div className="py-2">
+												{notifications.length === 0 ? (
+													<p className="text-center text-gray-500">Không có thông báo</p>
+												) : (
+													notifications.map((notif) => (
+														<div key={notif.id} className="px-4 py-2 border-b border-gray-200">
+															<p className={`${notif.isRead ? 'text-gray-500' : 'text-black'}`}>
+																{notif.message}
+															</p>
+														</div>
+													))
+												)}
+											</div>
+										</div>
+									)}
+								</>
 							)}
 						</li>
 
@@ -142,11 +173,6 @@ export const Header: React.FC = () => {
 										<Dropdown
 											overlay={
 												<Menu>
-													<Menu.Item key="profile">
-														<Link href="/profile" className="text-gray-700 hover:bg-gray-100">
-															Thông tin cá nhân
-														</Link>
-													</Menu.Item>
 													{(currentUser?.user?.role === 'ADMIN' ||
 														currentUser?.user?.role === 'HR') && (
 														<Menu.Item key="admin">
@@ -158,6 +184,18 @@ export const Header: React.FC = () => {
 															</Link>
 														</Menu.Item>
 													)}
+													<Menu.Item key="profile">
+														<Link href="/profile" className="text-gray-700 hover:bg-gray-100">
+															Thông tin cá nhân
+														</Link>
+													</Menu.Item>
+
+													<Menu.Item key="wallet">
+														<Link href="/wallet" className="text-gray-700 hover:bg-gray-100">
+															Số dư tài khoản
+														</Link>
+													</Menu.Item>
+
 													<Menu.Item key="logout">
 														<button
 															type="button"
@@ -178,14 +216,14 @@ export const Header: React.FC = () => {
 												className="flex items-center text-white"
 												onClick={(e) => e.preventDefault()}
 											>
-												<span className="text-sm">Xin chào, {currentUser.user?.name}</span>
+												<span className="text-sm">{t('home.hello')}, {currentUser.user?.name}</span>
 											</a>
 										</Dropdown>
 									</>
 								) : (
 									// Nếu chưa có currentUser (chưa đăng nhập)
 									<Link href="/login" className="text-white">
-										Đăng nhập
+										{t('home.buttonLogin')}
 									</Link>
 								)}
 							</div>

@@ -9,11 +9,18 @@ const useModal = () => {
   const [modalData, setModalData] = useState<any>(null);
 
 
-	const openModal = useCallback((type: ModalType, data: any = null) => {
+	// const openModal = useCallback((type: ModalType, data: any = null) => {
+  //   setVisible(true);
+  //   setModalType(type);
+  //   setModalData(data);
+  // }, []);
+
+  const openModal = useCallback((type: ModalType | null = null, data: any = null) => {
     setVisible(true);
     setModalType(type);
     setModalData(data);
   }, []);
+  
 	const closeModal = useCallback(() => {
     setVisible(false);
     setModalData(null); 

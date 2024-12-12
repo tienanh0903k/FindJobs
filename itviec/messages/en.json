@@ -4,11 +4,22 @@
         "title": "Hot job for you",
         "title2": "Top employers",
         "description": "Tìm kiếm và tìm việc làm hiệu quả",
-        "image": "https://example.com/job-search.jpg"
+        "image": "https://example.com/job-search.jpg",
+        "buttonSearch": "Search",
+        "buttonLogin": "Login",
+        "hello": "Hello",
+        "suggest": "Suggested for you:",
+        "nameSelect": "Location",
+        "namePlaceHolder": "Enter jobs name..."
     },
     "header": {
         "item1": "IT Jobs",
         "item2": "Top IT Company",
         "item3": "Blog"
+    },
+    "company": {
+        "btnReview": "Review",
+        "unfollow": "Follow",
+         "following": "Following"
     }
 }

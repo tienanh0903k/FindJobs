@@ -50,15 +50,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 				{ key: '/', label: <Link href="/">Home</Link> },
 
 				{ key: '/admin/dashboard', label: <Link href="/admin/dashboard">Dashboard</Link> },
-				{ key: '/admin/company', label: <Link href="/admin/company">Company</Link> },
+				{ key: '/admin/company', label: <Link href="/admin/company">Công ty</Link> },
 				{ key: '/admin/application', label: <Link href="/admin/application">Application</Link> },
-				{ key: '/admin/blog', label: <Link href="/admin/blog">Blog</Link> },
-				{ key: '/admin/users', label: <Link href="/admin/blog">Users</Link> },
-				{ key: '/admin/posts', label: <Link href="/admin/posts">Job list</Link> },
-				{ key: '/message', label: <Link href="/message">Message</Link> },
+				{ key: '/admin/blog', label: <Link href="/admin/blog">Tin tức</Link> },
+				{ key: '/admin/users', label: <Link href="/admin/blog">Người dùng</Link> },
+				{ key: '/admin/posts', label: <Link href="/admin/posts">Bài đăng</Link> },
+				{ key: '/message', label: <Link href="/message">Tin nhắn</Link> },
 
 				...(view_Role
-					? [{ key: '/admin/roles', label: <Link href="/admin/roles">Roles</Link> }]
+					? [{ key: '/admin/roles', label: <Link href="/admin/roles">Vai trò</Link> }]
 					: []),
 			];
 			setMenuItems(items);
