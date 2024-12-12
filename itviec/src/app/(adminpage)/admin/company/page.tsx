@@ -22,10 +22,10 @@ const CompanyPage: React.FC = () => {
 		setIsLoading(true);
 		try {
 			const response = await companyApi.getAllCompany({ page, limit });
-			setCompanies(response.data.items);
+			setCompanies(response.items);
 			setPagination((prev) => ({
 				...prev,
-				total: response.data.total,
+				total: response.items.total,
 			}));
 		} catch (error) {
 			console.error('Error fetching companies:', error);

@@ -18,6 +18,8 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.module';
 // import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { MailModule } from './modules/mail/mail.module';
+import { FollowerModule } from './modules/follower/follower.module';
+import { TransformInterceptor } from './common/interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -32,11 +34,11 @@ import { MailModule } from './modules/mail/mail.module';
       inject: [ConfigService],
     }),
 
-      // ElasticsearchModule.registerAsync({
-      //   useFactory: () => ({
-      //     node: 'http://localhost:9200',
-      //   }),
-      // }),
+    // ElasticsearchModule.registerAsync({
+    //   useFactory: () => ({
+    //     node: 'http://localhost:9200',
+    //   }),
+    // }),
     UserModule,
     CompaniesModule,
     AuthModule,
@@ -49,10 +51,14 @@ import { MailModule } from './modules/mail/mail.module';
     ApplicationModule,
     PaymentModule,
     ElasticSearchModule,
-    MailModule
+    MailModule,
+    FollowerModule,
     // ElasticsearchModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy],
+  providers: [AppService, GoogleStrategy, {
+    provide: 'APP_INTERCEPTOR',
+    useClass: TransformInterceptor
+  }]
 })
 export class AppModule {}

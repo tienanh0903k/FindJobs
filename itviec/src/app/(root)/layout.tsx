@@ -5,6 +5,7 @@ import {Header} from '@/components/base/Header';
 import { cookies } from 'next/headers';
 import { AppProvider } from '@/context/AppProvider';
 import { ModalProvider } from '@/context/ModalProvider';
+import Footer from '@/components/base/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
 						<div className="mt-[65px]">
 							{children}
 						</div>
+					<Footer />
 					
 				{/* </AppProvider> */}
 			</div>

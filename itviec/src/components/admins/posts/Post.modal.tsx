@@ -27,9 +27,11 @@ const JobPostingModal: React.FC<JobPostingModalProps> = ({ visible, onClose, onS
             title="Thêm tin tuyển dụng"
             visible={visible}
             onCancel={onClose}
-            footer={null} // Không hiển thị footer mặc định
+            width={800}
+            centered 
+            footer={null} 
         >
-            <Form form={form} onFinish={handleFinish}>
+            <Form form={form} onFinish={handleFinish} layout='horizontal'>
                 <Form.Item
                     label="Tên vị trí"
                     name="position"

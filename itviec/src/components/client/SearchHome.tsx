@@ -4,6 +4,7 @@ import { CHAT_HISTORY } from '@/constants';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { FaClock } from 'react-icons/fa';
+import Image from '../base/Image';
 
 interface RecentSearch {
 	keyword: string;
@@ -59,7 +60,7 @@ const SearchHome = () => {
 
 				<form className="flex items-center max-w-[95%] gap-2">
 					<select className="bg-white text-black placeholder-black px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
-						<option>Location</option>
+						<option>{t('home.nameSelect')}</option>
 						<option value="1">Hà Nội</option>
 						<option value="2">Hồ Chí Minh</option>
 						<option value="3">Đà Nẵng</option>
@@ -67,8 +68,8 @@ const SearchHome = () => {
 
 					<input
 						type="text"
-						placeholder="Tìm kiếm việc làm..."
-						className="relative bg-white text-black placeholder-black px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 flex-grow"
+						placeholder={t('home.namePlaceHolder')}
+						className="relative bg-white text-black placeholder-slate-500 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 flex-grow"
 						value={query}
 						onChange={(e) => setQuery(e.target.value)}
 					/>
@@ -77,7 +78,7 @@ const SearchHome = () => {
 						type="submit"
 						className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
 					>
-						Tìm kiếm
+						{t('home.buttonSearch')}
 					</button>
 				</form>
 				{query && (
@@ -85,7 +86,7 @@ const SearchHome = () => {
 						<div className="space-y-4 overflow-y-auto max-h-[500px]">
 							<div className="flex items-center justify-between">
 								<h2 className="text-lg font-semibold flex items-center gap-2 text-black">
-                  <FaClock className="h-4 w-4 text-gray-400" />
+									<FaClock className="h-4 w-4 text-gray-400" />
 									Từ khóa tìm kiếm gần đây
 								</h2>
 								<button className="text-green-600 text-sm hover:underline">Xóa tất cả</button>
@@ -116,7 +117,12 @@ const SearchHome = () => {
 										key={index}
 										className="flex gap-4 p-4 rounded-lg border border-gray-200 hover:border-green-500 transition-colors"
 									>
-										<img src={job.logo} alt={`${job.company} logo`} className="h-12 w-12 rounded" />
+										<Image
+											src={job.logo}
+											alt={`${job.company} logo`}
+											className="h-12 w-12 rounded"
+										/>
+										{/* <img src={job.logo} alt={`${job.company} logo`} className="h-12 w-12 rounded" /> */}
 										<div>
 											<h3 className="font-medium text-green-600 hover:underline">{job.title}</h3>
 											<p className="text-sm text-gray-600">{job.company}</p>
@@ -130,7 +136,7 @@ const SearchHome = () => {
 				)}
 
 				<div className="flex mt-4">
-					<div className="rounded-lg p-2">Gợi ý cho bạn:</div>
+					<div className="rounded-lg p-2">{t('home.suggest')}</div>
 					<ul className="flex flex-wrap ml-4 space-x-2">
 						<li className="">
 							<a
