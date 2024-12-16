@@ -48,16 +48,21 @@ export class PostsService implements OnModuleInit {
   //   return await this.postsModel.create(createJobPostingDto);
   // }
 
-  async create(createJobPostingDto: CreatePostDto): Promise<any> {
-    // const createdPost = await this.postsModel.create(createJobPostingDto);
-
+  async createJobPosting(createJobPostingDto: CreatePostDto): Promise<any> {
     try {
-      const createdPost = await this.esService.indexPost(createJobPostingDto);
-      return createdPost;
+      const newJobPosting = await this.postsModel.create(createJobPostingDto);
+      const indexedJobPosting = await this.esService.indexPost(newJobPosting);
+
+      console.log('indexedJobPosting', indexedJobPosting);
+      
+      return indexedJobPosting;
     } catch (error) {
-      console.error('Elasticsearch sync failed', error);
+      console.error('Lỗi trong quá trình tạo bài đăng hoặc đồng bộ Elasticsearch:', error);
+      
+      throw new Error('Không thể tạo bài đăng hoặc đồng bộ với Elasticsearch.');
     }
   }
+  
 
   //---------------------------------------GET---------------------------------------------
   /**

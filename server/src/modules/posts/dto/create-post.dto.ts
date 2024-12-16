@@ -1,80 +1,78 @@
-// src/job-postings/dto/create-job-posting.dto.ts
-import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsArray, IsOptional, IsDate } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsArray, IsOptional, IsDate, IsInt, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreatePostDto {
     @IsString()
     @IsNotEmpty()
-    position: string; // Tên vị trí
+    position: string; 
 
     @IsString()
     @IsNotEmpty()
-    description: string; // Mô tả công việc
+    description: string; 
+
+    // @IsString()
+    // requirements: string;
 
     @IsString()
     @IsNotEmpty()
-    requirements: string; // Các yêu cầu
+    companyName: string;
 
     @IsString()
     @IsNotEmpty()
-    companyName: string; // Tên công ty
+    location: string;
 
     @IsString()
     @IsNotEmpty()
-    location: string; // Địa điểm
+    salary: string; 
 
-    @IsString()
-    @IsNotEmpty()
-    salary: string; // Mức lương
+    // @IsString()
+    // workingHours: string; 
 
-    @IsString()
-    @IsNotEmpty()
-    workingHours: string; // Giờ làm việc
-
-    @Transform(({ value }) => new Date(value)) // Chuyển đổi từ chuỗi sang Date
+    @Transform(({ value }) => new Date(value)) 
     @IsDate()
     @IsNotEmpty()
-    deadline: Date; // Ngày hết hạn
+    deadline: Date; 
 
-    @IsString()
-    @IsNotEmpty()
-    contactInfo: string; // Thông tin liên hệ
+    // @IsString()
+    // @IsNotEmpty()
+    // contactInfo: string; 
 
-    @IsString()
-    @IsNotEmpty()
-    status: string; // Trạng thái
+    @IsBoolean()
+    status: boolean = true; 
 
-    @Transform(({ value }) => new Date(value)) // Chuyển đổi từ chuỗi sang Date
+    @Transform(({ value }) => new Date(value)) 
     @IsDate()
-    @IsNotEmpty()
-    postedDate: Date; // Ngày đăng
+    postedDate: Date; 
 
     @IsString()
-    @IsNotEmpty()
-    experience: string; // Kinh nghiệm
+    experience: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    numberOfPositions: number; // Số lượng vị trí
+    // @IsNumber()
+    // @IsInt()
+    // @Min(1)
+    numberOfPositions: number;
 
     @IsArray()
-    @IsNotEmpty()
-    tags: string[]; // Tag liên quan đến công việc
+    tags: string[]; 
 
     @IsOptional()
     @IsString()
-    image?: string; // Hình ảnh (tuỳ chọn)
+    image?: string;
 
-    @IsOptional()
+    @IsOptional() 
     @IsBoolean()
-    isHot?: boolean; // Trường để đánh dấu tin tuyển dụng nổi bật
+    isHot?: boolean;
 
-    @IsString()
-    @IsNotEmpty()
-    companyId: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // companyId: string;
 
     @IsString()
     @IsNotEmpty()
     userId: string;
+
+    constructor() {
+        this.postedDate = this.postedDate ?? new Date();
+    }
 
 }

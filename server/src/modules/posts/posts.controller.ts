@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Req, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Param, Query, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 // import { AuthGuard } from '../auth/guards/auth.guard';
 import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
+import { ResponseMessage } from '../auth/decorator/response_message.decorator';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -23,8 +25,9 @@ export class PostsController {
    * POST: api/posts/
    */
   @Post()
+  @ResponseMessage("Create post successfully")
   create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+    return this.postsService.createJobPosting(createPostDto);
   }
   //---------------------------------------GET---------------------------------------------
   /**
@@ -33,7 +36,7 @@ export class PostsController {
    * @returns
    */
   @Get('me')
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   async getMyPost(@Req() req: any) {
     //console.log("----",req.header);
     return this.postsService.findOne(req.user.sub);

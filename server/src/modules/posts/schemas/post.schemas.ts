@@ -1,63 +1,62 @@
 
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+    import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+    import { HydratedDocument, Types } from 'mongoose';
 
-export type PostDocument = HydratedDocument<Post>;
+    export type PostDocument = HydratedDocument<Post>;
 
-@Schema()
-export class Post {
-    @Prop({ required: true })
-    position: string; // Tên vị trí
+    @Schema()
+    export class Post {
+        @Prop({ required: true })
+        position: string; 
 
-    @Prop({ required: true })
-    description: string; // Mô tả công việc
+        @Prop({ required: true })
+        description: string; 
 
-    @Prop({ required: true })
-    requirements: string; // Các yêu cầu
+        @Prop({ required: false })
+        requirements: string; 
 
-    @Prop({ required: true })
-    companyName: string; // Tên công ty
+        @Prop({ required: false })
+        companyName: string; 
 
-    @Prop({ required: true })
-    location: string; // Địa điểm
+        @Prop({ required: true })
+        location: string; 
 
-    @Prop({ required: true })
-    salary: string; // Mức lương
+        @Prop({ required: true })
+        salary: string; 
 
-    @Prop({ required: true })
-    workingHours: string; // Giờ làm việc
+        @Prop({ required: false })
+        workingHours: string; 
 
-    @Prop({ required: true })
-    deadline: Date; // Ngày hết hạn
+        @Prop({ required: true })
+        deadline: Date; 
 
-    @Prop({ required: true })
-    contactInfo: string; // Thông tin liên hệ
+        @Prop({ required: false })
+        contactInfo: string; 
 
-    @Prop({ required: true })
-    status: string; // Trạng thái
+        @Prop({ required: false })  
+        status: boolean; 
 
-    @Prop({ required: true })
-    postedDate: Date; // Ngày đăng
+        // @Prop({ required: true })
+        // postedDate: Date; 
 
-    @Prop({ required: true })
-    experience: string; // Kinh nghiệm (ví dụ: "2 năm")
+        // @Prop({ required: true })
+        experience: string; 
 
-    @Prop({ required: true })
-    numberOfPositions: number; // Số lượng vị trí (ví dụ: 3)
+        @Prop({ required: true })
+        numberOfPositions: number;
 
-    @Prop({ type: [String], required: true })
-    tags: string[]; // Tag liên quan đến công việc
+        @Prop({ type: [String], required: true })
+        tags: string[]; 
 
-    @Prop({ default: false })
-    isHot: boolean; 
+        @Prop({ default: false })
+        isHot: boolean; 
 
+        @Prop({ required: false, ref: 'Companies', type: Types.ObjectId })
+        companyId: Types.ObjectId;
 
-    @Prop({ required: true, ref: 'Companies', type: Types.ObjectId })
-    companyId: Types.ObjectId;
+        @Prop({ required: false })
+        userId: string; 
 
-    @Prop({ required: true })
-    userId: string; 
+    }
 
-}
-
-export const PostSchemas = SchemaFactory.createForClass(Post);
+    export const PostSchemas = SchemaFactory.createForClass(Post);

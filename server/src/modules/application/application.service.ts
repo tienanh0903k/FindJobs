@@ -123,7 +123,6 @@ export class ApplicationService {
 
 
 
-
   async createApplication(data: CreateApplocationDto) {
     const exist = await this.applicationModel.findOne({
       userId: data.userId,
@@ -138,4 +137,21 @@ export class ApplicationService {
     return newApplication.save();
     
   }
+
+
+
+  async updateApplication(id: string, newStatus: string) {
+    const application = await this.applicationModel.updateOne(
+      { _id: id },
+      { $set: { status: newStatus } }
+    );
+    
+    return application;
+  }
+
+
+
+
+
+  //put application
 }
