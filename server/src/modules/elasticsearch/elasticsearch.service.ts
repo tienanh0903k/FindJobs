@@ -94,12 +94,18 @@ export class ElasticSearchService {
 
   async indexPost(post) {
     try {
-      const { _id, ...postBody } = post.toObject();
-      await this.esService.index({
+      const postData = post.toObject ? post.toObject() : post;
+      const { _id, ...postBody } =postData
+      const result = await this.esService.index({
         index: this.ELASTICSEARCH_INDEX,
         id: _id.toString(),
         body: postBody,
       });
+      return {
+        id: result._id,
+        index: result._index,
+        version: result._version,
+      }
     } catch (error) {
       console.error('Error indexing post:', error);
     }

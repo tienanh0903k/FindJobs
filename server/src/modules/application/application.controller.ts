@@ -7,6 +7,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Put,
   Query,
   Req,
   UploadedFile,
@@ -17,6 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApplicationService } from './application.service';
 import { CreateApplocationDto } from './dto/create-application.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { ResponseMessage } from '../auth/decorator/response_message.decorator';
 
 @Controller('application')
 export class ApplicationController {
@@ -77,6 +79,20 @@ export class ApplicationController {
     } catch (error) {
        console.error('Error creating application:', error);
         throw new HttpException('Error creating application', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
+
+
+  @Put()
+  @ResponseMessage("Cap nhat thanh cong")
+  async updateApplication(@Body() data: any) {
+    try {
+      return await this.applicationService.updateApplication(data.id, data.status);
+    } catch (error) {
+      console.error('Error updating application:', error);
+      throw new HttpException('Error updating application', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
