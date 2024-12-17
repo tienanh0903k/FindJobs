@@ -1,5 +1,5 @@
 import { jwtVerify, JWTVerifyResult } from 'jose';
-
+import { formatDistanceToNow } from 'date-fns';
 /**
  * Decodes a JSON Web Token (JWT) with the given secret key.
  *
@@ -93,3 +93,19 @@ export const truncateString = (str: any, num: any) => {
     if (!str) return '';
     return str.length > num ? str.slice(0, num) + '...' : str;
 };
+
+
+
+
+
+
+
+export const TimeAgo = ({date}: {
+	date: Date
+}) => {
+	const timeAgo = formatDistanceToNow(new Date(date), {
+		addSuffix: true,
+	})
+
+	return timeAgo;
+}

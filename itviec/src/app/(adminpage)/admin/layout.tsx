@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Layout, Menu, MenuProps, theme } from 'antd';
+import { Avatar, Badge, Breadcrumb, Button, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'antd';
 import 'antd/dist/reset.css';
 import './style.css';
 import { RootStyleRegistry } from '@/components/admins/RootStyleRegistry';
@@ -11,6 +11,7 @@ import { useAppSelector } from '@/hook/useSelector';
 import { IPermissionItem } from '@/app/types/interface';
 import { ALL_MODULES, ALL_PERMISSIONS } from '@/constants';
 import { ModalProvider } from '@/context/ModalProvider';
+import { BellOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -84,22 +85,44 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 		]);
 	}, [pathname]);
 
+
+	const menu = (
+		<Menu>
+		  <Menu.Item key="1">
+			<Button type="link">Đăng xuất</Button>
+		  </Menu.Item>
+		</Menu>
+	  );
+
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
 			<Sider collapsible>
 				<div className="logo" style={{ height: 32, margin: 16 }}>
 					<h3 className="text-2xl font-bold text-white">Admin page</h3>
 				</div>
-				<Menu
-					theme="dark"
-					mode="inline"
-					selectedKeys={[activeMenu]} // Thiết lập trạng thái active
-					items={menuItems}
-				/>
+				<Menu theme="dark" mode="inline" selectedKeys={[activeMenu]} items={menuItems} />
 			</Sider>
 			<Layout>
 				<ModalProvider>
-					<Header style={{ padding: 0, background: colorBgContainer }} />
+					<Header
+						style={{
+							padding: 0,
+							background: colorBgContainer,
+							display: 'flex',
+							justifyContent: 'flex-end',
+							alignItems: 'center',
+							paddingRight: '16px',
+						}}
+					>
+						<Space>
+							<Badge count={5} dot>
+								<BellOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
+							</Badge>
+							<Dropdown overlay={menu} trigger={['click']}>
+								<Avatar size="default" icon={<UserOutlined />} />
+							</Dropdown>	
+						</Space>
+					</Header>
 					<Content style={{ margin: '0 16px' }}>
 						<Breadcrumb style={{ margin: '16px 0' }}>{breadcrumbItems}</Breadcrumb>
 						<div

@@ -23,7 +23,7 @@ export default function RootLayout({
 	// const cookieStore = cookies();
 	// const sessionToken = cookieStore.get('sessionToken')?.value || ''; 	
 	return (
-			<div>
+			<div className=''>
 				{/* <header className="bg-custom-gradient border-b border-border-custom h-16 w-full fixed top-0 left-0 right-0 z-50">
 					<Header />
 				</header> */}
