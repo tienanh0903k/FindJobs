@@ -14,13 +14,15 @@
 
 
 import React from 'react';
+import Image from './Image';
 
 const Footer = () => {
 	return (
-		<footer className="bg-gradient-to-r from-red-950 to-black text-white py-8">
+		<footer className="bg-gradient-to-r from-red-950 to-black text-white py-8 mt-8 sm:mt-[50%] md:mt-[50%] lg:mt-20">
+
 			<div className="w-[80%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 				<div className="flex flex-col">
-					<img src="/path-to-logo.png" alt="ITViec Logo" className="mb-4 w-32" />
+					<Image src="#" alt="ITViec Logo" className="mb-4 w-32" />
 					<p className="text-gray-400">Ít nhưng mà chất</p>
 					<div className="flex space-x-4 mt-4">
 						<a href="#" className="text-gray-400 hover:text-white">

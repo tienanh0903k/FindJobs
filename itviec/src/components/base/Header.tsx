@@ -13,6 +13,9 @@ import { useNotifyCustom } from '@/hook/Notification/useNotification';
 import setLanguageValue from '@/app/api/auth/set-language/route';
 import { useTranslations } from 'next-intl';
 import { Dropdown, Menu } from 'antd';
+import { socket } from '@/socket/socketClient';
+
+
 
 export const Header: React.FC = () => {
 	const router = useRouter();
@@ -25,7 +28,11 @@ export const Header: React.FC = () => {
 	const currentUser: any = useSelector((state: RootState) => state.auth?.currentUser);
 	//console.log("NGUOI DUNG HT---",currentUser);
 
-	const { notifications, unreadCount, showNotifications, toggleNotifications } = useNotifyCustom();
+	const { notifications, unreadCount, showNotifications, toggleNotifications, isSeen } = useNotifyCustom(
+		currentUser?.user?._id,
+	);
+
+	console.log('notifications', notifications)
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -40,6 +47,29 @@ export const Header: React.FC = () => {
 			setIsLoading(false);
 		}, 500);
 	}, []);
+
+
+	useEffect(() => {
+			if (currentUser?.user?._id) {
+				socket.emit("addUser", { userId: currentUser.user._id });
+			}
+		}, [currentUser]);
+
+
+	// useEffect(() => {
+	// 	socket.on('statusChanged', (data: any) => {
+	// 	  console.log('Nhận thông báo:', data);
+	// 	//   setNotifications((prevNotifications) => [
+	// 	// 	...prevNotifications,
+	// 	// 	{ id: data.applicationId, message: data.message, isRead: false }
+	// 	//   ]);
+	// 	//   setUnreadCount((prevCount) => prevCount + 1); // Tăng số lượng thông báo chưa đọc
+	// 	});
+	
+	// 	return () => {
+	// 	  socket.off('statusChanged'); // Dọn dẹp khi component unmount
+	// 	};
+	//   }, []);
 
 	const handleLanguageChange = async (event: any) => {
 		const selectedLocale = event.target.value;
@@ -118,7 +148,7 @@ export const Header: React.FC = () => {
 								</div>
 							)}
 						</li> */}
-						<li className="relative">
+						{/* <li className="relative">
 							{currentUser && (
 								<>
 									<button className="relative text-white" onClick={toggleNotifications}>
@@ -138,6 +168,50 @@ export const Header: React.FC = () => {
 												) : (
 													notifications.map((notif) => (
 														<div key={notif.id} className="px-4 py-2 border-b border-gray-200">
+															<p className={`${notif.isRead ? 'text-gray-500' : 'text-black'}`}>
+																{notif.message}
+															</p>
+														</div>
+													))
+												)}
+											</div>
+										</div>
+									)}
+								</>
+							)}
+						</li> */}
+
+						<li className="relative">
+							{currentUser && (
+								<>
+									<button className="relative text-white" onClick={toggleNotifications}>
+										<FaBell className="h-6 w-6" />
+										{unreadCount > 0 && (
+											<span className="absolute top-0 right-0 inline-block w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
+												{unreadCount}
+											</span>
+										)}
+									</button>
+
+									{/* Dropdown Thông Báo */}
+									{showNotifications && (
+										<div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg overflow-hidden">
+											<div className="py-2">
+												{notifications.length === 0 ? (
+													<p className="text-center text-gray-500">Không có thông báo</p>
+												) : (
+													notifications.map((notif) => (
+														<div
+															key={notif.id}
+															className="px-4 py-2 border-b border-gray-200"
+															onClick={() => {
+																// Gọi hàm isSeen để đánh dấu thông báo là đã đọc
+																if (!notif.isRead) {
+																	// Cập nhật trạng thái thông báo là đã đọc
+																	isSeen(notif.id); // Hàm này cần được định nghĩa trong hook hoặc context
+																}
+															}}
+														>
 															<p className={`${notif.isRead ? 'text-gray-500' : 'text-black'}`}>
 																{notif.message}
 															</p>
@@ -191,7 +265,7 @@ export const Header: React.FC = () => {
 													</Menu.Item>
 
 													<Menu.Item key="wallet">
-														<Link href="/wallet" className="text-gray-700 hover:bg-gray-100">
+														<Link href="/wallets" className="text-gray-700 hover:bg-gray-100">
 															Số dư tài khoản
 														</Link>
 													</Menu.Item>
@@ -216,7 +290,9 @@ export const Header: React.FC = () => {
 												className="flex items-center text-white"
 												onClick={(e) => e.preventDefault()}
 											>
-												<span className="text-sm">{t('home.hello')}, {currentUser.user?.name}</span>
+												<span className="text-sm">
+													{t('home.hello')}, {currentUser.user?.name}
+												</span>
 											</a>
 										</Dropdown>
 									</>

@@ -24,12 +24,15 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.4.5",
-    "@nestjs/websockets": "^10.4.5",
+    "@nestjs/websockets": "^10.4.15",
     "@prisma/client": "^5.21.0",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "redis": "^4.7.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "socket-gateway": "file:",
-    "socket.io": "^4.8.0"
+    "socket.io": "^4.8.0",
+    "socket.io-redis": "^6.1.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

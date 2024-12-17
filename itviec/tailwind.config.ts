@@ -26,19 +26,35 @@ const config: Config = {
 			// animation
 			keyframes: {
 				ripple: {
-					'0%': {
-						transform: 'scale(1)',
-						opacity: '1',
-					},
-					'100%': {
-						transform: 'scale(3)',
-						opacity: '0',
-					},
+				  '0%': {
+					transform: 'scale(1)',
+					opacity: '1',
+				  },
+				  '100%': {
+					transform: 'scale(3)',
+					opacity: '0',
+				  },
 				},
-			},
-			animation: {
+				fadeIn: {
+				  '0%': { opacity: '0' },
+				  '100%': { opacity: '1' },
+				},
+				fadeInCollapse: {
+				  '0%': { maxHeight: '0' },
+				  '100%': { maxHeight: '7700px' },  
+				},
+
+				fadeOutCollapse: {
+					'0%': {  maxHeight: '7700px' },
+					'100%': {  maxHeight: '0' },
+				  },
+			  },
+			  animation: {
 				ripple: 'ripple 1.5s infinite',
-			},
+				fadeIn: 'fadeIn 1s ease-in-out',
+				fadeInCollapse: 'fadeInCollapse 1s ease-in-out',  
+				fadeOutCollapse: 'fadeOutCollapse 2s ease-in-out',
+			  },
 		},
 	},
 	plugins: [],

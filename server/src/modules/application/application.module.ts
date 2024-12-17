@@ -8,6 +8,7 @@ import { PostsModule } from '../posts/posts.module';
 import { Post, PostSchemas } from '../posts/schemas/post.schemas';
 import { AuthModule } from '../auth/auth.module';
 import { PermissionsModule } from '../permissions/permissions.module';
+import { NotifyModule } from '../notify/notify.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { PermissionsModule } from '../permissions/permissions.module';
     UploadsModule,
     PostsModule,
     AuthModule,
-    PermissionsModule
+    PermissionsModule,
+    NotifyModule
   ],
   controllers: [ApplicationController],
   providers: [ApplicationService],

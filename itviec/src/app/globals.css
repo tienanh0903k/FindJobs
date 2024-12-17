@@ -85,3 +85,26 @@ body {
 .swiper-button-prev {
 	left: 10px;
 }
+
+
+.search-bar {
+	position: sticky;
+  z-index: 111;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+
+
+
+
+
+
+
+
+.ant-select-focused .ant-select-selector {
+	border-color: transparent !important; /* Bỏ màu border */
+	box-shadow: none !important; /* Bỏ hiệu ứng box-shadow */
+	outline: none !important; /* Bỏ outline */
+  }

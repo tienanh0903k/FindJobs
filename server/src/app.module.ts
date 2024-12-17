@@ -20,6 +20,7 @@ import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.modul
 import { MailModule } from './modules/mail/mail.module';
 import { FollowerModule } from './modules/follower/follower.module';
 import { TransformInterceptor } from './common/interceptors/response.interceptor';
+import { NotifyModule } from './modules/notify/notify.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { TransformInterceptor } from './common/interceptors/response.interceptor
     ElasticSearchModule,
     MailModule,
     FollowerModule,
+    NotifyModule,
     // ElasticsearchModule,
   ],
   controllers: [AppController],

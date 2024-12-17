@@ -7,19 +7,50 @@ import {
   OnGatewayDisconnect,
   ConnectedSocket,
 } from '@nestjs/websockets';
+import { createClient } from '@redis/client';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3000',
+    origin: "*",
   },
 })
-@WebSocketGateway()
-export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer()
-  server: Server;
 
+@WebSocketGateway()
+
+export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer() server: Server;
+  private redisClient: any;
   private userSocketMap = new Map<number, string>();
+
+  constructor() {
+    this.redisClient = createClient({
+      url: 'redis://localhost:6379',
+    });
+
+    this.redisClient.connect();
+  }
+
+  async onModuleInit() {
+    await this.redisClient.subscribe(
+      'applicationStatusChanged',
+      (message: string) => {
+        const data = JSON.parse(message);
+        console.log('Received message from Redis:', data);
+        if (data.userId) {
+          this.sendNotificationToClient(data.userId, data);
+        }
+        // Received message from Redis: {
+        //   applicationId: '675bf5036742fe9bd8350a40',
+        //   notify: 'Trạng thái của đơn ứng tuyển đã được cập nhật thành:pending...'
+        // }
+
+        // this.server.emit('statusChanged', data);
+      },
+    );
+
+    console.log('WebSocket Gateway Initialized and Redis client subscribed');
+  }
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
@@ -71,6 +102,19 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.log(`Message sent from ${sender_id} to ${receive_id}`);
     } else {
       console.log(`User ${receive_id} is not connected.`);
+    }
+  }
+
+
+
+  //phat thong bao cho cloent by id
+  private sendNotificationToClient(userId: any, data: any) {
+    const clientSocketId = this.userSocketMap.get(userId);
+    console.log('first', clientSocketId)
+    if (clientSocketId) {
+      this.server.to(clientSocketId).emit('statusChanged', data);
+    } else {
+      console.log(`User with ID ${userId} is not connected.`);
     }
   }
 }

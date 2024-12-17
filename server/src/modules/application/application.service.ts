@@ -5,14 +5,25 @@ import { Model } from 'mongoose';
 import { UploadsService } from '../uploads/uploads.service';
 import { Post } from '../posts/schemas/post.schemas';
 import { CreateApplocationDto } from './dto/create-application.dto';
+import { NotifyDto } from '../notify/dto/create-notify.dto';
+import { NotifyService } from '../notify/notify.service';
+import { createClient } from 'redis';
+// import { HttpService } from '@nestjs/axios';
+
 
 @Injectable()
 export class ApplicationService {
+  private redisClient;
   constructor(
     @InjectModel(Application.name) private applicationModel: Model<Application>,
     @InjectModel(Post.name) private postsModel: Model<Post>,
     private readonly uploadsService: UploadsService,
-  ) {}
+    private readonly notifyService: NotifyService,
+    // private readonlyhttpServiceHttpService
+  ) {
+    this.redisClient = createClient({ url: 'redis://localhost:6379' });
+    this.redisClient.connect();
+  }
 
   async uploadApplication(file: Express.Multer.File, applicationData) {
     if (
@@ -141,11 +152,34 @@ export class ApplicationService {
 
 
   async updateApplication(id: string, newStatus: string) {
-    const application = await this.applicationModel.updateOne(
-      { _id: id },
-      { $set: { status: newStatus } }
+
+  
+    const application = await this.applicationModel.findOneAndUpdate(
+      { _id: id},
+      { status: newStatus },
+      { new: true }
     );
-    
+
+    if (!application) {
+      throw new HttpException('Application not found', HttpStatus.NOT_FOUND);
+    }
+
+    const notify: NotifyDto = {
+      userId: application.userId.toString(), 
+      applicationId: application._id.toString(),
+      message: "Trạng thái của đơn ứng tuyển đã được cập nhật thành:" + newStatus,
+      isRead: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+
+    await this.notifyService.createNotify(notify);
+
+    const notificationMessage = { applicationId: application.id, userId:  application.userId,  notify: notify.message };
+
+    await this.redisClient.publish('applicationStatusChanged', JSON.stringify(notificationMessage));
+
     return application;
   }
 

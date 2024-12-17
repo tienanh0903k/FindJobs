@@ -1,12 +1,13 @@
 import { AxiosResponse } from 'axios';
 import axiosClient from './axiosClient';
 import { IPost } from '@/app/types/interface';
-const URL_BACKEND = 'http://localhost:3001';
+import { URL_BACKEND } from '@/constants';
 
 interface IPostsApi {
 	getMyPost(): Promise<AxiosResponse<any>>;
     getPostForHome: () => Promise<IPost[]>;
 	getPostById: (id: string) => Promise<IPost>;
+	createPost: (data: any) => Promise<IPost>;
 }
 
 const postsApi: IPostsApi = {
@@ -23,6 +24,13 @@ const postsApi: IPostsApi = {
 
 	getPostById: async (id: string) => {
 		const response = await axiosClient.get(`${URL_BACKEND}/api/posts/${id}`);
+		return response.data
+	},
+
+
+	//create post 
+	createPost : async (data: any) => {
+		const response = await axiosClient.post(`${URL_BACKEND}/api/posts`, data);
 		return response.data
 	}
 };

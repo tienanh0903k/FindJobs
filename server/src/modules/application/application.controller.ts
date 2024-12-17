@@ -89,6 +89,7 @@ export class ApplicationController {
   @ResponseMessage("Cap nhat thanh cong")
   async updateApplication(@Body() data: any) {
     try {
+      console.log(data)
       return await this.applicationService.updateApplication(data.id, data.status);
     } catch (error) {
       console.error('Error updating application:', error);

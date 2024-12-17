@@ -1,10 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+// import { RedisIoAdapter } from './config/redis.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3002); 
-  console.log('Application is running on: http://localhost:3008');
+
+  // const redisIoAdapter = new RedisIoAdapter();
+  // await redisIoAdapter.connectToRedis();
+  
+  // app.useWebSocketAdapter(redisIoAdapter);
+  app.enableCors({
+    origin: '*', 
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true,})
+
+  await app.listen(3009); 
+  console.log('Application is running on PORT 8080');
 
 }
 bootstrap();

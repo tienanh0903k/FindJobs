@@ -19,7 +19,7 @@ const Companies = () => {
 	const params = useParams<{ id: string }>();
 	const [isFollow, setIsFollow] = useState(false);
 	const [company, setCompany] = useState<ICompany>();
-	const [isLoading , setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 	const currentUser: any = useCurrentUser();
 	const t = useTranslations();
 
@@ -28,7 +28,7 @@ const Companies = () => {
 	const commentRef = useRef<HTMLDivElement | null>(null); //use scrollIntoView
 	const handleScrollToComment = () => {
 		//console.log('ref', commentRef.current);
-		commentRef.current?.scrollIntoView({ behavior:'smooth' });
+		commentRef.current?.scrollIntoView({ behavior: 'smooth' });
 	};
 
 	//*********side effect*************
@@ -55,16 +55,16 @@ const Companies = () => {
 				return () => clearTimeout(timer);
 			} catch (error) {
 				console.error('Error fetching follow status:', error);
-				setIsFollow(false); 
+				setIsFollow(false);
 			}
 		};
 
 		fetchFollowStatus();
 	}, [params.id, currentUser]);
-	  
 
 
-	
+
+
 	const fetchInfoCompany = async () => {
 		const data = await companyApi.getCompanyById(params.id);
 		setCompany(data || {});
@@ -190,7 +190,7 @@ const Companies = () => {
 									)}
 								</div> */}
 
-								<div className="flex space-x-4 mt-4">
+								{/* <div className="flex space-x-4 mt-4">
 									{isLoading ? (
 										<div className="w-28 h-10 bg-gray-300 rounded animate-pulse" />
 									) : (
@@ -218,7 +218,38 @@ const Companies = () => {
 											</button>
 										)
 									)}
+								</div> */}
+								<div className="flex space-x-4 mt-4">
+									{/* Button Review */}
+									{isLoading || !currentUser ? (
+										<div className="w-28 h-10 bg-gray-300 rounded animate-pulse" />
+									) : (
+										<button
+											onClick={handleScrollToComment}
+											className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+										>
+											{t('company.btnReview')}
+										</button>
+									)}
+
+									{/* Follow/Unfollow Button */}
+									{isLoading || !currentUser ? (
+										<div className="w-28 h-10 bg-gray-300 rounded animate-pulse" />
+									) : (
+										currentUser && (
+											<button
+												onClick={toggleFollow}
+												className={`${isFollow
+														? 'bg-red-500 hover:bg-red-600'
+														: 'bg-green-500 hover:bg-green-600'
+													} text-white py-2 px-4 rounded`}
+											>
+												{isFollow ? t('company.following') : t('company.unfollow')}
+											</button>
+										)
+									)}
 								</div>
+
 							</div>
 						</div>
 					</div>

@@ -6,8 +6,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getConversation } from '@/api/fetching/messageApi';
 import messApi from '@/api/messApi';
 import { io } from 'socket.io-client';
+import Image from '@/components/base/Image';
+import { socket } from '@/socket/socketClient';
 
-const socket = io('http://localhost:3002');
+// const socket = io('http://localhost:3002');
 interface IConversation {
 	id?: string;
 	title?: string;
@@ -74,7 +76,7 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 
 
 	 useEffect(() => {
-        socket.on('receive_message', (msg) => {
+        socket.on('receive_message', (msg: any) => {
             console.log("Received message from server:", msg);
             setMessages((prevMessages) => [...prevMessages, msg]);
         });
@@ -115,6 +117,7 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 			socket.emit('send_message', messageData);
 			setMessages((prevMessages) => [...prevMessages, messageData]);
 			setNewMessage('');
+			
 			if (buttonRef.current) {
 				buttonRef.current.focus();
 			}
@@ -126,7 +129,7 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 		<>
 			<div className="w-1/2 bg-white h-[100%] p-4 relative">
 				<div className="flex items-center mb-4 border-b-2 border-gray-200 shadow-xs">
-					<img
+					<Image
 						src="https://via.placeholder.com/50"
 						alt="Logo Công ty"
 						className="w-12 h-12 rounded-full"
@@ -183,7 +186,7 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 							) : (
 								<div className="flex items-start mb-4">
 									<div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-										<img
+										<Image
 											src="https://via.placeholder.com/40"
 											alt="Sender"
 											className="rounded-full"
