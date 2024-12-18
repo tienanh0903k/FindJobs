@@ -1,11 +1,11 @@
 'use client'
 
-import { Layout, Typography, Input, Select, Button, Card, Empty, Table, Tooltip } from 'antd';
+import { Layout, Typography, Input, Select, Button, Card, Empty, Table, Tooltip, message } from 'antd';
 import { SearchOutlined, FileTextOutlined, FolderOpenOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { applicationApi } from '@/api/applicationApi';
 import ApplicationModal from '@/components/admins/application/Application.modal';
-
+import { Tag } from 'antd';
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -13,92 +13,70 @@ const { Option } = Select;
 import '../style.css'
 import Access from '@/components/admins/permission/Access';
 import { ALL_PERMISSIONS } from '@/constants';
+import EmailDrawer from '@/components/admins/application/Mailer.drawer';
+
+type StatusType = 'pending' | 'reviewing' | 'interview' | 'hired' | 'rejected';
+
+const statusColors: Record<StatusType, string> = {
+	pending: 'orange',
+	reviewing: 'blue',
+	interview: 'purple',
+	hired: 'green',
+	rejected: 'red',
+};
+
 
 const ApplicationPage: React.FC = () => {
 
 
-	const [data, setData] = useState();
+	const [data, setData] = useState<any[]>([]);
 	const [isVisible, setIsVisible] = useState(false);
 	const [formData, setFormData] = useState(null);
 
 	const [searchTerm, setSearchTerm] = useState('');
-	const [status, setStatus] = useState('');
-	const [sort, setSort] = useState('');
+	const [status, setStatus] = useState<any>('');
+
+	const [isEmailDrawerVisible, setEmailDrawerVisible] = useState(false);
+	const [selectedApplicant, setSelectedApplicant] = useState(null);
+
+	const loadData = async () => {
+		try {
+			const response = await applicationApi.getAllApplication({
+				search: '',
+				status: '',
+			});
+			setData(response.applications || []);
+		} catch (error) {
+			console.error('Error fetching data:', error);
+		}
+	};
+
+
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await applicationApi.getAllApplication({
-					search: '',
-					status: '',
-				});
-				setData(response.applications || []);
-			} catch (error) {
-				console.error('Error fetching data:', error);
-			}
-		};
-		fetchData();
+		loadData();
 	}, 	[]);
 
+	const filteredData = data?.filter((item: any) => {
+		const keyword = searchTerm.toLowerCase();
+		const matchSearchTerm =
+			item.name.toLowerCase().includes(keyword) ||
+			item.email.toLowerCase().includes(keyword) ||
+			item.jobId.position.toLowerCase().includes(keyword);
 
+		const matchStatus = status ? item.status === status : true;
 
-	// console.log(data)
-
-    // const data = [
-    //     {
-    //         _id: "6735e6d688957686bda0d054",
-    //         userId: "66c9fb96da1322f95d32885f",
-    //         email: "tienanh2003k@gmail.com",
-    //         name: "Tien ANh",
-    //         jobId: {
-    //             _id: "671a6889f3ef7fe71c07d72c",
-    //             position: "Junior React"
-    //         },
-    //         resume_url: "https://cv-project-public-bucket.s3.amazonaws.com/resumes/1731585748816-anki-thống kê-2022-03-01@17-41-59.pdf",
-    //         coverLetter: "hi",
-    //         status: "pending",
-    //         appliedAt: "2024-11-14T12:02:30.460Z",
-    //         updatedAt: "2024-11-14T12:02:30.460Z",
-    //         __v: 0,
-    //         isSeen: true
-    //     },
-    //     {
-    //         _id: "67564659478a761263b70ec7",
-    //         userId: "66e84384ca6853fbf2b47519",
-    //         email: "minhthuab@gmail.com",
-    //         name: "NGUYEN MINH THUAN",
-    //         jobId: {
-    //             _id: "67344a36c720060058b4820a",
-    //             position: "Backend Developer"
-    //         },
-    //         resume_url: "https://cv-project-public-bucket.s3.amazonaws.com/resumes/1733707352856-hdfgdfgdfgdfgd.docx",
-    //         coverLetter: "tao tim viec khan cap",
-    //         status: "pending",
-    //         appliedAt: "2024-12-09T01:22:33.839Z",
-    //         updatedAt: "2024-12-09T01:22:33.839Z",
-    //         __v: 0
-    //     },
-    //     {
-    //         _id: "675646fc478a761263b70ecc",
-    //         userId: "66e84384ca6853fbf2b47519",
-    //         email: "minhthuab@gmail.com",
-    //         name: "NGUYEN MINH THUAN",
-    //         jobId: {
-    //             _id: "67344a5ac720060058b4820c",
-    //             position: "Junior QA Engineer"
-    //         },
-    //         resume_url: "https://cv-project-public-bucket.s3.amazonaws.com/resumes/1733707514527-anki-thống kê-2022-03-01@17-41-59.pdf",
-    //         coverLetter: "tao tim viec khan cap",
-    //         status: "pending",
-    //         appliedAt: "2024-12-09T01:25:16.263Z",
-    //         updatedAt: "2024-12-09T01:25:16.263Z",
-    //         __v: 0
-    //     }
-    // ];
-
-
-
-
+		return matchSearchTerm && matchStatus;
+	});
+	  
+	const handleSendEmail = async (data: any) => {
+		try {
+			await applicationApi.sendMail(data);
+			message.success('Email sent successfully');
+		} catch (error) {
+			console.error('Failed to send email:', error);
+		}
+	}
 
 
     const columns = [
@@ -132,6 +110,26 @@ const ApplicationPage: React.FC = () => {
 				title: 'Trạng thái',
 				dataIndex: 'status',
 				key: 'status',
+				render: (status: string) => {
+					// Ép kiểu trạng thái để đảm bảo nó là một `StatusType`
+					const tagColor = statusColors[status as StatusType] || 'default';
+
+					return (
+						<Tag color={tagColor}>
+							{status === 'pending'
+								? 'Chờ xử lý'
+								: status === 'reviewing'
+								? 'Đang xem xét'
+								: status === 'interview'
+								? 'Đã phỏng vấn'
+								: status === 'hired'
+								? 'Được nhận'
+								: status === 'rejected'
+								? 'Bị từ chối'
+								: 'Chờ xử lý'}
+						</Tag>
+					);
+				},
 			},
 			{
 				title: 'Ngày nộp',
@@ -145,27 +143,32 @@ const ApplicationPage: React.FC = () => {
 				key: 'action',
 				render: (_: any, record: any) => (
 					<div className="flex">
+						{/* <Button type="default" style={{ marginLeft: '8px', color: 'green' }}>
+							<EditOutlined />
+						</Button> */}
 
-
-						<Button type="default" style={{ marginLeft: '8px', color: 'green' }}>
-							<SaveOutlined />
-						</Button>
-
-						<Access
-							permission={ALL_PERMISSIONS.APPLICATION.UPDATE}
-							hideChildren={true}
-						>
+						<Access permission={ALL_PERMISSIONS.APPLICATION.UPDATE} hideChildren={true}>
 							<Button
+								type="default"
+								onClick={() => {
+									setIsVisible(!isVisible);
+									setFormData(record);
+								}}
+							>
+								<EditOutlined />
+							</Button>
+						</Access>
+
+						<Button
 							type="default"
 							onClick={() => {
-								setIsVisible(!isVisible);
-								setFormData(record);
+								setSelectedApplicant(record);
+								setEmailDrawerVisible(true);
 							}}
 						>
-							<EditOutlined />
+							Gửi Email
 						</Button>
-						</Access>
-						
+
 						<Button type="default" onClick={() => console.log('Edit:', record)}>
 							<DeleteOutlined style={{ fontSize: '20px', color: '#F44336' }} />
 						</Button>
@@ -187,17 +190,26 @@ const ApplicationPage: React.FC = () => {
 						<div className="flex flex-col gap-4 lg:flex-row lg:items-center">
 							<Input
 								placeholder="Tìm kiếm tên, email, số điện thoại"
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
 								prefix={<SearchOutlined />}
 								className="flex-1"
 							/>
 							<div className="flex flex-wrap gap-2">
-								<Select defaultValue="" style={{ width: 200 }}>
+								<Select
+									defaultValue=""
+									style={{ width: 200 }}
+									onChange={(value) => setStatus(value)}
+								>
 									<Option value="">Nhập trạng thái</Option>
-									<Option value="new">Mới</Option>
+									<Option value="pending">Mới</Option>
 									<Option value="reviewing">Đang xem xét</Option>
-									<Option value="interviewed">Đã phỏng vấn</Option>
+									<Option value="interview">Đã phỏng vấn</Option>
+									<Option value="hired">Được nhận</Option>
+									<Option value="rejected">Bị từ chối</Option>
 								</Select>
-								<Select defaultValue="" style={{ width: 200 }}>
+
+								{/* <Select defaultValue="" style={{ width: 200 }}>
 									<Option value="">Nhập nguồn CV</Option>
 									<Option value="all">Tất cả nguồn</Option>
 									<Option value="internal">Nội bộ</Option>
@@ -208,7 +220,7 @@ const ApplicationPage: React.FC = () => {
 									<Option value="all">Tất cả</Option>
 									<Option value="shortlisted">Đã chọn</Option>
 									<Option value="rejected">Đã loại</Option>
-								</Select>
+								</Select> */}
 							</div>
 						</div>
 
@@ -221,10 +233,24 @@ const ApplicationPage: React.FC = () => {
 
 						{/* ------body ---------- */}
 						<div className="bg-white p-6 text-center">
-							{data ? (
+							{/* {data ? (
 								<Table
 									columns={columns}
 									dataSource={data}
+									pagination={{
+										defaultPageSize: 10,
+										showSizeChanger: true,
+										pageSizeOptions: ['10', '20', '30'],
+									}}
+									className="custom-table"
+								/>
+							) : (
+								<Empty description="Không có ứng viên" />
+							)} */}
+							{filteredData?.length > 0 ? (
+								<Table
+									columns={columns}
+									dataSource={filteredData}
 									pagination={{
 										defaultPageSize: 10,
 										showSizeChanger: true,
@@ -245,6 +271,14 @@ const ApplicationPage: React.FC = () => {
 				formData={formData}
 				setFormData={setFormData}
 				setIsVisible={setIsVisible}
+				loadData={loadData}
+			/>
+
+			<EmailDrawer
+				visible={isEmailDrawerVisible}
+				onClose={() => setEmailDrawerVisible(false)}
+				applicant={selectedApplicant}
+				onSend={handleSendEmail}
 			/>
 		</>
 	);
