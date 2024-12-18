@@ -1,0 +1,29 @@
+.ant-menu .ant-menu-item-selected {
+    background-color: #00b14f
+}
+
+
+.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
+background-color: #00b14f
+;
+}
+
+.custom-table .ant-table-thead > tr > th {
+    background-color: #00b14f; 
+    color: white;  
+  }
+
+.ant-btn.ant-btn-primary {
+    background-color: #00b14f;
+  }
+
+.ant-layout-sider-children {
+  position: fixed;
+  width: 53%;
+  top: 0;
+  left: 0px;
+  bottom: 0;
+  width: inherit;
+}
+
+

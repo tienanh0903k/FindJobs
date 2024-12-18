@@ -5,7 +5,10 @@ const URL_NEXT = 'http://localhost:3000'
 const URL_BACKEND = 'http://localhost:3001'
 
 const userApi = {
-    // getMe: () => axiosClient.get(`${URL_BACKEND}/api/user/me`),
+   getMe: async () => {
+        const response = await axiosClient.get(`${URL_BACKEND}/api/user/me`);
+        return response; 
+    },
 
     // getMe: () => httpClient.get(`${URL_BACKEND}/user/me`, {
     //     headers: {
@@ -19,6 +22,11 @@ const userApi = {
                 'Content-Type': 'multipart/form-data'
             }
         })
+    },
+
+    //update user me 
+    updateMe: (data: any) => {
+        return axiosClient.patch(`${URL_BACKEND}/api/user/me`, data)
     }
 }
 

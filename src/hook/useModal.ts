@@ -1,21 +1,33 @@
-"use client"
+'use client';
+import { ModalType } from '@/components/client/Profiles/ProfileInfo';
+import { useState, useCallback } from 'react';
 
-import { useState } from "react";
 
-const useModal = ():{
-  openModal: boolean;
-  handleOpenModal: () => void;
-} => {
-  const [openModal, setOpenModal] = useState(false);
+const useModal = () => {
+	const [visible, setVisible] = useState(false);
+  const [modalType, setModalType] = useState<ModalType | null>(null);
+  const [modalData, setModalData] = useState<any>(null);
 
-  const handleOpenModal = () => {
-    setOpenModal(!openModal)
-  }
 
-  return {
-    openModal,
-    handleOpenModal
-  }
-}
+	// const openModal = useCallback((type: ModalType, data: any = null) => {
+  //   setVisible(true);
+  //   setModalType(type);
+  //   setModalData(data);
+  // }, []);
 
-export default useModal
+  const openModal = useCallback((type: ModalType | null = null, data: any = null) => {
+    setVisible(true);
+    setModalType(type);
+    setModalData(data);
+  }, []);
+  
+	const closeModal = useCallback(() => {
+    setVisible(false);
+    setModalData(null); 
+    setModalType(null);
+  }, []);
+
+	return { visible, modalType, modalData,  openModal, closeModal };
+};
+
+export default useModal;

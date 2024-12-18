@@ -78,4 +78,102 @@ export interface IPost {
 export interface IJobSlideProps {
 	posts: IPost[]; 
 }
+
+
+
+//------------ USER TYPE---------------//
+
+export interface IUserType {
+	_id: string;
+	password: string;
+	awards: any[]; 
+	certifications: any[]; 
+	create_at: string; 
+	address: string;
+	email: string;
+	position: string;
+	projects: any[]; 
+	avatar: string;
+	role: string;
+	skills: any[]; 
+	update_at: string; 
+	userName: string;
+	fullName: string;
+	workExperience: any[]; 
+	introduction: string;
+}
+
+
+
+export interface ICertification {
+	_id: string;
+	name: string;
+	issuedDate: Date;
+  }
   
+  export interface IWorkExperience {
+	position: string;
+	company: string;
+	duration: string; 
+	description: string;
+  }
+  
+  export interface IProject {
+	name: string;
+	description: string;
+	duration: string;
+  }
+
+
+  export interface IResumeInfo {
+	_id: string;
+	password: string;
+	awards: string[]; // Array of award names or IDs
+	certifications: ICertification[];
+	create_at: Date; // Date object instead of string
+	address: string;
+	currentPosition: string;
+	email: string;
+	position: string;
+	projects: IProject[];
+	avatar: string; // URL of the avatar image
+	role: string; // If 'role' is an ID, you can define it as string; otherwise, create a Role interface
+	skills: string[]; // Array of skills (strings)
+	update_at: Date; // Date object instead of string
+	userName: string;
+	fullName: string;
+	workExperience: IWorkExperience[];
+	introduction: string;
+  }
+  
+
+  export interface IUserResume {
+	_id: string;
+	password: string;
+	awards: string[]; // Array of award names or IDs
+	certifications: ICertification[];
+	create_at: Date; // Date object instead of string
+	address: string;
+	email: string;
+	position: string;
+	projects: IProject[];
+	avatar: string; // URL of the avatar image
+	role: string; // If 'role' is an ID, you can define it as string; otherwise, create a Role interface
+	skills: string[]; // Array of skills (strings)
+	update_at: Date; // Date object instead of string
+	userName: string;
+	fullName: string;
+	workExperience: IWorkExperience[];
+	introduction: string;
+  }
+
+
+
+
+export interface IUserQuery{
+	data: IUserType | undefined;
+	isFetching: boolean;
+	isSuccess: boolean;
+	isError: boolean;
+	error: any
+}

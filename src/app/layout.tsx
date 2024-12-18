@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import ReduxProvider from '@/redux/provider/ReduxProvider';
-import { SnackbarProvider } from 'notistack';
 import SnackBarProvider from '@/redux/provider/Snackbar';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { NextIntlClientProvider } from 'next-intl';
@@ -23,14 +22,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	return (
 		<html lang={locale}>
 			<NextIntlClientProvider messages={messages}>
-				<body>
+				<body suppressHydrationWarning={true}>
 					<AntdRegistry> 
 						{/* //tao 1 ReduxProvider de truyen vao layout root de tranh viet client vao server compoent */}
 						<SnackBarProvider>
 							<ReduxProvider>
 								<TanStackProviders>
 								<TokenProvider>
-									{children}
+									{children} 
 								</TokenProvider>
 								</TanStackProviders>
 							</ReduxProvider>

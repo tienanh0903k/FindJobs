@@ -23,6 +23,7 @@ const JobListing = () => {
 	// 	console.log('-data', data);
 	// 	return data
 	// }
+	const { id: jobId } = useParams<{ id: string }>();
 	
 	const { data, error, isLoading, isError } = useQuery({
 		queryKey: ['job', id], 
@@ -45,27 +46,26 @@ const JobListing = () => {
 
 
 	
-
-	const handleApply = async (data: FormData) => {
+	const handleApply = async (formData: FormData) => {
 		try {
-			const response = await fetch('/api/apply', {
-				method: 'POST',
-				body: data,
-			});
-
-			if (response.ok) {
-				alert('Nộp hồ sơ thành công!');
-				setIsModalVisible(false); // Đóng modal
-			} else {
-				console.error('Nộp hồ sơ thất bại.');
-			}
+		  const response = await fetch('http://localhost:3001/api/application/upload', {
+			method: 'POST',
+			body: formData,
+		  });
+	
+		  if (response.ok) {
+			alert('Nộp hồ sơ thành công!');
+			setIsModalVisible(false);
+		  } else {
+			console.error('Nộp hồ sơ thất bại.');
+		  }
 		} catch (error) {
-			console.error('Lỗi khi nộp hồ sơ:', error);
+		  console.error('Lỗi khi nộp hồ sơ:', error);
 		}
-	};
+	  };
 
 	return (
-		<div className="h-[1500px] w-full relative">
+		<div className="min-h-screen w-full relative">
 			<div className={cx('gradient-background')}></div>
 			<section className="mt-24 relative">
 				<header className={cx('job-show-header', { 'scroll-active': isScrollActive })}>
@@ -215,31 +215,9 @@ const JobListing = () => {
 								<div className="jd px-2 m-2">
 									<div className="text-2xl font-semibold p-2">Mô tả công việc</div>
 									<div className="mb-2 text-14 break-words">
-										<p>
-											- Quản lý và phát triển thị trường sơn tại khu vực được phân công tại Hà Nội,
-											Hải Phòng, Quảng Ninh, Nam Định, Thái Bình và các khu vực Phía Bắc
-										</p>
-										<p>- Lập kế hoạch kinh doanh theo tuần, tháng, quý năm</p>
-										<p>- Lập kế hoạch công tác theo ngày, tuần</p>
-										<p>
-											- Báo cáo kết quả công việc theo ngày, tuần, tháng, năm cho giám đốc kinh
-											doanh
-										</p>
-										<p>
-											- Phát triển thị trường, mở mới khách hàng tại thị trường khu vực được giao.
-										</p>
-										<p>- Soạn thảo hợp đồng, báo giá cho khách hàng tại khu vực</p>
-										<p>
-											- Tư vấn cho giám đốc kinh doanh và ban lãnh đạo công ty về việc phát triển
-											thương hiệu tại thị trường khu vực.
-										</p>
-										<p>- Thu hồi công nợ khách hàng tại khu vực quản lý.</p>
-										<p>
-											- Chăm sóc và phát triển khách hàng cũ của công ty tại địa bàn khu vực được
-											giao.
-										</p>
+										<div className="mb-2 text-14 break-words" dangerouslySetInnerHTML={{ __html: data?.description ?? '' }} />
 									</div>
-								</div>
+								</div>U
 
 								<div className="jd px-2 m-2">
 									<div className="text-2xl font-semibold p-2">Mô tả công việc</div>
@@ -316,6 +294,7 @@ const JobListing = () => {
 						</div>
 
 						<ApplyModal
+							jobId={jobId}
 							visible={isModalVisible}
 							onCancel={() => setIsModalVisible(false)}
 							onApply={handleApply}

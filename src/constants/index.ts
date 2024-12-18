@@ -1,3 +1,17 @@
+
+
+/**
+ * ************************API ****************************-
+ */
+
+export const URL_NEXT = 'http://localhost:3000'
+export const URL_BACKEND = 'http://localhost:3001'
+
+
+/**
+ * **************************MENU *****************************
+ */
+
 export const menuItems = [
 	{
 		text: 'Dashboard',
@@ -53,11 +67,11 @@ export const ALL_PERMISSIONS = {
 		UPDATE: { method: 'PATCH', apiPath: '/api/permissions/:id', module: 'PERMISSIONS' },
 		DELETE: { method: 'DELETE', apiPath: '/api/permissions/:id', module: 'PERMISSIONS' },
 	},
-	RESUMES: {
-		GET_PAGINATE: { method: 'GET', apiPath: '/api/resumes', module: 'RESUMES' },
-		CREATE: { method: 'POST', apiPath: '/api/resumes', module: 'RESUMES' },
-		UPDATE: { method: 'PATCH', apiPath: '/api/resumes/:id', module: 'RESUMES' },
-		DELETE: { method: 'DELETE', apiPath: '/api/resumes/:id', module: 'RESUMES' },
+	APPLICATION: {
+		GET_PAGINATE: { method: 'GET', apiPath: '/api/application', module: 'APPLICATION' },
+		CREATE: { method: 'POST', apiPath: '/api/application', module: 'APPLICATION' },
+		UPDATE: { method: 'POST', apiPath: '/api/application/:id', module: 'APPLICATION' },
+		DELETE: { method: 'DELETE', apiPath: '/api/application/:id', module: 'APPLICATION' },
 	},
 	ROLES: {
 		GET_PAGINATE: { method: 'GET', apiPath: '/api/roles', module: 'ROLES' },
@@ -84,3 +98,47 @@ export const ALL_MODULES = {
 	USERS: 'USERS',
 	SUBSCRIBERS: 'SUBSCRIBERS',
 };
+
+
+
+
+export const CHAT_HISTORY = [
+	{ keyword: 'fpt', jobsCount: 849 },
+	{ keyword: 'net intern', jobsCount: 86 },
+	{ keyword: 'net', jobsCount: 162 },
+	{ keyword: 'rikai', jobsCount: 6 },
+	{ keyword: 'fpt intern', jobsCount: 0 },
+	{ keyword: 'front end developer', jobsCount: 313 },
+	{ keyword: 'hr intern', jobsCount: 153 },
+	{ keyword: 'thực tập sinh it', jobsCount: 11 },
+	{ keyword: 'internship', jobsCount: 2288 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+	{ keyword: 'intern web', jobsCount: 1 },
+];
+
+
+
+
+
+
+export const templates = [
+	{
+		id: 1,
+		name: 'Elegant',
+		imageUrl:
+			'https://marketplace.canva.com/EAFRuCp3DcY/1/0/1131w/canva-black-white-minimalist-cv-resume-f5JNR-K5jjw.jpg',
+	},
+	{
+		id: 2,
+		name: 'Minimal',
+		imageUrl:
+			'https://cdn1.vieclam24h.vn/images/assets/img/cv8-202122.png',
+	}
+];
