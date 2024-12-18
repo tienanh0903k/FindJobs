@@ -101,19 +101,11 @@ export default function SearchForm() {
 							<Option value="range3">Trên 20 triệu</Option>
 						</Select>
 
-						<Select className="flex-1" defaultValue="staff">
-							<Option value="staff">Nhân viên</Option>
-							<Option value="manager">Quản lý</Option>
-						</Select>
 
-						<Select className="flex-1" defaultValue="fulltime">
+						<Select className="flex-1"  defaultValue="default">
+							<Option value="default">Phương thức</Option>
 							<Option value="fulltime">Toàn thời gian</Option>
 							<Option value="parttime">Bán thời gian</Option>
-						</Select>
-
-						<Select className="flex-1" defaultValue="domestic">
-							<Option value="domestic">Trong nước</Option>
-							<Option value="foreign">Nước ngoài</Option>
 						</Select>
 					</div>
 				)}

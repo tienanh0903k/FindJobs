@@ -18,8 +18,7 @@ import Image from './Image';
 
 const Footer = () => {
 	return (
-		<footer className="bg-gradient-to-r from-red-950 to-black text-white py-8 mt-8 sm:mt-[50%] md:mt-[50%] lg:mt-20">
-
+		<footer className="bg-gradient-to-r from-red-950 to-black text-white py-8 mt-[50%] xl:mt-0">
 			<div className="w-[80%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 				<div className="flex flex-col">
 					<Image src="#" alt="ITViec Logo" className="mb-4 w-32" />

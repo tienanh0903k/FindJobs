@@ -65,7 +65,7 @@ const JobListing = () => {
 	  };
 
 	return (
-		<div className="h-[1500px] w-full relative">
+		<div className="min-h-screen w-full relative">
 			<div className={cx('gradient-background')}></div>
 			<section className="mt-24 relative">
 				<header className={cx('job-show-header', { 'scroll-active': isScrollActive })}>

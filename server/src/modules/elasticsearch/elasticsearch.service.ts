@@ -8,20 +8,6 @@ export class ElasticSearchService {
 
   private readonly ELASTICSEARCH_INDEX = 'posts_index';
 
-  //   public async createIndex() {
-  //     const index = this.ELASTICSEARCH_INDEX;
-  //     const checkIndex = await this.esService.indices.exists({ index });
-  //     if (!checkIndex) {
-  //       await this.esService.indices.create({
-  //         index,
-  //         body: {
-  //           mappings: postMapping,
-  //           settings: autocompleteAnalyzer,
-  //         },
-  //       });
-  //     }
-  //   }
-
   public async createIndex() {
     const index = 'users_index';
     const checkIndex = await this.esService.indices.exists({ index });
@@ -46,51 +32,6 @@ export class ElasticSearchService {
     }
   }
 
-  // public async createIndex() {
-  //   const index = this.ELASTICSEARCH_INDEX;
-  //   const checkIndex = await this.esService.indices.exists({ index });
-
-  //   if (!checkIndex) {
-  //     await this.esService.indices.create({
-  //       index: 'posts_index',
-  //       body: {
-  //         settings: {
-  //           number_of_shards: 1,
-  //           number_of_replicas: 1,
-  //         },
-  //         mappings: {
-  //           properties: {
-  //             position: { type: 'text' },
-  //             description: { type: 'text' },
-  //             requirements: { type: 'text' },
-  //             companyName: { type: 'text' },
-  //             location: { type: 'text' },
-  //             salary: { type: 'text' },
-  //             workingHours: { type: 'text' },
-  //             deadline: { type: 'date' },
-  //             contactInfo: { type: 'text' },
-  //             status: { type: 'text' },
-  //             postedDate: { type: 'date' },
-  //             experience: { type: 'text' },
-  //             numberOfPositions: { type: 'integer' },
-  //             tags: {
-  //               type: 'text',
-  //               fields: {
-  //                 keyword: {
-  //                   type: 'keyword',
-  //                   ignore_above: 256,
-  //                 },
-  //               },
-  //             },
-  //             isHot: { type: 'boolean' },
-  //             companyId: { type: 'keyword' },
-  //             userId: { type: 'keyword' },
-  //           },
-  //         },
-  //       },
-  //     });
-  //   }
-  // }
 
   async indexPost(post) {
     try {
@@ -153,6 +94,7 @@ export class ElasticSearchService {
           from,
         },
       });
+      console.log(fields)
 
       const results = response.hits.hits.map((post: any) => ({
         id: post._id,

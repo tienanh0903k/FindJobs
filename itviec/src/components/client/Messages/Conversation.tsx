@@ -2,14 +2,13 @@
 import { useAppSelector } from '@/hook/useSelector';
 import ChatInput from './ChatInput';
 import { RootState } from '@/redux/store';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getConversation } from '@/api/fetching/messageApi';
 import messApi from '@/api/messApi';
 import { io } from 'socket.io-client';
 import Image from '@/components/base/Image';
-import { socket } from '@/socket/socketClient';
+import SocketClient from '@/socket/socketClient';
 
-// const socket = io('http://localhost:3002');
 interface IConversation {
 	id?: string;
 	title?: string;
@@ -33,6 +32,11 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 
 	const messageEndRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null); 
+
+	const socket = useMemo(() => {
+		const socket = SocketClient.getInstance();
+		return socket;
+	}, []);
 
 	const senderId = currentUser?.user?._id;
 	// useEffect(() => {

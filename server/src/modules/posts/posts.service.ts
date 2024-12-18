@@ -131,7 +131,7 @@ export class PostsService implements OnModuleInit {
         };
 
         
-        const posts = await this.esService.search('posts_index', matchQuery, ['position', 'companyName', 'salary'], 10, 0);
+        const posts = await this.esService.search('posts_index', matchQuery, ['position', 'companyName', 'salary', 'companyId'], 10, 0);
 
         console.log(posts);
 

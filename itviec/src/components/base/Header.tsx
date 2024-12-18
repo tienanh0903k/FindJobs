@@ -4,7 +4,7 @@ import Logo from '../../../public/img/Logo.png';
 import AVT from '../../../public/img/phuongphong.png';
 import { FaBell } from 'react-icons/fa';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import authApi from '@/api/authApi';
@@ -13,11 +13,10 @@ import { useNotifyCustom } from '@/hook/Notification/useNotification';
 import setLanguageValue from '@/app/api/auth/set-language/route';
 import { useTranslations } from 'next-intl';
 import { Dropdown, Menu } from 'antd';
-import { socket } from '@/socket/socketClient';
+import SocketClient from '@/socket/socketClient';
+// import { socket } from '@/socket/socketClient';
 
-
-
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
 	const router = useRouter();
 
 	const t = useTranslations();
@@ -28,11 +27,17 @@ export const Header: React.FC = () => {
 	const currentUser: any = useSelector((state: RootState) => state.auth?.currentUser);
 	//console.log("NGUOI DUNG HT---",currentUser);
 
-	const { notifications, unreadCount, showNotifications, toggleNotifications, isSeen } = useNotifyCustom(
-		currentUser?.user?._id,
-	);
+	const { notifications, unreadCount, showNotifications, toggleNotifications, isSeen } =
+		useNotifyCustom(currentUser?.user?._id);
 
-	console.log('notifications', notifications)
+	//console.log('notifications', notifications)
+
+	const socket = useMemo(() => {
+		// const socket = connectSocket();
+		// return socket.connect();
+		const socket = SocketClient.getInstance();
+		return socket;
+	}, []);
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -48,28 +53,26 @@ export const Header: React.FC = () => {
 		}, 500);
 	}, []);
 
+	useEffect(() => {
+		if (currentUser?.user?._id) {
+			socket.emit('addUser', { userId: currentUser.user._id });
+		}
+	}, [currentUser]);
 
 	useEffect(() => {
-			if (currentUser?.user?._id) {
-				socket.emit("addUser", { userId: currentUser.user._id });
-			}
-		}, [currentUser]);
+		console.log('Current listeners before registering:', socket.listeners('statusChanged').length);
 
+		socket.on('statusChanged', (data: any) => {
+			console.log('HEADER:', data);
+			// Xử lý sự kiện...
+		});
 
-	// useEffect(() => {
-	// 	socket.on('statusChanged', (data: any) => {
-	// 	  console.log('Nhận thông báo:', data);
-	// 	//   setNotifications((prevNotifications) => [
-	// 	// 	...prevNotifications,
-	// 	// 	{ id: data.applicationId, message: data.message, isRead: false }
-	// 	//   ]);
-	// 	//   setUnreadCount((prevCount) => prevCount + 1); // Tăng số lượng thông báo chưa đọc
-	// 	});
-	
-	// 	return () => {
-	// 	  socket.off('statusChanged'); // Dọn dẹp khi component unmount
-	// 	};
-	//   }, []);
+		console.log('Current listeners after registering:', socket.listeners('statusChanged').length);
+
+		return () => {
+			socket.off('statusChanged');
+		};
+	}, [socket]);
 
 	const handleLanguageChange = async (event: any) => {
 		const selectedLocale = event.target.value;
@@ -196,27 +199,36 @@ export const Header: React.FC = () => {
 									{/* Dropdown Thông Báo */}
 									{showNotifications && (
 										<div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg overflow-hidden">
-											<div className="py-2">
+											<div
+												className="py-2 max-h-64 overflow-y-auto cursor-pointer"
+												style={{
+													overflow: 'hidden',
+													overflowY: 'scroll',
+													scrollbarWidth: 'none',
+													msOverflowStyle: 'none',
+												}}
+											>
 												{notifications.length === 0 ? (
 													<p className="text-center text-gray-500">Không có thông báo</p>
 												) : (
-													notifications.map((notif) => (
-														<div
-															key={notif.id}
-															className="px-4 py-2 border-b border-gray-200"
-															onClick={() => {
-																// Gọi hàm isSeen để đánh dấu thông báo là đã đọc
-																if (!notif.isRead) {
-																	// Cập nhật trạng thái thông báo là đã đọc
-																	isSeen(notif.id); // Hàm này cần được định nghĩa trong hook hoặc context
-																}
-															}}
-														>
-															<p className={`${notif.isRead ? 'text-gray-500' : 'text-black'}`}>
-																{notif.message}
-															</p>
-														</div>
-													))
+													notifications
+														.slice()
+														.reverse()
+														.map((notif) => (
+															<div
+																key={notif.id}
+																className="px-4 py-2 border-b border-gray-200"
+																onClick={() => {
+																	if (!notif.isRead) {
+																		isSeen(notif.id);
+																	}
+																}}
+															>
+																<p className={`${notif.isRead ? 'text-gray-500' : 'text-black'}`}>
+																	{notif.notify}
+																</p>
+															</div>
+														))
 												)}
 											</div>
 										</div>
@@ -324,3 +336,5 @@ export const Header: React.FC = () => {
 		</header>
 	);
 };
+
+export default Header;

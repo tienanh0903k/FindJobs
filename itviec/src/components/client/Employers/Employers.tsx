@@ -8,7 +8,7 @@ export const Employers = ({
 	const {items} = jobs
 	const t  = useTranslations();
 	return (
-		<div className="bg-white h-[1200px]">
+		<div className="bg-white h-[1100px]">
 			<div className="w-[90%] mx-auto">
 				<h1 className="text-2xl text-center font-bold pt-4">{t('home.title2')}</h1>
 				<div className="grid xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3">

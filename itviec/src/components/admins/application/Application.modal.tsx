@@ -1,13 +1,17 @@
+import { applicationApi } from '@/api/applicationApi';
 import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useCallback } from 'react';
 const { Option } = Select;
+import { message } from 'antd';
+
 
 interface IApplicationProps {
   isVisible?: boolean;
   formData?: any;
-  setFormData?: (data: any) => void;  // Đảm bảo setFormData có tham số
+  setFormData?: (data: any) => void; 
   setIsVisible: (visible: boolean) => void;
+  loadData: () => void
 }
 
 const ApplicationModal = ({
@@ -15,10 +19,10 @@ const ApplicationModal = ({
   formData,
   setFormData,
   setIsVisible,
+  loadData
 }: IApplicationProps) => {
   const [form] = Form.useForm();
 
-  // Hàm cập nhật dữ liệu form từ formData
   const updateFormData = useCallback(() => {
     if (formData) {
       form.setFieldsValue({
@@ -32,7 +36,7 @@ const ApplicationModal = ({
     }
   }, [form, formData]);
 
-  // Cập nhật form khi formData thay đổi
+
   useEffect(() => {
     updateFormData();
   }, [formData, updateFormData]);
@@ -41,9 +45,16 @@ const ApplicationModal = ({
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
-      console.log('Lưu dữ liệu', values);
-      // Thực hiện lưu dữ liệu hoặc gọi API ở đây
-      setIsVisible(false);  // Đóng modal sau khi lưu thành công
+      //console.log('Lưu dữ liệu', values);
+      const bodyData = {
+          id: formData?._id, 
+          status: values.status,
+      }
+
+      await applicationApi.changeStatus(bodyData);
+      message.success('Cap nhat trang thai thanh cong');
+      loadData();
+      setIsVisible(false);  
     } catch (error) {
       console.error('Validation failed:', error);
     }
@@ -110,7 +121,8 @@ const ApplicationModal = ({
         >
           <Select>
             <Option value="pending">Chờ</Option>
-            <Option value="interviewed">Đã phỏng vấn</Option>
+            <Option value="reviewing">Đang xem</Option>
+            <Option value="interview">Đã phỏng vấn</Option>
             <Option value="hired">Đã thuê</Option>
             <Option value="rejected">Từ chối</Option>
           </Select>
