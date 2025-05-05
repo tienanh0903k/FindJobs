@@ -57,7 +57,7 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 					}}
 				>
 					{posts && posts.length > 0 ? (
-						posts.map((job: any) => (
+						posts.slice().reverse().map((job: any) => (
 							<SwiperSlide key={job._id} onClick={() => handleClick(job._id)}>
 								<ItemJobs job={job} />
 							</SwiperSlide>

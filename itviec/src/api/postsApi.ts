@@ -8,6 +8,7 @@ interface IPostsApi {
     getPostForHome: () => Promise<IPost[]>;
 	getPostById: (id: string) => Promise<IPost>;
 	createPost: (data: any) => Promise<IPost>;
+	searchPosts: (query: string) => Promise<IPost[]>; 
 }
 
 const postsApi: IPostsApi = {
@@ -32,6 +33,13 @@ const postsApi: IPostsApi = {
 	createPost : async (data: any) => {
 		const response = await axiosClient.post(`${URL_BACKEND}/api/posts`, data);
 		return response.data
-	}
+	},
+
+	searchPosts: async (query: string): Promise<IPost[]> => {
+        const response = await axiosClient.post(
+            `${URL_BACKEND}/api/posts/search?query=${(query)}`
+        );
+        return response.data;
+    },
 };
 export default postsApi;

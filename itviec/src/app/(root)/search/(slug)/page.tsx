@@ -1,24 +1,30 @@
+'use client';
 import JobCard from '@/components/client/Search/JobCard';
 import SearchForm from '@/components/client/Search/SearchForm';
 import { useParams, useSearchParams } from 'next/navigation';
 import { List, Avatar } from 'antd';
+import { useState } from 'react';
 
-const companies = [
-	{ name: 'Công ty A', logo: 'https://via.placeholder.com/64' },
-	{ name: 'Công ty B', logo: 'https://via.placeholder.com/64' },
-	{ name: 'Công ty C', logo: 'https://via.placeholder.com/64' },
-	{ name: 'Công ty D', logo: 'https://via.placeholder.com/64' },
-];
+// const companies = [
+// 	{ name: 'Công ty A', logo: 'https://via.placeholder.com/64' },
+// 	{ name: 'Công ty B', logo: 'https://via.placeholder.com/64' },
+// 	{ name: 'Công ty C', logo: 'https://via.placeholder.com/64' },
+// 	{ name: 'Công ty D', logo: 'https://via.placeholder.com/64' },
+// ];
 
 const SearchPage = () => {
+	const [searchResults, setSearchResults] = useState<any[]>([]); 
+	const handleSearchResults = (data: any[]) => {
+		setSearchResults(data);
+	};
 	return (
 		<div className="min-h-screen">
-			<SearchForm />
+			<SearchForm onSearchResults={handleSearchResults} />
 
 			<div className="flex flex-col md:flex-row w-full p-4 gap-4">
 				{/* Job List (70%) */}
 				<div className="flex-1 md:w-9/12">
-					<div className="flex items-center gap-4 bg-gray-100 p-4 rounded-md shadow-md">
+					{/* <div className="flex items-center gap-4 bg-gray-100 p-4 rounded-md shadow-md">
 						<div className="flex items-center gap-2">
 							<span className="text-gray-700 font-medium">Tìm kiếm theo:</span>
 							<button className="rounded-full bg-green-100 text-green-700 px-4 py-1 flex items-center gap-1 border border-green-600">
@@ -66,7 +72,7 @@ const SearchPage = () => {
 								</svg>
 							</button>
 						</div>
-					</div>
+					</div> */}
 					<h1 className="text-xl font-semibold mb-4 mt-4">Kết qủa tìm kiếm</h1>
 					<div className="flex flex-col gap-4">
 						{Array(10)
