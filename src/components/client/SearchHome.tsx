@@ -2,9 +2,8 @@
 
 import { CHAT_HISTORY } from '@/constants';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { FaClock } from 'react-icons/fa';
-import Image from '../base/Image';
 import SearchSuggest from './Search/Suggestion';
 
 interface RecentSearch {
@@ -14,31 +13,9 @@ interface RecentSearch {
 
 const SearchHome = () => {
 	const [query, setQuery] = useState('');
-	const [searchType, setSearchType] = useState('jobTitle');
 	const [recentSearches, setRecentSearches] = useState<RecentSearch[]>(CHAT_HISTORY);
-
 	const t = useTranslations();
-
-	const suggestedJobs = [
-		{
-			title: 'Chương Trình Đào Tạo IT Fresher - The Rookie Program',
-			company: 'NashTech',
-			salary: 'Thoả thuận',
-			logo: '/placeholder.svg?height=50&width=50',
-		},
-		{
-			title: 'Chuyên Viên Tư Vấn Giáo Dục Full-Time/Part-Time',
-			company: 'CÔNG TY TNHH WESET ENGLISH CENTER',
-			salary: '6 - 30 triệu',
-			logo: '/placeholder.svg?height=50&width=50',
-		},
-		{
-			title: 'Giám Đốc Kinh Doanh Toàn Khu Vực (Miền Trung)',
-			company: 'CÔNG TY CỔ PHẦN DỊCH VỤ VẬN TẢI BSHIP',
-			salary: '25 - 40 triệu',
-			logo: '/placeholder.svg?height=50&width=50',
-		},
-	];
+	const router = useRouter();
 
 	const handleDeleteKeyword = (keyword: string) => {
 		setRecentSearches(recentSearches.filter((search) => search.keyword !== keyword));
@@ -48,17 +25,24 @@ const SearchHome = () => {
 		setRecentSearches([]);
 	};
 
-	// Lọc từ khóa gợi ý dựa trên `query`
-	const filteredSearches = query
-		? recentSearches.filter((search) => search.keyword.toLowerCase().includes(query.toLowerCase()))
-		: [];
+	const handleSearch = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (query) {
+			router.push(`/search?query=${encodeURIComponent(query)}`);
+		}
+	};
+
+	const handleSuggestionClick = (keyword: string) => {
+		setQuery(keyword);
+		router.push(`/search?query=${encodeURIComponent(keyword)}`);
+	};
 
 	return (
 		<div className="text-white bg-custom-gradient p-8 rounded-lg shadow-xl h-[280px]">
 			<div className="mx-auto max-w-[70%]">
 				<h1 className="text-3xl font-bold mb-4">{t('home.search')}</h1>
 
-				<form className="flex items-center max-w-[95%] gap-2">
+				<form className="flex items-center max-w-[95%] gap-2" onSubmit={handleSearch}>
 					<select className="bg-white text-black placeholder-black px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
 						<option>{t('home.nameSelect')}</option>
 						<option value="1">Hà Nội</option>
@@ -81,58 +65,30 @@ const SearchHome = () => {
 						{t('home.buttonSearch')}
 					</button>
 				</form>
+
 				{query && (
 					<SearchSuggest
 						query={query}
 						recentSearches={recentSearches}
-						onDeleteKeyword={handleDeleteKeyword}						
+						onDeleteKeyword={handleDeleteKeyword}
 						onClearAll={handleClearAll}
+						onSelectKeyword={(keyword: string) => setQuery(keyword)} 
 					/>
 				)}
 
 				<div className="flex mt-4">
 					<div className="rounded-lg p-2">{t('home.suggest')}</div>
 					<ul className="flex flex-wrap ml-4 space-x-2">
-						<li className="">
-							<a
-								href="#"
-								className="inline-block bg-secondary text-third rounded-full px-3 py-2 border border-gray-400 text-xs leading-6 hover:text-gray-900"
-							>
-								ReactJS
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								className="inline-block bg-secondary text-third rounded-full px-3 py-2 border border-gray-400 text-xs leading-6 hover:text-gray-900"
-							>
-								NodeJS
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								className="inline-block bg-secondary text-third rounded-full px-3 py-2 border border-gray-400 text-xs leading-6 hover:text-gray-900"
-							>
-								.NET Core
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								className="inline-block bg-secondary text-third rounded-full px-3 py-2 border border-gray-400 text-xs leading-6 hover:text-gray-900"
-							>
-								Go
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								className="inline-block bg-secondary text-third rounded-full px-3 py-2 border border-gray-400 text-xs leading-6 hover:text-gray-900"
-							>
-								Laravel
-							</a>
-						</li>
+						{recentSearches.slice(0, 5).map((suggest, index) => (
+							<li key={index}>
+								<button
+									onClick={() => handleSuggestionClick(suggest.keyword)}
+									className="inline-block bg-secondary text-third rounded-full px-3 py-2 border border-gray-400 text-xs leading-6 hover:text-gray-900"
+								>
+									{suggest.keyword}
+								</button>
+							</li>
+						))}
 					</ul>
 				</div>
 			</div>
@@ -141,6 +97,7 @@ const SearchHome = () => {
 };
 
 export default SearchHome;
+
 
 //opton 2
 

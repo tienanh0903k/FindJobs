@@ -7,6 +7,7 @@ interface SearchSuggestProps {
 	recentSearches: any[];
 	onDeleteKeyword: (keyword: string) => void;
 	onClearAll: () => void;
+	onSelectKeyword: (keyword: string) => void; 
 	className?: string;
 }
 
@@ -15,9 +16,9 @@ const SearchSuggest: React.FC<SearchSuggestProps> = ({
 	recentSearches,
 	onDeleteKeyword,
 	onClearAll,
-	className ="",
+	onSelectKeyword,
+	className = "",
 }) => {
-	// Lọc từ khóa gợi ý dựa trên query
 	const filteredSearches = query
 		? recentSearches.filter((search) => search.keyword.toLowerCase().includes(query.toLowerCase()))
 		: [];
@@ -26,8 +27,6 @@ const SearchSuggest: React.FC<SearchSuggestProps> = ({
 		'suggestions absolute grid grid-cols-1 md:grid-cols-2 gap-6 bg-white mt-2 p-4 z-10 w-[80%] border rounded-lg shadow-lg border-gray-300',
 		className,
 	);
-
-    console.log(className)//underfined
 
 	return (
 		<div className={containerClass}>
@@ -47,7 +46,10 @@ const SearchSuggest: React.FC<SearchSuggestProps> = ({
 							key={search.keyword}
 							className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 group"
 						>
-							<button className="flex items-center gap-2 text-gray-700">
+							<button
+								className="flex items-center gap-2 text-gray-700"
+								onClick={() => onSelectKeyword(search.keyword)}
+							>
 								<FaClock className="h-4 w-4 text-gray-400" />
 								<span>{search.keyword}</span>
 								<span className="text-gray-400">({search.jobsCount} việc làm)</span>
@@ -56,7 +58,8 @@ const SearchSuggest: React.FC<SearchSuggestProps> = ({
 								className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600"
 								onClick={() => onDeleteKeyword(search.keyword)}
 							>
-								{/* Icon X để xóa */}
+								
+								✕
 							</button>
 						</div>
 					))}
