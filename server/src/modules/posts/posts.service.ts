@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { AnyObject, Model } from 'mongoose';
 import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
 
+
+
 @Injectable()
 export class PostsService implements OnModuleInit {
   constructor(
@@ -116,31 +118,144 @@ export class PostsService implements OnModuleInit {
    * @param {string} query - The search query
    * @returns {Promise<any[]>} - The search results
    */
-    async searchPosts(query: string): Promise<any[]> {
-      try {
+    // async searchPosts(query: any): Promise<any[]> {
+    //   try {
+
+    //     const {
+    //       companyType,
+    //       experience,
+    //       jobType,
+    //       location,
+    //       position,
+    //       salary,
+    //     } = query;
+    //     console.log('query', query);
+
+    //     console.log('Parsed Query:', {
+    //       companyType,
+    //       experience,
+    //       jobType,
+    //       location,
+    //       position,
+    //       salary,
+    //     });
 
 
-        const matchQuery = {
-          match: {
-            "position": {
-              "query": query,
-              "fuzziness": "AUTO",  
-              "prefix_length": 1  
-            }
-          }
-        };
-
+    //     const matchQuery = {
+    //       match: {
+    //         "position": {
+    //           "query": query,
+    //           "fuzziness": "AUTO",  
+    //           "prefix_length": 1  
+    //         }
+    //       }
+    //     };
         
-        const posts = await this.esService.search('posts_index', matchQuery, ['position', 'companyName', 'salary', 'companyId'], 10, 0);
+    //     const posts = await this.esService.search('posts_index', matchQuery, ['position', 'companyName', 'salary', 'companyId'], 10, 0);
 
-        console.log(posts);
+    //     console.log(posts);
 
+    //     return posts;
+    //   } catch (error) {
+    //     console.error('Lỗi tìm kiếm:', error);
+    //     throw error;
+    //   }
+    // }
+
+    async searchPosts(query: any): Promise<any[]> {
+      try {
+        const { companyType, experience, jobType, location, position, salary } = query;
+    
+        console.log('Parsed Query:', {
+          companyType,
+          experience,
+          jobType,
+          location,
+          position,
+          salary,
+        });
+    
+        const esQuery: any = {
+          bool: {
+            must: [],  
+            filter: [], 
+          },
+        };
+    
+        if (position) {
+          esQuery.bool.must.push({
+            match: {
+              position: {
+                query: position,
+                fuzziness: 'AUTO',
+                prefix_length: 1,  
+              },
+            },
+          });
+        }
+    
+        if (companyType) {
+          esQuery.bool.filter.push({
+            term: { companyType },
+          });
+        }
+    
+        if (experience) {
+          esQuery.bool.filter.push({
+            range: {
+              experience: {
+                gte: parseInt(experience, 10),
+              },
+            },
+          });
+        }
+    
+        if (jobType) {
+          esQuery.bool.filter.push({
+            term: { jobType },
+          });
+        }
+    
+        if (location) {
+          esQuery.bool.filter.push({
+            match: {
+              location: {
+                query: location,
+                fuzziness: 'AUTO',
+              },
+            },
+          });
+        }
+    
+        if (salary) {
+          esQuery.bool.filter.push({
+            range: {
+              salary: {
+                gte: parseInt(salary, 10), 
+              },
+            },
+          });
+        }
+    
+        console.log('Elasticsearch Query:', JSON.stringify(esQuery, null, 2));
+    
+        const posts = await this.esService.search(
+          'posts_index', 
+          esQuery,
+          ['position', 'companyName', 'salary', 'companyType', 'experience', 'location'], 
+          10,
+          0 
+        );
+    
+        console.log('Search Results:', posts);
+    
         return posts;
       } catch (error) {
         console.error('Lỗi tìm kiếm:', error);
         throw error;
       }
     }
+    
 
 
 }

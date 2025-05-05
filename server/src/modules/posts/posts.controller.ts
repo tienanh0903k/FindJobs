@@ -72,15 +72,32 @@ export class PostsController {
   /**
    * POST: api/posts/search
    */
-  @Post('search')
-  async search(@Query('query') query: any) {
-    try {
-      const result = await this.postsService.searchPosts(query);
-      console.log(query);
-      return result;
-    } catch (error) {
-      console.error('Lỗi tìm kiếm bài đăng:', error);
-      throw error;
+    @Post('search')
+    async search(@Query() query: Record<string, any>) {
+      try {
+        //console.log('Original Query Params:', query);
+  
+        if (query.query && query.query.includes('=')) {
+          const parsedParams = query.query.split('&').reduce((acc, param) => {
+            const [key, value] = param.split('=');
+            acc[key] = decodeURIComponent(value);
+            return acc;
+          }, {} as Record<string, string>);
+  
+          query = { ...query, ...parsedParams };
+          delete query.query;
+        }
+  
+        //console.log('Parsed Query Params:', query);
+  
+        // Gọi service xử lý
+        const results = await this.postsService.searchPosts(query);
+        return results;
+      } catch (error) {
+        console.error('Error during search:', error);
+        throw error;
+      }
     }
   }
-}
+  
+
