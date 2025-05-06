@@ -10,7 +10,7 @@ import { RootState } from '@/redux/store';
 import authApi from '@/api/authApi';
 import { useRouter } from 'next/navigation';
 import { useNotifyCustom } from '@/hook/Notification/useNotification';
-import setLanguageValue from '@/app/api/auth/set-language/route';
+import { POST as setLanguageValue} from '@/app/api/auth/set-language/route';
 import { useTranslations } from 'next-intl';
 import { Dropdown, Menu } from 'antd';
 import SocketClient from '@/socket/socketClient';

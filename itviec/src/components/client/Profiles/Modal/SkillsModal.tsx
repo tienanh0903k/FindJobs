@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import { Modal, Input, Tag, Button, Form, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-const SkillsModal = ({onClose }: { onClose: () => void }) => {
-  const [skills, setSkills] = useState<string[]>([]); // Danh sách kỹ năng đã chọn
-  const [input, setInput] = useState(''); // Biến lưu giá trị nhập
-  const [inputVisible, setInputVisible] = useState(false); // Điều khiển hiển thị input nhập
+interface ISkills {
+  data: any; 
+  closeModal: () => void;
+  handleSave?: (data: any) => void; 
+}
+
+const SkillsModal: React.FC<ISkills> = ({ data, closeModal, handleSave }) => {
+  const [skills, setSkills] = useState<string[]>([]);
+  const [input, setInput] = useState(''); 
+  const [inputVisible, setInputVisible] = useState(false); 
 
   // Thêm kỹ năng vào danh sách khi nhấn Enter
   const handleInputConfirm = () => {
@@ -21,7 +27,6 @@ const SkillsModal = ({onClose }: { onClose: () => void }) => {
     setInputVisible(true);
   };
 
-  // Xóa kỹ năng khỏi danh sách
   const handleClose = (removedSkill: string) => {
     const newSkills = skills.filter(skill => skill !== removedSkill);
     setSkills(newSkills);
@@ -66,7 +71,7 @@ const SkillsModal = ({onClose }: { onClose: () => void }) => {
           </div>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={onClose}>
+          <Button type="primary" onClick={closeModal}>
             Lưu
           </Button>
         </Form.Item>

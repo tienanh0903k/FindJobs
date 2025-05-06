@@ -14,15 +14,15 @@ interface IConversation {
 	title?: string;
 	companyName?: string;
 }
-
 interface IMessage {
-	_id: string;
-	sender_id: string;
-	receive_id: string;
-	message: string;
-	timestamp: string;
-	userName: string;
+    _id?: string;
+    sender_id?: string;
+    receive_id?: string;
+    message?: string;
+    timestamp: string;
+    userName?: string;
 }
+
 
 const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 	const currentUser: any = useAppSelector((state: RootState) => state.auth?.currentUser);

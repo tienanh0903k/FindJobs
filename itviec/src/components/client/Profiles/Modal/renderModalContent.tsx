@@ -16,6 +16,8 @@ const ProjectModal = dynamic(() => import('./ProjectModal'), { ssr: false });
 const RenderModalContent = (modalType: ModalType, closeModal: () => void, modalData: any, handleSave: (data: any) => void) => {
   switch (modalType) {
     case ModalType.PERSONAL:
+      //Type '{ data: any; closeModal: () => void; handleSave: (data: any) => void; }' is not assignable to type 'IntrinsicAttributes & { onClose: () => void; }'.
+  //Property 'data' does not exist on type 'IntrinsicAttributes & { onClose: () => void; }'.ts(2322)
       return <PersonalModal data={modalData} closeModal={closeModal} handleSave={handleSave} />;
     case ModalType.INTRODUCE:
       return <IntroduceModal data={modalData} closeModal={closeModal} handleSave={handleSave} />;
@@ -26,7 +28,7 @@ const RenderModalContent = (modalType: ModalType, closeModal: () => void, modalD
     case ModalType.PROJECTS:
       return <ProjectModal data={modalData} closeModal={closeModal} />;
     case ModalType.EXPERIENCE:
-      return <ExperienceModal data={modalData} closeModal={closeModal} />;
+      return <ExperienceModal data={modalData} />;
     default:
       return null;
   }

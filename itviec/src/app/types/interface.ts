@@ -48,6 +48,10 @@ export interface ICompany {
 	logo: string;
 	total_employee: number;
 	image: string;
+	file?: {
+		url: string;
+		name: string;
+	};
   }
 
 

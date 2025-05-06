@@ -4,7 +4,17 @@ import { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 const { Option } = Select;
-const ExperienceModal = () => {
+
+
+interface ExperienceModalProps {
+	data: any; 
+	handleSave?: (data: any) => void; 
+}
+
+const ExperienceModal: React.FC<ExperienceModalProps> = ({
+	data,
+	handleSave,
+}) => {
     const { openModal, closeModal } = useModal();
     const [form] = Form.useForm()
     const [description, setDescription] = useState('dasdasd');

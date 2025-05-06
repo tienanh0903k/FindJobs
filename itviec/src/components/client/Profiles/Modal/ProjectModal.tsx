@@ -3,27 +3,32 @@ import { DatePicker, Select } from 'antd';
 
 const { Option } = Select;
 
-const ProjectModal = () => {
+interface ProjectModalProps {
+  data: any; 
+  closeModal: () => void; 
+}
+
+const ProjectModal: React.FC<ProjectModalProps> = ({ data, closeModal }) => {
   const [date, setDate] = useState(null);
   const [month, setMonth] = useState(null);
   const [year, setYear] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleDateChange = (value) => {
+  const handleDateChange = (value: any) => {
     setDate(value);
     setMonth(value.month() + 1);
     setYear(value.year());
   };
 
-  const handleMonthChange = (value) => {
+  const handleMonthChange = (value: any) => {
     setMonth(value);
   };
 
-  const handleYearChange = (value) => {
+  const handleYearChange = (value: any ) => {
     setYear(value);
   };
 
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
   };
 

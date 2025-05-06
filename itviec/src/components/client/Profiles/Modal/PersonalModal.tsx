@@ -3,14 +3,26 @@ import { Form, Input, Button, DatePicker, Select } from 'antd';
 
 const { Option } = Select;
 
-const PersonalModal = ({ onClose }: { onClose: () => void }) => {
+
+interface PersonalModalProps {
+  data: any; 
+  closeModal: () => void;
+  handleSave: (data: any) => void; 
+}
+
+// const PersonalModal = ({ onClose }: { onClose: () => void }) 
+const PersonalModal: React.FC<PersonalModalProps> = ({
+  data,
+  closeModal,
+  handleSave,
+}) => {
   const [form] = Form.useForm();
 
   const handleSubmit = () => {
     form.validateFields()
       .then((values) => {
         console.log('Form Values:', values); // Thay bằng xử lý logic lưu trữ
-        onClose(); // Đóng modal sau khi submit
+        closeModal(); // Đóng modal sau khi submit
       })
       .catch((error) => {
         console.error('Validation Failed:', error);
@@ -94,7 +106,7 @@ const PersonalModal = ({ onClose }: { onClose: () => void }) => {
         <Button type="primary" onClick={handleSubmit} style={{ marginRight: 8 }}>
           Lưu thông tin
         </Button>
-        <Button onClick={onClose}>Hủy</Button>
+        <Button onClick={closeModal}>Hủy</Button>
       </Form.Item>
     </Form>
   );
