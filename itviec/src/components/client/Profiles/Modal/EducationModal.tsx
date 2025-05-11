@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Input, Select, Checkbox } from 'antd';  // Import Ant Design components
+import { Modal, Button, Form, Input, Select, Checkbox } from 'antd';  
 
 const { Option } = Select;
 
-const EducationModal = ({ onClose }: { onClose: () => void }) => {
+
+interface EducationModalProps {
+  data: any; 
+  closeModal: () => void; 
+  handleSave?: (data: any) => void; 
+}
+
+
+const EducationModal: React.FC<EducationModalProps> = ({ data, closeModal, handleSave }) => {
   const [form] = Form.useForm();
   const [isCurrent, setIsCurrent] = useState(false);
 
@@ -76,7 +84,7 @@ const EducationModal = ({ onClose }: { onClose: () => void }) => {
 
         {/* Footer with Save and Cancel buttons */}
         <div className="flex justify-between">
-          <Button onClick={onClose} className="bg-gray-300 text-gray-800">
+          <Button onClick={closeModal} className="bg-gray-300 text-gray-800">
             Hủy
           </Button>
           <Button type="primary" htmlType="submit" className="bg-red-500 text-white">

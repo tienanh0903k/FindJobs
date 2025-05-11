@@ -12,11 +12,12 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: "*",
+    origin: ["*"],
+    credentials: true,
   },
+  pingTimeout: 60000, 
+  pingInterval: 25000,
 })
-
-@WebSocketGateway()
 
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
@@ -62,7 +63,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.userSocketMap.delete(userId);
       }
     });
-    console.log(`Client disconnected: ${client.id}`);
+    //console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('addUser')
@@ -73,10 +74,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { userId } = data;
     if (client && client.id) {
       this.userSocketMap.set(userId, client.id);
+      console.log("dang luu userSocketMap: ", this.userSocketMap);
       console.log(this.userSocketMap);
-      console.log(`User ${userId} connected with socket ID ${client.id}`);
+      //console.log(`User ${userId} connected with socket ID ${client.id}`);
     } else {
-      console.log('Client socket is undefined or missing ID');
+      console.log('Client socket is undefined or missing ID');  
     }
   }
 
@@ -90,7 +92,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     },
   ) {
     const { sender_id, receive_id, message } = data;
+    //console.log(this.userSocketMap);
+    console.log(data);
     const receiverSocketId = this.userSocketMap.get(receive_id);
+    console.log('nguoi nhan: ', receiverSocketId);
 
     if (receiverSocketId) {
       // Gửi tin nhắn đến người nhận thông qua socketId
@@ -117,4 +122,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.log(`User with ID ${userId} is not connected.`);
     }
   }
+
+  
 }

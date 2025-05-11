@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,15 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>();
+
+
+  const [isMounted, setIsMounted] = useState(false);
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
+
+	if (!isMounted) return null;
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     setIsLoading(true);

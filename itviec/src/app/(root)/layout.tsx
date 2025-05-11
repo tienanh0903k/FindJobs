@@ -9,6 +9,7 @@ import Footer from '@/components/base/Footer';
 
 import dynamic from 'next/dynamic';
 import Header from '@/components/base/Header';
+import ChatPopup from '@/components/client/ChatBot/ChatPopUp';
 
 // Import Header component và tắt SSR
 // const Header = dynamic(() => import('@/components/base/Header'), {
@@ -29,16 +30,17 @@ export default function RootLayout({
 	// const cookieStore = cookies();
 	// const sessionToken = cookieStore.get('sessionToken')?.value || ''; 	
 	return (
-			<div className=''>
+			<div className="flex flex-col min-h-screen">
 				{/* <header className="bg-custom-gradient border-b border-border-custom h-16 w-full fixed top-0 left-0 right-0 z-50">
 					<Header />
 				</header> */}
 				{/* <AppProvider initialToken={sessionToken}> */}
 			
 					<Header />
-						<div className="mt-[65px]">
+						<div className="flex-grow" id="mt-[65px]">
 							{children}
 						</div>
+						<ChatPopup />	
 					<Footer />
 					
 				{/* </AppProvider> */}

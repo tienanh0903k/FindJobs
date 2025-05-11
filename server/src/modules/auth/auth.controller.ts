@@ -1,4 +1,14 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
@@ -11,7 +21,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() credentials: LoginDto) {
-    return this.authService.login(credentials); 
+    return this.authService.login(credentials);
   }
 
   //refresh token
@@ -35,15 +45,56 @@ export class AuthController {
     console.log('Google login route called');
   }
 
+  // @Get('google/callback')
+  // @UseGuards(GoogleOauthGuard)
+  // async googleAuthCallback(@Req() req, @Res() res: Response) {
+  //   try {
+  //     const token = await this.authService.oAuthLogin(req.user);
+  //     res.redirect(`http://localhost:3000/oauth?token=${token.jwt}`);
+  //   } catch (err) {
+  //     res.status(500).send({ success: false, message: err.message });
+  //   }
+  // }
+
+  // @Get('google/callback')
+  // @UseGuards(GoogleOauthGuard)
+  // async googleAuthCallback(@Req() req, @Res() res: Response) {
+  //   try {
+  //     const token = await this.authService.oAuthLogin(req.user);
+
+  //     res.cookie('auth_token', token.access_token, {
+  //       httpOnly: true,
+  //       maxAge: 3600000,
+  //     });
+
+  //     res.redirect('http://localhost:3000');
+  //   } catch (err) {
+  //     res.status(500).send({ success: false, message: err.message });
+  //   }
+  // }
+
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
   async googleAuthCallback(@Req() req, @Res() res: Response) {
     try {
       const token = await this.authService.oAuthLogin(req.user);
-      res.redirect(`http://localhost:3000/oauth?token=${token.jwt}`);
+  
+      // Render một đoạn script để postMessage sang FE
+      const htmlResponse = `
+        <script>
+          window.opener.postMessage(${JSON.stringify({
+            access_token: token.access_token,
+            user: req.user,
+          })}, '*');
+          window.close();
+        </script>
+      `;
+  
+      res.send(htmlResponse);
     } catch (err) {
-      res.status(500).send({ success: false, message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
+  
 
 }

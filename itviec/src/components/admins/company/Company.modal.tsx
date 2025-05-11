@@ -1,4 +1,4 @@
-
+'use client';
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Input, InputNumber, Form, Upload } from 'antd';
 import ReactQuill from 'react-quill';
@@ -59,8 +59,8 @@ const CompanyModal: React.FC<IProps> = ({
         formData.append('total_employee', values.total_employee);
         
         // Nếu có file, thêm vào FormData
-        if (fileList.length > 0) {
-            formData.append('file', fileList[0].originFileObj); // Sử dụng originFileObj để lấy file thực
+        if (fileList.length > 0 && fileList[0].originFileObj) {
+            formData.append('file', fileList[0].originFileObj);
         }
         
         const response = dataInit

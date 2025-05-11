@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import Logo from '../../../public/img/Logo.png';
+import Logo from '../../../public/img/logo2.png';
 import AVT from '../../../public/img/phuongphong.png';
 import { FaBell } from 'react-icons/fa';
 import Link from 'next/link';
@@ -10,10 +10,11 @@ import { RootState } from '@/redux/store';
 import authApi from '@/api/authApi';
 import { useRouter } from 'next/navigation';
 import { useNotifyCustom } from '@/hook/Notification/useNotification';
-import setLanguageValue from '@/app/api/auth/set-language/route';
+import { POST as setLanguageValue} from '@/app/api/auth/set-language/route';
 import { useTranslations } from 'next-intl';
 import { Dropdown, Menu } from 'antd';
 import SocketClient from '@/socket/socketClient';
+import DropdownMenu from './DropDown';
 // import { socket } from '@/socket/socketClient';
 
 const Header: React.FC = () => {
@@ -106,10 +107,16 @@ const Header: React.FC = () => {
 				{/* MENU & OPTION */}
 				<div className="flex items-center w-full space-x-4">
 					<ul className="flex space-x-4" style={{ flexBasis: '50%' }}>
-						<li>
-							<Link href="/" className="text-gray-400 hover:text-gray-600">
-								{t('header.item1')}
-							</Link>
+						<li className="relative group">
+							<div className="flex items-center gap-1 text-gray-400 hover:text-gray-600 cursor-pointer">
+								<Link href="/" className="text-gray-400 hover:text-gray-600">
+									{t('header.item1')}
+								</Link>
+								<i className="fas fa-chevron-down text-xs"></i>
+								<div className="absolute top-5 left-0 w-full h-8 bg-black"></div>
+
+								<DropdownMenu />
+							</div>
 						</li>
 						<li>
 							<Link href="/about" className="text-gray-400 hover:text-gray-700">
@@ -303,7 +310,9 @@ const Header: React.FC = () => {
 												onClick={(e) => e.preventDefault()}
 											>
 												<span className="text-sm">
-													{t('home.hello')}, {currentUser.user?.name}
+													{t('home.hello')},{' '}
+													{currentUser.user?.name ||
+														currentUser.firstName + ' ' + currentUser.lastName}
 												</span>
 											</a>
 										</Dropdown>

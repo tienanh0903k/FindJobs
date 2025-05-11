@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { Result } from 'antd';
 import { useAppSelector } from '@/hook/useSelector';

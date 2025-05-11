@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import { Modal, Input, Tag, Button, Form, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-const SkillsModal = ({onClose }: { onClose: () => void }) => {
+interface ISkills {
+  data: any; 
+  closeModal: () => void;
+  handleSave?: (data: any) => void; 
+}
+
+const SkillsModal: React.FC<ISkills> = ({ data, closeModal, handleSave }) => {
   const [skills, setSkills] = useState<string[]>([]); // Danh sách kỹ năng đã chọn
   const [input, setInput] = useState(''); // Biến lưu giá trị nhập
   const [inputVisible, setInputVisible] = useState(false); // Điều khiển hiển thị input nhập
@@ -66,7 +72,7 @@ const SkillsModal = ({onClose }: { onClose: () => void }) => {
           </div>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={onClose}>
+          <Button type="primary" onClick={closeModal} >
             Lưu
           </Button>
         </Form.Item>

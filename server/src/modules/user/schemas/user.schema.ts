@@ -5,7 +5,7 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop({ required: true })
+  @Prop({ required: false })
   userName: string;
 
   @Prop({
@@ -15,14 +15,21 @@ export class User {
   email: string;
 
   @Prop({
-    required: true,
+    required: false,
   })
   password: string;
 
+  // @Prop({
+  //   required: true,
+  // })
+  // role: string;
+  
   @Prop({
+    type: Types.ObjectId,
+    ref: 'Roles',
     required: true,
   })
-  role: string;
+  role: Types.ObjectId;
 
   @Prop({
     type: String,
@@ -68,7 +75,7 @@ export class User {
     type: [
       {
         companyName: { type: String, required: true },
-        position: { type: String, required: true },
+        position: { type: String, required: false },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
       },
@@ -133,24 +140,24 @@ export class User {
   }[];
 
   @Prop({
-    required: true,
+    required: false,
   })
   position: string;
 
   @Prop({
-    required: true,
+    required: false,
   })
   fullName: string;
 
   @Prop({
-    required: true,
+    required: false,
   })
   introduction: string;
 
   @Prop({
     type: Types.ObjectId,
     ref: 'Companies',
-    required: true,
+    required: false,
   })
   companyId: Types.ObjectId;
 }

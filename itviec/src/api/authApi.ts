@@ -12,6 +12,7 @@ interface AuthApi {
 	setCookie(token: string): Promise<Response>;
 	logOut(): Promise<Response>;
 	refreshToken(body: { refreshToken: string }): Promise<Response>;
+	googleLoginCallback(): Promise<AxiosResponse<any>>;
   }
 
 
@@ -51,5 +52,11 @@ const authApi: AuthApi = {
 
 
 	refreshToken: (body) => httpClient.post('/auth/refresh-token', body),
+
+	googleLoginCallback: async (): Promise<AxiosResponse<any>> => {
+		return await axiosClient.get(`${URL_BACKEND}/api/auth/google/callback`, {
+		  withCredentials: true, // nếu cần cookie
+		});
+	  },
 };
 export default authApi;

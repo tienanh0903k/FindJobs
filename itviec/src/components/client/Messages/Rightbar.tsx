@@ -9,7 +9,7 @@ const Rightbar = () => {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
 							<img
-								src="https://via.placeholder.com/30"
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMLzn0LyA-haVBCuTDFgo6-bPXLB7RIa5rA&s"
 								alt="Logo Công ty"
 								className="w-8 h-8 rounded-full"
 							/>
@@ -27,7 +27,7 @@ const Rightbar = () => {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
 							<img
-								src="https://via.placeholder.com/30"
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMLzn0LyA-haVBCuTDFgo6-bPXLB7RIa5rA&s"
 								alt="Logo Công ty"
 								className="w-8 h-8 rounded-full"
 							/>
@@ -45,7 +45,7 @@ const Rightbar = () => {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
 							<img
-								src="https://via.placeholder.com/30"
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMLzn0LyA-haVBCuTDFgo6-bPXLB7RIa5rA&s"
 								alt="Logo Công ty"
 								className="w-8 h-8 rounded-full"
 							/>

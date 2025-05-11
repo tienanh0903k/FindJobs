@@ -26,7 +26,7 @@ const RenderModalContent = (modalType: ModalType, closeModal: () => void, modalD
     case ModalType.PROJECTS:
       return <ProjectModal data={modalData} closeModal={closeModal} />;
     case ModalType.EXPERIENCE:
-      return <ExperienceModal data={modalData} closeModal={closeModal} />;
+      return <ExperienceModal data={modalData} />;
     default:
       return null;
   }

@@ -16,12 +16,12 @@ interface IConversation {
 }
 
 interface IMessage {
-	_id: string;
-	sender_id: string;
-	receive_id: string;
-	message: string;
+	_id?: string;
+	sender_id?: string;
+	receive_id?: string;
+	message?: string;
 	timestamp: string;
-	userName: string;
+	userName?: string;
 }
 
 const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
@@ -72,11 +72,43 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 		}
 	}, [messages]);
 
+	// useEffect(() => {
+	// 	socket.on('connect', () => {
+	// 		console.log('Socket ID:', socket.id);
+	// 	  });
+	// 	if (currentUser?.user?._id) {
+	// 		socket.emit("addUser", { userId: currentUser.user._id });
+	// 	}
+	// }, [currentUser]);
+
+
 	useEffect(() => {
-		if (currentUser?.user?._id) {
-			socket.emit("addUser", { userId: currentUser.user._id });
-		}
-	}, [currentUser]);
+		// Lắng nghe sự kiện connect
+		socket.on('connect', () => {
+		  console.log('Socket connected, ID:', socket.id);
+		  if (currentUser?.user?._id) {
+			console.log(`Emitting addUser for userId: ${currentUser.user._id}`);
+			socket.emit('addUser', { userId: currentUser.user._id });
+		  }
+		});
+	  
+		// Lắng nghe lỗi kết nối
+		socket.on('connect_error', (error) => {
+		  console.error('Socket connect error:', error);
+		});
+	  
+		// Lắng nghe ngắt kết nối
+		socket.on('disconnect', (reason) => {
+		  console.log('Socket disconnected:', reason);
+		});
+	  
+		// Dọn dẹp khi component unmount
+		return () => {
+		  socket.off('connect');
+		  socket.off('connect_error');
+		  socket.off('disconnect');
+		};
+	  }, [socket, currentUser]);
 
 
 	 useEffect(() => {
@@ -151,7 +183,7 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 						<div className="mb-4">
 							<div className="flex items-start mb-4">
 								<div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-									<img src="https://via.placeholder.com/40" alt="Sender" className="rounded-full" />
+									<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMLzn0LyA-haVBCuTDFgo6-bPXLB7RIa5rA&s" alt="Sender" className="rounded-full" />
 								</div>
 								<div className="ml-2">
 									<div className="bg-gray-100 p-3 rounded-lg">
@@ -191,7 +223,7 @@ const Converation: React.FC<IConversation> = ({ id, title, companyName }) => {
 								<div className="flex items-start mb-4">
 									<div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
 										<Image
-											src="https://via.placeholder.com/40"
+											src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMLzn0LyA-haVBCuTDFgo6-bPXLB7RIa5rA&s"
 											alt="Sender"
 											className="rounded-full"
 										/>

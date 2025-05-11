@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { IJobSlideProps } from '@/app/types/interface';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import JobCards from '../JobSection/JobCard';
 
 // Property 'posts' does not exist on type 'IJobSlideProps[]'.ts(2339)
 
@@ -28,13 +29,12 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 	const t = useTranslations();
 	return (
 		<div className="w-full mx-auto md:py-4 lg:py-2">
-			<h2 className="text-2xl mt-6 font-bold text-center text-gray-800 mb-6">{t('home.title')}</h2>
-
+			{/* <h2 className="text-2xl mt-6 font-bold text-center text-gray-800 mb-6">{t('home.title')}</h2> */}
 			<div className="relative bg-white rounded-lg p-2">
 				<Swiper
-					slidesPerView={3}
+					slidesPerView={4}
 					grid={{
-						rows: 3,
+						rows: 4,
 						fill: 'row',
 					}}
 					spaceBetween={30}
@@ -59,7 +59,8 @@ const JobSlide: React.FC<IJobSlideProps> = ({ posts }) => {
 					{posts && posts.length > 0 ? (
 						posts.slice().reverse().map((job: any) => (
 							<SwiperSlide key={job._id} onClick={() => handleClick(job._id)}>
-								<ItemJobs job={job} />
+								{/* <ItemJobs job={job} /> */}
+								<JobCards job={job} />
 							</SwiperSlide>
 						))
 					) : (

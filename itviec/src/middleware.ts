@@ -47,6 +47,7 @@ export const config = {
 		'/profile',
 		'/admin/:path*',
 		'/message/:path*',
-		'/:locale(en|vi)?/:path*',
+		// '/:locale(en|vi)?/:path*',
+		'/((?!api|_next|static|favicon.ico).*)',
 	],
 };

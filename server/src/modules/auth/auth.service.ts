@@ -6,6 +6,9 @@ import { LoginDto } from './dtos/login.dto';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { RolesService } from '../roles/roles.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from '../user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +17,7 @@ export class AuthService {
     private roleService: RolesService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    @InjectModel(User.name) private userModels: Model<User>,
   ) {}
   // async validateUser(username: string, pass: string): Promise<any> {
   //   const user = await this.usersService.findOneByName(username);
@@ -109,7 +113,7 @@ export class AuthService {
     //   fullName: 'TIEN ANH NGUYEN',
     //   companyId: '671213dc92c1ab2b8b66493d'
     // }
-    
+
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -204,18 +208,69 @@ export class AuthService {
   }
 
   //-------------oAuthLogin---------------------
-  async oAuthLogin(user) {
-    if (!user) {
-      throw new Error('User not found!!!');
+  async oAuthLogin(user: any) {
+    if (!user) throw new Error('User not found!!!');
+
+    const populateOptions = [
+      {
+        path: 'role',
+        select: 'name permissions',
+        populate: {
+          path: 'permissions',
+          select: 'name apiPath method module',
+        },
+      },
+      {
+        path: 'companyId',
+        select: 'name logo',
+      },
+    ];
+
+    // Tìm user theo email
+    let existingUser: any = await this.userModels
+      .findOne({ email: user.email })
+      .populate(populateOptions);
+
+    // Nếu chưa có, tạo mới
+    if (!existingUser) {
+      const defaultRole: any = await this.roleService.findByName('USER');
+      if (!defaultRole || !defaultRole._id) {
+        throw new Error('Role USER not found or invalid');
+      }
+
+      const createdUser = await this.userModels.create({
+        email: user.email,
+        userName: user.name,
+        fullName: user.name,
+        password: '',
+        role: defaultRole._id, 
+      });
+
+      existingUser = await this.userModels
+        .findById(createdUser._id)
+        .populate(populateOptions);
     }
 
+    // Tạo payload và token
     const payload = {
-      email: user.email,
-      name: user.name,
+      email: existingUser.email,
+      name: existingUser.fullName,
+      role: existingUser.role,
     };
 
-    const jwt = await this.jwtService.sign(payload);
+    const access_token = this.jwtService.sign(payload);
+    const refresh_token = await this.createRefreshToken(payload);
 
-    return { jwt };
+    return {
+      access_token,
+      refresh_token,
+      user: {
+        _id: existingUser._id,
+        name: existingUser.userName,
+        role: existingUser.role.name,
+      },
+      company: existingUser.companyId,
+      permissions: existingUser.role.permissions,
+    };
   }
 }

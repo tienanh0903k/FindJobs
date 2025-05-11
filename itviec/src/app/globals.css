@@ -108,3 +108,31 @@ body {
 	box-shadow: none !important; /* Bỏ hiệu ứng box-shadow */
 	outline: none !important; /* Bỏ outline */
   }
+
+
+@media screen and (min-width: 706px) {
+  main {
+    height: 100%; /* Không thay đổi chiều cao */
+  }
+}
+
+/* Đối với màn hình từ 705px đến 526px */
+@media screen and (max-width: 1000px) and (min-width: 526px) {
+  main {
+    height: 170rem; /* Chiều cao của main khi màn hình từ 706px xuống 526px */
+  }
+}
+
+/* Đối với màn hình dưới 526px */
+@media screen and (max-width: 525px) {
+  main {
+    height: 250rem; /* Chiều cao của main khi màn hình dưới 526px */
+  }
+}
+
+
+
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}

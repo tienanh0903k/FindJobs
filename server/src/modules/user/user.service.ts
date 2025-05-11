@@ -133,6 +133,11 @@ export class UserService {
     await this.userModels.updateOne({ _id: userId }, { refreshToken }).exec();
   }
 
+   // Tìm người dùng theo email
+   async findOneByEmail(email: string): Promise<User | null> {
+    return this.userModels.findOne({ email }).exec();
+  }
+
 
 
 

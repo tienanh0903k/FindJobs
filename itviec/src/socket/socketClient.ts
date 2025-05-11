@@ -38,7 +38,7 @@ class SocketClient {
       SocketClient.instance = io(SERVER_URL, {
         transports: ['websocket'],
         withCredentials: true,
-        autoConnect: false, // Không tự động kết nối
+        autoConnect: true, // Không tự động kết nối
       });
     }
     return SocketClient.instance;
