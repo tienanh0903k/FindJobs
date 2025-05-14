@@ -339,56 +339,115 @@ export default function ChatPopup() {
     setInput('');
     setLoading(true);
 
+    // try {
+    //   let fileContent = '';
+
+    //   // Upload file nếu có
+    //   if (file) {
+    //     const formData = new FormData();
+    //     formData.append('file', file);
+
+    //     // Gửi tệp tới API để phân tích
+    //     const uploadRes = await fetch('http://localhost:3001/api/resume/pdf', {
+    //       method: 'POST',
+    //       body: formData,
+    //     });
+
+    //     const uploadData = await uploadRes.json();
+    //     fileContent = uploadData.text || '';
+    //   }
+
+    //   const analyzeRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    //     method: "POST",
+    //     headers: {
+    //       "Authorization": "Bearer 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", // Thay thế bằng API key của bạn
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //       model: "deepseek/deepseek-prover-v2:free",
+    //       messages: [
+    //         {
+    //           role: "system",
+    //           content: "Bạn là chuyên gia tuyển dụng. Phân tích nội dung bên dưới: nêu rõ điểm mạnh, điểm yếu và gợi ý cải thiện."
+    //         },
+    //         {
+    //           role: "user",
+    //           content: fileContent || input.trim(),
+    //         }
+    //       ]
+    //     })
+    //   });
+
+    //   const analysis = await analyzeRes.json();
+    //   setMessages((prev) => [
+    //     ...prev,
+    //     { from: 'bot', text: analysis.choices[0]?.message?.content || 'Không thể phân tích.' },
+    //   ]);
+    // } catch {
+    //   setMessages((prev) => [
+    //     ...prev,
+    //     { from: 'bot', text: 'Đã có lỗi xảy ra khi xử lý.' },
+    //   ]);
+    // }
+
     try {
-      let fileContent = '';
+  let fileContent = '';
 
-      // Upload file nếu có
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
+  if (file) {
+    const formData = new FormData();
+    formData.append('file', file);
 
-        // Gửi tệp tới API để phân tích
-        const uploadRes = await fetch('http://localhost:3001/api/resume/pdf', {
-          method: 'POST',
-          body: formData,
-        });
+    const uploadRes = await fetch('http://localhost:3001/api/resume/pdf', {
+      method: 'POST',
+      body: formData,
+    });
 
-        const uploadData = await uploadRes.json();
-        fileContent = uploadData.text || '';
-      }
+    const uploadData = await uploadRes.json();
+    fileContent = uploadData.text || '';
+  }
 
-      const analyzeRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer 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", // Thay thế bằng API key của bạn
-          "Content-Type": "application/json"
+  const analyzeRes = await fetch("https://openrouter.ai/api/v1/chat/completions ", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer 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",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "deepseek/deepseek-prover-v2:free",
+      messages: [
+        {
+          role: "system",
+          content: "Bạn là chuyên gia tuyển dụng. Phân tích nội dung bên dưới: nêu rõ điểm mạnh, điểm yếu và gợi ý cải thiện."
         },
-        body: JSON.stringify({
-          model: "deepseek/deepseek-prover-v2:free",
-          messages: [
-            {
-              role: "system",
-              content: "Bạn là chuyên gia tuyển dụng. Phân tích nội dung bên dưới: nêu rõ điểm mạnh, điểm yếu và gợi ý cải thiện."
-            },
-            {
-              role: "user",
-              content: fileContent || input.trim(),
-            }
-          ]
-        })
-      });
+        {
+          role: "user",
+          content: fileContent || input.trim(),
+        }
+      ]
+    })
+  });
 
-      const analysis = await analyzeRes.json();
-      setMessages((prev) => [
-        ...prev,
-        { from: 'bot', text: analysis.choices[0]?.message?.content || 'Không thể phân tích.' },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { from: 'bot', text: 'Đã có lỗi xảy ra khi xử lý.' },
-      ]);
-    }
+  if (!analyzeRes.ok) {
+    throw new Error('Phân tích thất bại');
+  }
+
+  const analysis = await analyzeRes.json();
+
+  const botReply = analysis?.choices?.[0]?.message?.content 
+    || 'Không thể phân tích phản hồi từ máy chủ.';
+
+  setMessages((prev) => [
+    ...prev,
+    { from: 'bot', text: botReply },
+  ]);
+
+} catch (error) {
+  console.error(error);
+  setMessages((prev) => [
+    ...prev,
+    { from: 'bot', text: 'Đã có lỗi xảy ra khi xử lý.' },
+  ]);
+}
 
     setLoading(false);
     setFile(null);

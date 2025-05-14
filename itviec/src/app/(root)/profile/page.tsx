@@ -1,5 +1,5 @@
-// 'use server'
-import { cookies } from 'next/headers';
+'use client';
+// import { cookies } from 'next/headers';
 
 import { Profile } from '@/components/client/Profiles';
 import React from 'react';

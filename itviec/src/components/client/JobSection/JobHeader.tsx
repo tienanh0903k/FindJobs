@@ -72,7 +72,7 @@ const scrollRight = () => {
 					'Cầu Giấy',
 					'Thanh Xuân',
 					'Nam Từ Liêm',
-					'Long Biên',
+					'Long Biên 22',  
 					'Van Giang',
 					'Da Nang',
 					'Vung Tau',

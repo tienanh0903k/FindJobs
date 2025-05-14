@@ -73,9 +73,13 @@ export default function SearchForm({ onSearchResults }: SearchFormProps) {
 
 	return (
 		<div
-			className="search-bar relative w-full p-4 backdrop-blur-lg bg-opacity-70"
+			className="search-bar fixed w-full p-4 backdrop-blur-lg bg-opacity-70 mt-[73px] z-10"
 			style={{ background: 'linear-gradient(269.85deg, #54151C 0%, #121212 54.89%)' }}
 		>
+		{/* <div
+			className="search-bar relative w-full p-4 backdrop-blur-lg bg-opacity-70"
+			style={{ background: 'linear-gradient(269.85deg, #54151C 0%, #121212 54.89%)' }}
+		> */}
 			<div className="flex flex-col gap-4 flex-1">
 				<div className="flex flex-col md:flex-row gap-2">
 					<div className="flex-[2] bg-white rounded-md flex items-center px-3 relative">
@@ -167,6 +171,15 @@ export default function SearchForm({ onSearchResults }: SearchFormProps) {
 							placeholder="Loại công việc"
 							className="w-[200px]"
 							onChange={(value) => updateQueryParams('jobType', value)}
+						>
+							<Option value="">Tất cả</Option>
+							<Option value="fulltime">Toàn thời gian</Option>
+							<Option value="parttime">Bán thời gian</Option>
+						</Select>
+						<Select
+							placeholder="Danh mục"
+							className="w-[200px]"
+							// onChange={(value) => updateQueryParams('jobType', value)}
 						>
 							<Option value="">Tất cả</Option>
 							<Option value="fulltime">Toàn thời gian</Option>

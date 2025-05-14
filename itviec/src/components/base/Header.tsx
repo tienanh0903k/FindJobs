@@ -107,14 +107,13 @@ const Header: React.FC = () => {
 				{/* MENU & OPTION */}
 				<div className="flex items-center w-full space-x-4">
 					<ul className="flex space-x-4" style={{ flexBasis: '50%' }}>
-						<li className="relative group">
-							<div className="flex items-center gap-1 text-gray-400 hover:text-gray-600 cursor-pointer">
-								<Link href="/" className="text-gray-400 hover:text-gray-600">
+						<li className="relative">
+							<div className="group flex items-center gap-1 text-gray-400">
+								<Link href="/" className="text-gray-400 hover:text-gray-600 cursor-pointer">
 									{t('header.item1')}
 								</Link>
 								<i className="fas fa-chevron-down text-xs"></i>
-								<div className="absolute top-5 left-0 w-full h-8 bg-black"></div>
-
+								<div className="absolute top-5 left-0 w-full h-8 "></div>
 								<DropdownMenu />
 							</div>
 						</li>

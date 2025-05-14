@@ -15,7 +15,7 @@ import { PostsModule } from './modules/posts/posts.module';
 import { ResumeModule } from './modules/resume/resume.module';
 import { ApplicationModule } from './modules/application/application.module';
 import { PaymentModule } from './modules/payment/payment.module';
-import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.module';
+// import { ElasticSearchModule } from './modules/elasticsearch/elasticsearch.module';
 // import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { MailModule } from './modules/mail/mail.module';
 import { FollowerModule } from './modules/follower/follower.module';
@@ -51,7 +51,7 @@ import { NotifyModule } from './modules/notify/notify.module';
     ResumeModule,
     ApplicationModule,
     PaymentModule,
-    ElasticSearchModule,
+    // ElasticSearchModule,
     MailModule,
     FollowerModule,
     NotifyModule,

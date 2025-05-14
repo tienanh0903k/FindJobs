@@ -17,11 +17,12 @@ const userApi = {
     // }),
 
     create: (data: any) => {
-        return axiosClient.post(`${URL_BACKEND}/api/user`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
+        // return axiosClient.post(`${URL_BACKEND}/api/user`, data, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // })
+        return axiosClient.post(`${URL_BACKEND}/api/user`, data)
     },
 
     //update user me 

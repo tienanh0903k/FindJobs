@@ -3,13 +3,14 @@ import React from 'react';
 import { FaHeart } from 'react-icons/fa';
 
 const JobCards = ({ job }: any) => {
+	console.log('job', job);
   return (
 		<article 
         style={{ borderLeft: '4px solid #00b14f' }}
       className="bg-white rounded-lg p-4 flex flex-col gap-2 border border-transparent hover:shadow-md transition relative border-l-4 border-[#10b981]"
     >
 			<div className="flex items-center gap-3">
-				<img alt={job.companyName} className="w-12 h-12 object-contain rounded" src={job.logoUrl} />
+				<img alt={job.companyName} className="w-12 h-12 object-contain rounded" src={job?.userId?.companyId?.logo} />
 				<h2 className="text-xs sm:text-sm font-semibold text-[#1f2937] leading-snug line-clamp-3 cursor-pointer">
 					{job.position}
 				</h2>

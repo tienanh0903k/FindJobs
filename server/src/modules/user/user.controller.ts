@@ -52,8 +52,15 @@ export class UserController {
 
   // --------------------API POST--------------------------//
   @Post()
-  create(@Body() createUser: CreateUserDto) {
-    return this.userService.create(createUser);
+  async create(@Body() createUser: CreateUserDto) {
+    try {
+      return await this.userService.create(createUser);
+    } catch (error) {
+      console.error('Lỗi khi tạo người dùng:', error);
+      return {
+        message: error.message || 'Đã xảy ra lỗi khi tạo người dùng',
+      };
+    }
   }
 
   @Post('/avatar/:id')

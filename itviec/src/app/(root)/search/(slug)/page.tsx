@@ -4,6 +4,7 @@ import SearchForm from '@/components/client/Search/SearchForm';
 import { useParams, useSearchParams } from 'next/navigation';
 import { List, Avatar } from 'antd';
 import { useState } from 'react';
+import RightSection from '@/components/client/Search/RightSection';
 
 // const companies = [
 // 	{ name: 'Công ty A', logo: 'https://via.placeholder.com/64' },
@@ -85,6 +86,7 @@ const SearchPage = () => {
 
 				<div className="md:w-3/12 bg-white rounded-md p-4 shadow-md">
 					<h2 className="text-xl font-semibold mb-4">Danh sách công ty</h2>
+					<RightSection />
 				</div>
 			</div>
 		</div>

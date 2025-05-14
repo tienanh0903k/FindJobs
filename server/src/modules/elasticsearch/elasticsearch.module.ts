@@ -8,7 +8,8 @@ import { ElasticSearchService } from './elasticsearch.service';
   imports: [
     ElasticsearchModule.registerAsync({
       useFactory: () => ({
-        node: 'http://localhost:9200'
+        //node: 'http://localhost:9200'
+        node: 'http://160.191.244.41:9200'
       }),
     }), 
   ],
