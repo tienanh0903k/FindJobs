@@ -58,7 +58,18 @@ export const fetchLogin = createAsyncThunk<UserType, { username: string; passwor
 
 			return data;
 		} catch (error: any) {
-			return rejectWithValue(error.message || 'Login failed');
+			console.log('>>>>>error', error);
+			// if (error.response) {
+			// 	return rejectWithValue({
+			// 		message: error.response.data?.message || 'Login failed',
+			// 		status: error.response.status,
+			// 	});
+			// }
+			// Lỗi khác
+			return rejectWithValue({
+				message: error.message || 'Login failed',
+				status: 500,
+			});
 		}
 	},
 );

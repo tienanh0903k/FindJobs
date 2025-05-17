@@ -1,6 +1,7 @@
+
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   Button,
@@ -17,6 +18,10 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
+import { ColumnsType } from 'antd/es/table';
+import { roles } from '@/constants';
+import userApi from '@/api/userApi';
+import { IUserType } from '@/app/types/interface';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -56,92 +61,133 @@ const AccountPage: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'asc' | 'desc'>('desc');
+  // const [sortBy, setSortBy] = useState<'ascend' | 'descend'>('descend');
+  const [activeUser, setActiveUser] = useState<any>(undefined);
+  const [sortBy, setSortBy] = useState<'ascend' | 'descend'>('descend');
+  const [selectedRole, setSelectedRole] = useState<string>(roles.USER); 
 
-  // Cột bảng AntD
-  const columns = [
-    {
-      title: 'Tên người dùng',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: (a: User, b: User) => a.name.localeCompare(b.name),
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Vai trò',
-      dataIndex: 'role',
-      key: 'role',
-      render: (role: string) => (
-        <span className={role === 'admin' ? 'text-green-600' : 'text-gray-600'}>
-          {role === 'admin' ? 'Quản trị viên' : 'Người dùng'}
-        </span>
-      ),
-      filters: [
-        { text: 'Quản trị viên', value: 'admin' },
-        { text: 'Người dùng', value: 'user' },
-      ],
-      onFilter: (value: any, record: User) => record.role === value,
-    },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean, record: User) => (
-        <Switch
-          checked={status}
-          onChange={(checked) =>
-            handleUpdateStatus(record.id, checked)
-          }
-        />
-      ),
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      sorter: (a: User, b: User) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      defaultSortOrder: sortBy === 'desc' ? 'descend' : 'ascend',
-      sortDirections: ['descend', 'ascend'],
-    },
-    {
-      title: 'Hành động',
-      key: 'action',
-      render: (_: any, record: User) => (
-        <span className="flex space-x-2">
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => showModal(record)}
-          />
-          <Button
-            icon={<DeleteOutlined />}
-            danger
-            onClick={() => handleDelete(record.id)}
-          />
-        </span>
-      ),
-    },
-  ];
+  const [loading, setLoading] = useState(false);
 
-  // Hàm tìm kiếm và lọc dữ liệu
+useEffect(() => {
+  if (!selectedRole) {
+    setUsers([]);
+    return;
+  }
+  setLoading(true);
+  userApi.getUsersByRoleId(selectedRole, activeUser ?? undefined)
+    .then((data) => {
+      setUsers(
+        data.map((u: IUserType) => ({
+          key: u._id,
+          id: u._id,
+          name: u.fullName || u.userName || 'No name',
+          email: u.email,
+          role: u.role?.name || '',
+          status: u.status === 1,
+          createdAt: u.create_at ? new Date(u.create_at).toISOString().split('T')[0] : '',
+        }))
+      );
+    })
+    .finally(() => setLoading(false));
+}, [selectedRole, activeUser]);
+
+
+  const roleOptions = [
+		{ label: 'Quản trị viên', value: roles.ADMIN },
+		{ label: 'HR', value: roles.HR },
+		{ label: 'Người dùng', value: roles.USER },
+	];
+
+
+
+  const columns: ColumnsType<User> = [
+		{
+			title: 'Tên người dùng',
+			dataIndex: 'name',
+			key: 'name',
+			sorter: (a: User, b: User) => a.name.localeCompare(b.name),
+		},
+		{
+			title: 'Email',
+			dataIndex: 'email',
+			key: 'email',
+		},
+		{
+			title: 'Vai trò',
+			dataIndex: 'role',
+			key: 'role',
+			render: (role: string) => (
+				<span className={role === 'admin' ? 'text-green-600' : 'text-gray-600'}>
+					{role === 'admin' ? 'Quản trị viên' : 'Người dùng'}
+				</span>
+			),
+			filters: [
+				{ text: 'Quản trị viên', value: 'admin' },
+				{ text: 'Người dùng', value: 'user' },
+			],
+			onFilter: (value: any, record: User) => record.role === String(value),
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'status',
+			key: 'status',
+			render: (status: boolean, record: User) => (
+				<Switch checked={status} onChange={(checked) => handleUpdateStatus(record.id, checked)} />
+			),
+		},
+		{
+			title: 'Ngày tạo',
+			dataIndex: 'createdAt',
+			key: 'createdAt',
+			sorter: (a: User, b: User) =>
+				new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+			defaultSortOrder: sortBy, // Đúng kiểu 'ascend' | 'descend'
+			sortDirections: ['ascend', 'descend'] as ('ascend' | 'descend')[],
+		},
+		{
+			title: 'Hành động',
+			key: 'action',
+			render: (_: any, record: User) => (
+				<span className="flex space-x-2">
+					<>
+						<Select
+							value={record.role}
+							style={{ width: 120 }}
+							onChange={(value) => handleAssignRole(record.id, value)}
+						>
+							{roleOptions.map((opt) => (
+								<Option key={opt.value} value={opt.value}>
+									{opt.label}
+								</Option>
+							))}
+						</Select>
+					</>
+					<Button icon={<EditOutlined />} onClick={() => showModal(record)} title="Sửa" />
+					<Button
+						icon={<DeleteOutlined />}
+						danger
+						onClick={() => handleDelete(record.id)}
+						title="Xóa"
+					/>
+				</span>
+			),
+		},
+	];
+
   const filteredData = users
-    .filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortBy === 'asc') {
+      if (sortBy === 'ascend') {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       } else {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
     });
 
-  // Mở modal sửa
   const showModal = (user?: User) => {
     if (user) {
       setEditingUser(user);
@@ -158,7 +204,6 @@ const AccountPage: React.FC = () => {
     setIsModalVisible(true);
   };
 
-  // Xóa người dùng
   const handleDelete = (id: string) => {
     if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
       setUsers(users.filter((user) => user.id !== id));
@@ -166,7 +211,6 @@ const AccountPage: React.FC = () => {
     }
   };
 
-  // Cập nhật trạng thái
   const handleUpdateStatus = (id: string, status: boolean) => {
     setUsers(
       users.map((user) =>
@@ -176,7 +220,6 @@ const AccountPage: React.FC = () => {
     message.success('Cập nhật trạng thái thành công!');
   };
 
-  // Modal Form
   const [form] = Form.useForm();
 
   const handleOk = () => {
@@ -195,6 +238,7 @@ const AccountPage: React.FC = () => {
           key: `${users.length + 1}`,
           id: `${users.length + 1}`,
           ...values,
+          createdAt: new Date().toISOString().split('T')[0],
         };
         setUsers([...users, newUser]);
         message.success('Thêm mới thành công!');
@@ -212,76 +256,109 @@ const AccountPage: React.FC = () => {
     setEditingUser(null);
   };
 
+
+
+    const handleAssignRole = async (id: string, role: string) => {
+			try {
+				await userApi.assignRole(id, role);
+				setUsers(users.map((user) => (user.id === id ? { ...user, role } : user)));
+				message.success('Gán quyền thành công!');
+			} catch (e) {
+				message.error('Lỗi khi gán quyền');
+			}
+		};
+
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 className="text-xl font-semibold mb-4">Quản lý người dùng</h2>
+		<div style={{ padding: '20px' }}>
+			<h2 className="text-xl font-semibold mb-4">Quản lý người dùng</h2>
 
-      {/* Tìm kiếm và sắp xếp */}
-      <div className="mb-4 flex flex-wrap gap-4 items-center justify-between">
-        <Search
-          placeholder="Tìm theo tên hoặc email"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          prefix={<SearchOutlined />}
-          style={{ width: 300 }}
-        />
-
-        <Select
-          defaultValue={sortBy}
-          onChange={(value) => setSortBy(value)}
-          style={{ width: 150 }}
+			<div className="mb-4 flex flex-wrap gap-4 items-center justify-between">
+				<Search
+					placeholder="Tìm theo tên hoặc email"
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+					prefix={<SearchOutlined />}
+					style={{ width: 300 }}
+				/>
+  
+				<Select 
+          value={activeUser}
+          placeholder="Chọn trạng thái"
+          allowClear
+          onChange={(value) => setActiveUser(value)}
+          style={{ width: 200 }}
         >
-          <Option value="desc">Mới nhất</Option>
-          <Option value="asc">Cũ nhất</Option>
-        </Select>
+					<Option value="0">Inactive</Option>
+					<Option value="1">Active</Option>
+				</Select>
 
-        <Button
-          type="primary"
-          icon={<UserAddOutlined />}
-          onClick={() => showModal()}
-        >
-          Thêm người dùng
-        </Button>
-      </div>
+				<Select
+					style={{ width: 200 }}
+					value={selectedRole}
+					onChange={setSelectedRole}
+					placeholder="Chọn vai trò"
+				>
+					{roleOptions.map((opt) => (
+						<Option key={opt.value} value={opt.value}>
+							{opt.label}
+						</Option>
+					))}
+				</Select>
 
-      {/* Bảng danh sách người dùng */}
-      <Table
-        columns={columns}
-        dataSource={filteredData}
-        pagination={{ pageSize: 10 }}
-        rowClassName={() => 'hover:bg-gray-50'}
-      />
+				<Button type="primary" icon={<UserAddOutlined />} onClick={() => showModal()}>
+					Thêm người dùng
+				</Button>
+			</div>
 
-      {/* Modal thêm/sửa người dùng */}
-      <Modal
-        title={editingUser ? 'Sửa thông tin người dùng' : 'Thêm người dùng mới'}
-        open={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Form form={form} layout="vertical" name="user_form">
-          <Form.Item label="Tên người dùng" name="name" rules={[{ required: true }]}>
-            <Input placeholder="Nhập tên" />
-          </Form.Item>
+			<Table
+				columns={columns}
+				dataSource={filteredData}
+				pagination={{ pageSize: 10 }}
+				rowClassName={() => 'hover:bg-gray-50'}
+				rowKey="id"
+			/>
 
-          <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
-            <Input placeholder="Nhập email" />
-          </Form.Item>
+			<Modal
+				title={editingUser ? 'Sửa thông tin người dùng' : 'Thêm người dùng mới'}
+				open={isModalVisible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+			>
+				<Form form={form} layout="vertical" name="user_form">
+					<Form.Item
+						label="Tên người dùng"
+						name="name"
+						rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
+					>
+						<Input placeholder="Nhập tên" />
+					</Form.Item>
 
-          <Form.Item label="Vai trò" name="role" rules={[{ required: true }]}>
-            <Select placeholder="Chọn vai trò">
-              <Option value="admin">Quản trị viên</Option>
-              <Option value="user">Người dùng</Option>
-            </Select>
-          </Form.Item>
+					<Form.Item
+						label="Email"
+						name="email"
+						rules={[{ required: true, type: 'email', message: 'Vui lòng nhập email hợp lệ' }]}
+					>
+						<Input placeholder="Nhập email" />
+					</Form.Item>
 
-          <Form.Item label="Trạng thái" name="status" valuePropName="checked">
-            <Switch />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
-  );
+					<Form.Item
+						label="Vai trò"
+						name="role"
+						rules={[{ required: true, message: 'Vui lòng chọn vai trò' }]}
+					>
+						<Select placeholder="Chọn vai trò">
+							<Option value="admin">Quản trị viên</Option>
+							<Option value="user">Người dùng</Option>
+						</Select>
+					</Form.Item>
+
+					<Form.Item label="Trạng thái" name="status" valuePropName="checked">
+						<Switch />
+					</Form.Item>
+				</Form>
+			</Modal>
+		</div>
+	);
 };
 
 export default AccountPage;

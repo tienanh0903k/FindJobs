@@ -109,3 +109,11 @@ export const TimeAgo = ({date}: {
 
 	return timeAgo;
 }
+
+
+export function getErrorMessage(error: unknown): string {
+	if (typeof error === 'object' && error !== null && 'message' in error) {
+		return (error as { message: string }).message;
+	}
+	return 'Internal server error';
+}

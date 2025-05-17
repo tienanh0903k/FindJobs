@@ -18,7 +18,10 @@ export const Employers = ({
 							<EmployerCard key={index} jobs={jobs} />
 						))} */}
 
-					{items.slice(0, 8).map((job: any, index: number) => (
+					{/* {items.slice(0, 8).map((job: any, index: number) => (
+						<EmployerCard key={index} job={job} />
+					))} */}
+					{items.map((job: any, index: number) => (
 						<EmployerCard key={index} job={job} />
 					))}
 				</div>

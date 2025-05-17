@@ -160,6 +160,13 @@ export class User {
     required: false,
   })
   companyId: Types.ObjectId;
+
+  //status int32
+  @Prop({
+    type: Number,
+    default: 1,
+  })
+  status: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

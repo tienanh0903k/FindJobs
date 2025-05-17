@@ -58,7 +58,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 p-4">
+    <div className="flex min-h-screen p-4">
       {/* Left form side */}
       <div className="flex-1 max-w-3xl px-8 py-10">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto" noValidate>

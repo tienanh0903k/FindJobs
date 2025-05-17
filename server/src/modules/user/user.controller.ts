@@ -11,6 +11,7 @@ import {
   Req,
   UploadedFile,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,6 +28,19 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   // --------------------API GET--------------------------//
+
+  //get for tab user manager
+  // @Get('by-role')
+  // async getUsersByRoleId(@Query('roleId') roleId?: string) {
+  //   return this.userService.findAllUsersByRoleId(roleId);
+  // }
+  @Get('by-role')
+  async getUsersByRoleId(
+    @Query('roleId') roleId?: string,
+    @Query('status') status?: string,
+  ) {
+    return this.userService.findAllUsersByRoleId(roleId, status);
+  }
 
   @Get()
   @Roles('HR')
@@ -63,6 +77,28 @@ export class UserController {
     }
   }
 
+  // --------------------API Patch--------------------------//
+  @Patch(':id/status')
+  async updateStatus(
+    @Param('id') id: string,
+    @Body() body: { status: number },
+  ) {
+    return this.userService.updateStatus(id, body.status);
+  }
+
+  @Patch(':id')
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.updateUserInfo(id, updateUserDto);
+  }
+
+  @Patch(':id/role')
+  async updateRole(@Param('id') id: string, @Body() body: { role: string }) {
+    return this.userService.updateRole(id, body.role);
+  }
+
   @Post('/avatar/:id')
   // @Roles('ADMIN')
   // @UseGuards(AuthGuard, RolesGuard)
@@ -83,8 +119,6 @@ export class UserController {
     };
   }
 
-
-
   /**
    * Update user information
    * @param req - Request
@@ -104,7 +138,6 @@ export class UserController {
     }
     return this.userService.updateUserInfo(userId, updateUserDto);
   }
-
 
   @Delete(':id')
   remove(@Param('id') id: string) {

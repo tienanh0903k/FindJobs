@@ -12,4 +12,6 @@ export class PaginationQueryDto {
   @Min(1)  // Đảm bảo giá trị tối thiểu của trường này là 1 (không thể ít hơn 1).
   @Type(() => Number)  // Chuyển đổi giá trị về kiểu `Number`.
   limit?: number;  // Trường này đại diện cho số lượng kết quả trên mỗi trang (limit).
+
+   status?: number;
 }

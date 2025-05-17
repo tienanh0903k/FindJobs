@@ -1,8 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { HashingUtil } from 'src/utils/bcrypt.util';
 import { UploadsService } from '../uploads/uploads.service';
@@ -13,6 +17,42 @@ export class UserService {
     @InjectModel(User.name) private userModels: Model<User>,
     private readonly uploadsService: UploadsService,
   ) {}
+
+  //get all user
+  // async findAllUsersByRoleId(roleId?: string) {
+  //   const filter: any = {};
+  //   if (roleId) {
+  //     filter.role = roleId;
+  //   }
+  //   console.log('filter', filter);
+
+  //   return this.userModels.find(filter).populate('role').exec();
+  // }
+
+  async findAllUsersByRoleId(roleId?: string, status?: string | number) {
+    const filter: any = {};
+
+    if (roleId) {
+      if (!Types.ObjectId.isValid(roleId)) {
+        throw new Error('Invalid roleId');
+      }
+      filter.role = roleId;
+    }
+
+    if (status !== undefined && status !== null) {
+      const statusNum =
+        typeof status === 'string' ? parseInt(status, 10) : status;
+      if (statusNum === 0 || statusNum === 1) {
+        filter.status = statusNum;
+      } else {
+        throw new Error('Invalid status value, must be 0 or 1');
+      }
+    }
+
+    //console.log('filter', filter);
+
+    return this.userModels.find(filter).populate('role').exec();
+  }
 
   async create(dataUser: CreateUserDto) {
     try {
@@ -155,4 +195,29 @@ export class UserService {
 
   //   console.log(user);
   // }
+
+  // Sửa status
+  async updateStatus(id: string, status: number) {
+    if (![0, 1].includes(status))
+      throw new BadRequestException('Invalid status');
+    const user = await this.userModels.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true },
+    );
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  async updateRole(id: string, role: string) {
+    console.log('role', role);
+    if (!role) throw new BadRequestException('Role is required');
+    const user = await this.userModels.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true },
+    );
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
 }

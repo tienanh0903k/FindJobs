@@ -175,6 +175,14 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+        console.log('user.status:', user, 'type:', typeof user.status);
+
+    if (Number(user.status) !== 1) {
+      throw new UnauthorizedException(
+        'Tài khoản chưa được kích hoạt hoặc đã bị khóa',
+      );
+    }
+
     const isValid = await this.isValidPassword(password, user.password);
     if (!isValid) {
       throw new UnauthorizedException('Sai mật khẩu');

@@ -19,6 +19,7 @@
 
 // import authApi from '@/api/auth';
 import authApi from '@/api/authApi';
+import { getErrorMessage } from '@/lib/helper';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
 
 		return response;
 	} catch (error) {
-		console.error(error);
-		return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+		console.error("---error", error);
+		return NextResponse.json({ error });
 	}
 }

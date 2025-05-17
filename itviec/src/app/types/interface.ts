@@ -25,6 +25,11 @@ export interface UserType {
 	access_token?: string;
 	refresh_token?: string;
 	permissions?: IPermissionItem[]
+	error?: {
+		code: string;
+		message: string;
+		status: number;
+	};
 }
 
 
@@ -48,6 +53,7 @@ export interface ICompany {
 	logo: string;
 	total_employee: number;
 	image: string;
+	status?: number;
 	file?: {
 		url: string;
 		name: string;
@@ -98,13 +104,17 @@ export interface IUserType {
 	position: string;
 	projects: any[]; 
 	avatar: string;
-	role: string;
+	role: {
+	_id: string;
+	name: string;
+	};
 	skills: any[]; 
 	update_at: string; 
 	userName: string;
 	fullName: string;
 	workExperience: any[]; 
 	introduction: string;
+	status: number;
 }
 
 

@@ -8,7 +8,7 @@ const URL_BACKEND = 'http://localhost:3001'
 
 interface AuthApi {
 	login(body: LoginBodyType):Promise<AxiosResponse<any>>;
-	loginClient(username: string, password: string): Promise<AxiosResponse<any>>;
+	loginClient(username: string, password: string): Promise<any>;
 	setCookie(token: string): Promise<Response>;
 	logOut(): Promise<Response>;
 	refreshToken(body: { refreshToken: string }): Promise<Response>;

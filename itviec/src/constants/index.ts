@@ -160,3 +160,9 @@ export const templates = [
 			'https://cdn1.vieclam24h.vn/images/assets/img/cv8-202122.png',
 	}
 ];
+
+export const roles = {
+	ADMIN: '66e412d0e72f47d74a6fa7e7',
+	HR: '66e8410b7f7f221ba7a995b1',
+	USER: '66e8425f7f7f221ba7a995b6'
+}

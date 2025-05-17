@@ -28,6 +28,9 @@ export class Companies {
 
   @Prop({ type: String })
   image: string;
+
+    @Prop({ type: Number, default: 0 }) // 0 = chờ duyệt, 1 = duyệt rồi
+  status: number;
 }
 
 export const CompaniesSchema = SchemaFactory.createForClass(Companies);

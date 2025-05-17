@@ -12,15 +12,23 @@ export default async function Home() {
 	// const posts: IPost[] = await postsApi.getPostForHome();
 	// console.log('posts', posts);
 
-	const [posts, jobs] = await Promise.all([
-		postsApi.getPostForHome(),
-		companyApi.getAllCompany({
-			limit: 10,
-			page: 1,
-		}),
-	]);
+	// const [posts, jobs] = await Promise.all([
+	// 	postsApi.getPostForHome(),
+	// 	// companyApi.getAllCompany({
+	// 	// 	limit: 10,
+	// 	// 	page: 1,
+	// 	// }),
+	// 	companyApi.getHomeCompanies(10),
+	// ]);
 
-	// console.log(posts, jobs)
+	//  console.log('posts', posts);
+	//  console.log('jobs', jobs);
+	  const posts = await postsApi.getPostForHome();
+  const jobs = await companyApi.getHomeCompanies(10);
+
+  console.log('posts', posts);
+  console.log('jobs', jobs);
+
 	return (
 		<main className="mt-[64px]">
 			<SearchHome />
@@ -34,7 +42,7 @@ export default async function Home() {
 				</div>  */}
 			<JobSlide posts={posts} />
 			</div>
-			<Employers jobs={jobs} />
+			{/* <Employers jobs={jobs} /> */}
 		</main>
 	);
 }

@@ -15,7 +15,10 @@ const Access = ({ permission, hideChildren = false, children }: IProps) => {
 	const [allow, setAllow] = useState<boolean>(false);
 
 	const permissions = useAppSelector((state) => state.auth.currentUser?.permissions);
-	console.log('permissions', permissions);
+	// console.log('permissions', permissions);
+	useEffect(() => {
+		console.log('permissions', permissions);
+	}, [permissions]); 
 
 	useEffect(() => {
 		if (permissions && permissions.length) {

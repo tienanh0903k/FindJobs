@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateCompanyDto {
@@ -28,4 +29,9 @@ export class CreateCompanyDto {
 
   @IsOptional()
   total_employee?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  status?: number;
 }
