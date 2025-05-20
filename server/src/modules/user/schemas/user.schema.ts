@@ -167,6 +167,13 @@ export class User {
     default: 1,
   })
   status: number;
+
+  //add balance
+  @Prop({
+    type: Number,
+    default: 0,
+  })
+  balance: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

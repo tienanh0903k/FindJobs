@@ -99,7 +99,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 					<Avatar size="small" src={infoCompany?.logo} style={{ backgroundColor: '#f56a00' }}>
 						{infoCompany?.name?.charAt(0)}
 					</Avatar>
-					<span>{infoCompany?.name || 'Tên công ty chưa xác định'}</span>
+					<span>{infoCompany?.name || 'Quan tri vien'}</span>
 				</Space>
 			</Menu.Item>
 			<Menu.Item key="logout">

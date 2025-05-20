@@ -21,6 +21,7 @@ import { MailModule } from './modules/mail/mail.module';
 import { FollowerModule } from './modules/follower/follower.module';
 import { TransformInterceptor } from './common/interceptors/response.interceptor';
 import { NotifyModule } from './modules/notify/notify.module';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { NotifyModule } from './modules/notify/notify.module';
     MailModule,
     FollowerModule,
     NotifyModule,
+    TransactionModule,
     // ElasticsearchModule,
   ],
   controllers: [AppController],

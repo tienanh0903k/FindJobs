@@ -70,7 +70,7 @@ const CompanyModal: React.FC<IProps> = ({
 
       // Thêm file ảnh nếu có
       if (fileList.length > 0 && fileList[0].originFileObj) {
-        formData.append('image', fileList[0].originFileObj);
+        formData.append('logo', fileList[0].originFileObj);
       }
 
       let response;

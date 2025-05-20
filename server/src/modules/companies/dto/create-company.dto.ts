@@ -15,7 +15,7 @@ export class CreateCompanyDto {
 
   @IsString()
   @IsOptional()
-  image?: string;
+  logo?: string;
 
   @IsString()
   @IsOptional()

@@ -43,7 +43,7 @@ export class CompaniesService {
     }
 
     if (imageUrl) {
-      createCompanyDto.image = imageUrl;
+      createCompanyDto.logo = imageUrl;
     }
     //console.log('createCompanyDto:', createCompanyDto);
     const result = this.companyModels.create(createCompanyDto);
@@ -96,7 +96,7 @@ export class CompaniesService {
     }
 
     if (imageUrl) {
-      updateCompanyDto.image = imageUrl;
+      updateCompanyDto.logo = imageUrl;
     }
 
     const company = await this.companyModels

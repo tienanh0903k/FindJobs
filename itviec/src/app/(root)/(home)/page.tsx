@@ -26,8 +26,8 @@ export default async function Home() {
 	  const posts = await postsApi.getPostForHome();
   const jobs = await companyApi.getHomeCompanies(10);
 
-  console.log('posts', posts);
-  console.log('jobs', jobs);
+ // console.log('posts', posts);
+  console.log('>>>>>>jobs', jobs);
 
 	return (
 		<main className="mt-[64px]">
@@ -42,7 +42,7 @@ export default async function Home() {
 				</div>  */}
 			<JobSlide posts={posts} />
 			</div>
-			{/* <Employers jobs={jobs} /> */}
+				<Employers jobs={jobs} />
 		</main>
 	);
 }

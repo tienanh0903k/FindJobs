@@ -74,8 +74,8 @@ const CompanyPage: React.FC = () => {
 		},
 		{
 			title: 'Hình ảnh',
-			dataIndex: 'image',
-			key: 'image',
+			dataIndex: 'logo',
+			key: 'logo',
 			render: (image: string) => (
 				<Image
 					src={image}

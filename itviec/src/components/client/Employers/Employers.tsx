@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 export const Employers = ({
 	jobs
 }: any) => {
-	const {items} = jobs
+	const items = jobs
 	const t  = useTranslations();
 	return (
 		<div className="bg-white h-[1100px]">
