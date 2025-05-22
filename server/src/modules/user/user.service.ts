@@ -10,6 +10,7 @@ import mongoose, { Model, Types } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { HashingUtil } from 'src/utils/bcrypt.util';
 import { UploadsService } from '../uploads/uploads.service';
+import { CreateProjectDto } from './dto/general-dto';
 
 @Injectable()
 export class UserService {
@@ -112,6 +113,18 @@ export class UserService {
     return avatarUrl;
   }
 
+  //----------------------------- start add labels profile -----------------------------
+
+  async addProject(userId: string, dto: CreateProjectDto) {
+    return this.userModels.findByIdAndUpdate(
+      userId,
+      { $push: { projects: dto } }, ///$push is used to add a new item to an array
+      { new: true },
+    );
+  }
+
+  //------------------------------end add labels profile ------------------------------
+
   async getProfile(userId: string): Promise<User> {
     return this.userModels.findById(userId).exec();
   }
@@ -130,33 +143,108 @@ export class UserService {
     });
   }
 
-  /**
-   * Update user
-   * @param updateUserDto - Data to update
-   * @returns Updated user
-   */
+  // /**
+  //  * Update user
+  //  * @param updateUserDto - Data to update
+  //  * @returns Updated user
+  //  */
+  //     async updateUserInfo(id: string, updateUserDto: UpdateUserDto) {
+  //       console.log('updateUserDto', updateUserDto);
+  //       const updateFields = {};
+
+  //       Object.keys(updateUserDto).forEach((key) => {
+  //         if (updateUserDto[key] !== undefined && updateUserDto[key] !== null) {
+  //           updateFields[key] = updateUserDto[key];
+  //         }
+
+  //       });
+
+  //       const updated = await this.userModels
+  //         .findOneAndUpdate(
+  //           { _id: id },
+  //           { $set: updateFields },
+  //           {
+  //             new: true,
+  //             runValidators: true,
+  //           },
+  //         )
+  //         .exec();
+
+  //       return updated;
+  //     }
+
   async updateUserInfo(id: string, updateUserDto: UpdateUserDto) {
-    const updateFields = {};
+    const updateSetFields: Record<string, any> = {};
+    const updatePushFields: Record<string, any> = {};
+
+    // Các trường dạng mảng mà bạn muốn xử lý thêm phần tử
+    const arrayFields = [
+      'education',
+      'workExperience',
+      'skills',
+      'projects',
+      'certifications',
+      'awards',
+    ];
 
     Object.keys(updateUserDto).forEach((key) => {
-      if (updateUserDto[key] !== undefined && updateUserDto[key] !== null) {
-        updateFields[key] = updateUserDto[key];
+      const value = updateUserDto[key];
+      if (value !== undefined && value !== null) {
+        if (arrayFields.includes(key) && Array.isArray(value)) {
+          // Nếu trường là mảng, dùng $push với $each để thêm phần tử mới
+          updatePushFields[key] = { $each: value };
+        } else {
+          updateSetFields[key] = value;
+        }
       }
     });
 
+    // Tạo object update cuối cùng
+    const updateQuery: any = {};
+    if (Object.keys(updateSetFields).length > 0) {
+      updateQuery['$set'] = updateSetFields;
+    }
+    if (Object.keys(updatePushFields).length > 0) {
+      updateQuery['$push'] = updatePushFields;
+    }
+
     const updated = await this.userModels
-      .findOneAndUpdate(
-        { _id: id },
-        { $set: updateFields },
-        {
-          new: true,
-          runValidators: true,
-        },
-      )
+      .findOneAndUpdate({ _id: id }, updateQuery, {
+        new: true,
+        runValidators: true,
+      })
       .exec();
 
     return updated;
   }
+
+  // xoa mang con
+  async removeItemFromArrayField(
+    userId: string,
+    arrayField: string,
+    itemId: string,
+  ) {
+    // Tạo điều kiện pull động
+    const pullCondition = { [arrayField]: { _id: itemId } };
+
+    // Cập nhật user, xóa phần tử trong mảng tương ứng
+    const updatedUser = await this.userModels.findByIdAndUpdate(
+      userId,
+      { $pull: pullCondition },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundException('User không tồn tại');
+    }
+
+    return updatedUser;
+  }
+
+
+
+
+
 
   remove(id: number) {
     return `This action removes a #${id} user`;

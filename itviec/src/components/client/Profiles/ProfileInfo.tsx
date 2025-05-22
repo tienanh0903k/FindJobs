@@ -2,16 +2,19 @@
 
 import ModalGlobal from '@/components/base/ModalGlobal';
 import useModal from '@/hook/useModal';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FiEdit, FiPlus, FiTrash } from 'react-icons/fi';
 import RenderModalContent from './Modal/renderModalContent';
-import { Progress, Skeleton, Tooltip } from 'antd';
+import { message, Progress, Skeleton, Tooltip } from 'antd';
 import userApi from '@/api/userApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { IUserQuery, IUserType } from '@/app/types/interface';
+import { Award, Certificate, IUserQuery, IUserType } from '@/app/types/interface';
 import Image from '@/components/base/Image';
-import { getModalTitle } from '@/lib/helper'
-
+import { getModalTitle } from '@/lib/helper';
+import SectionListBlock from './SectionLabel';
+import { useAppSelector } from '@/hook/useSelector';
+import { RootState } from '@/redux/store';
+import { profileApi } from '@/api/profileApi';
 
 export enum ModalType {
 	PERSONAL = 'personal',
@@ -26,13 +29,17 @@ export enum ModalType {
 
 export const ProfileInfo = () => {
 	const queryClient = useQueryClient();
-	const { modalType, visible,  modalData, openModal, closeModal } = useModal();
+	const { modalType, visible, modalData, openModal, closeModal } = useModal();
 	const [formData, setFormData] = useState<IUserType | null>(null);
-	
+
 	//call skill by user
 	const [skills, setSkills] = useState(['ReactJS', 'TypeScript', 'JavaScript', 'NodeJS']);
 	const [percent, setPercent] = useState(0);
 
+	const infoUser = useAppSelector((state: RootState) => state.auth.currentUser?.user);
+
+	const [isAvatarHover, setIsAvatarHover] = useState(false);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	//get api get me
 	// const [data, setData] = useState<IUserType>();
@@ -50,6 +57,15 @@ export const ProfileInfo = () => {
 	// 	fetchMe();
 	// }, []);
 
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setPercent(37.9);
+		}, 1500);
+
+		return () => clearTimeout(timer);
+	}, []);
+
+	console.log('parent', formData);
 
 	//useQuery
 	const { data, isFetching, isSuccess, isError, error }: IUserQuery = useQuery({
@@ -58,6 +74,7 @@ export const ProfileInfo = () => {
 			try {
 				const { data } = await userApi.getMe();
 				if (!data) throw new Error('User not found');
+				console.log('User data:', data);
 				return data;
 			} catch (err) {
 				console.error(err);
@@ -67,7 +84,6 @@ export const ProfileInfo = () => {
 
 		refetchOnWindowFocus: false,
 	});
-
 
 	//mutation
 	const mutation = useMutation({
@@ -81,37 +97,101 @@ export const ProfileInfo = () => {
 		onError: (error) => {
 			console.log(error);
 		},
-	  })
+	});
 
+	// const handleSave = async (data: any, type: ModalType) => {
+	// 	setFormData(prev => {
+	// 		console.log("prev", prev);
+	// 		return {
+	// 			...prev,
+	// 			...data
+	// 		}
+	// 	})
+	// 	try {
+	// 		await mutation.mutateAsync(data);
+	// 		console.log("Updated user:", data);
+	// 	} catch (error) {
+	// 		console.error('Error updating user:', error);
+	// 	}
+	// 	console.log('>>>', data, type, infoUser?._id);
+	// 	try {
+	// 		if (!infoUser?._id) {
+	// 			message.error('Có lỗi khi lưu dữ liệu!');
+	// 			return;
+	// 		}
+	// 		if (type === ModalType.PROJECTS) {
+	// 			await profileApi.postProject(infoUser?._id, data);
+	// 			message.success('Thêm dự án thành công!');
+	// 		}
 
-	const handleSave = async (data: any) => {
-		setFormData(prev => {
-			console.log("prev", prev);
-			return {
-				...prev,
-				...data
-			}
-		})
+	// 		queryClient.invalidateQueries({ queryKey: ['me'] });
+	// 		closeModal(); // Đóng modal sau khi refetch xong
+	// 	} catch (error) {
+	// 		message.error('Có lỗi khi lưu dữ liệu!');
+	// 	}
+	// };
+
+	const handleSave = async (data: any, type: ModalType) => {
+		setFormData((prev) => ({
+			...prev,
+			...data,
+		}));
+
 		try {
-			await mutation.mutateAsync(data);
-			console.log("Updated user:", data);
+			if (!infoUser?._id) {
+				message.error('Có lỗi khi lưu dữ liệu!');
+				return;
+			}
+
+			if (type === ModalType.PROJECTS) {
+				// Gọi API thêm dự án
+				await profileApi.postProject(infoUser._id, data);
+				message.success('Thêm dự án thành công!');
+			} else {
+				await mutation.mutateAsync(data);
+				message.success('Cập nhật thành công!');
+			}
+
+			queryClient.invalidateQueries({ queryKey: ['me'] });
 		} catch (error) {
-			console.error('Error updating user:', error);
+			console.error(error);
+			message.error('Có lỗi khi lưu dữ liệu!');
 		}
-		
-	} 
+	};
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setPercent(37.9);
-		  }, 1500);
+	//handle avater change
+	const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (!file || !infoUser?._id) return;
+		console.log('file', file);
+		try {
+			const res = await profileApi.uploadAvatar(infoUser._id, file);
+			message.success('Cập nhật ảnh đại diện thành công!');
+			queryClient.invalidateQueries({ queryKey: ['me'] });
+		} catch (err) {
+			message.error('Cập nhật ảnh đại diện thất bại!');
+		}
+	};
 
-		return () => clearTimeout(timer);
-	}, [])
+	const handleDeleteArrayItem = async (
+		arrayField: string,
+		itemId: string,
+		successMessage?: string,
+	) => {
+		if (!infoUser?._id) {
+			message.error('Không tìm thấy user');
+			return;
+		}
+		try {
+			await profileApi.deleteArrayItem(infoUser._id, arrayField, itemId);
+			message.success(successMessage || 'Xóa thành công');
+			queryClient.invalidateQueries({ queryKey: ['me'] });
+		} catch (error) {
+			console.error(error);
+			message.error('Có lỗi khi xóa dữ liệu');
+		}
+	};
 
-	console.log("parent", formData);
-
-	
 	return (
 		<div className="w-full min-h-screen p-2">
 			<div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
@@ -163,10 +243,7 @@ export const ProfileInfo = () => {
 					</div>
 
 					<div className="bg-white my-4">
-						<a
-							className="bg-red-700 p-2 w-full block text-center text-white"
-							href="/custom-resume"
-						>
+						<a className="bg-red-700 p-2 w-full block text-center text-white" href="/custom-resume">
 							Xem và Tải CV
 						</a>
 					</div>
@@ -177,13 +254,71 @@ export const ProfileInfo = () => {
 						<section className="relative border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Thông tin cá nhân</h2>
 							<div className="flex flex-col sm:flex-row items-center">
-								<div className="w-24 h-24">
+								{/* <div className="w-24 h-24">
 									<Image
 										src={data?.avatar || 'https://via.placeholder.com/150'}
 										alt="Profile"
 										className="rounded-full object-cover"
 										width={150}
 										height={150}
+									/>
+								</div> */}
+								{/* <div
+									className="w-24 h-24 relative group border-4 border-blue-300 rounded-full"
+									onMouseEnter={() => setIsAvatarHover(true)}
+									onMouseLeave={() => setIsAvatarHover(false)}
+								>
+									<Image
+										src={data?.avatar || 'https://via.placeholder.com/150'}
+										alt="ㅤ"
+										className="rounded-full object-cover"
+										width={150}
+										height={150}
+									/>
+									{isAvatarHover && (
+										<div
+											className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full cursor-pointer"
+											onClick={() => fileInputRef.current?.click()}
+										>
+											<FiEdit className="text-white text-2xl" />
+											<input
+												type="file"
+												accept="image/*"
+												ref={fileInputRef}
+												style={{ display: 'none' }}
+												onChange={handleAvatarChange}
+											/>
+										</div>
+									)}
+								</div> */}
+								<div
+									className="w-24 h-24 relative group border-4 border-blue-300 rounded-full overflow-hidden"
+									onMouseEnter={() => setIsAvatarHover(true)}
+									onMouseLeave={() => setIsAvatarHover(false)}
+								>
+									<Image
+										src={data?.avatar || 'https://via.placeholder.com/150'}
+										alt="ㅤ"
+										className="w-full h-full object-cover rounded-full"
+										width={150}
+										height={150}
+									/>
+									{/* Overlay icon, chỉ hiện khi hover */}
+									{isAvatarHover && (
+										<div
+											className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full cursor-pointer z-10"
+											onClick={() => fileInputRef.current?.click()}
+										>
+											<FiEdit className="text-white text-2xl" />
+										</div>
+									)}
+									{/* Input file LUÔN LUÔN xuất hiện, không điều kiện */}
+									<input
+										type="file"
+										accept="image/*"
+										ref={fileInputRef}
+										style={{ display: 'none' }}
+										onChange={handleAvatarChange}
 									/>
 								</div>
 
@@ -281,22 +416,20 @@ export const ProfileInfo = () => {
 							>
 								{isFetching ? (
 									<div className="h-4 bg-gray-300 rounded w-3/4" />
-								) 
-								: 
-								(
+								) : (
 									<div
 										dangerouslySetInnerHTML={{
-										__html: data?.introduction || 'Chưa cung cấp thông tin giới thiệu',
+											__html: data?.introduction || 'Chưa cung cấp thông tin giới thiệu',
 										}}
 									/>
 								)}
 							</div>
 							<button
 								className="text-white mt-4 absolute top-0 right-2 border-none"
-								onClick={() =>{
+								onClick={() => {
 									openModal(ModalType.INTRODUCE, {
-										introduction: data?.introduction
-									})
+										introduction: data?.introduction,
+									});
 								}}
 							>
 								<FiEdit className="text-blue-500 font-bold" />
@@ -339,7 +472,7 @@ export const ProfileInfo = () => {
 						</section>
 
 						{/* Projects Section */}
-						<section className="relative border bg-white p-4 mb-4 shadow-sm">
+						{/* <section className="relative border bg-white p-4 mb-4 shadow-sm">
 							<h2 className="text-xl font-semibold mb-4">Dự án</h2>
 							{data?.projects.map((project: any, index: any) => (
 								<div key={index} className="mt-4 relative">
@@ -352,10 +485,7 @@ export const ProfileInfo = () => {
 										>
 											<FiEdit className="font-bold" />
 										</button>
-										<button
-											className="text-red-500 hover:text-red-700 focus:outline-none"
-											
-										>
+										<button className="text-red-500 hover:text-red-700 focus:outline-none">
 											<FiTrash className="font-bold" />
 										</button>
 									</div>
@@ -367,30 +497,156 @@ export const ProfileInfo = () => {
 							>
 								<FiPlus className="text-blue-500 font-bold" />
 							</button>
-						</section>
-
-						{/* Work Experience Section */}
+						</section> */}
 						<section className="relative border bg-white p-4 mb-4 shadow-sm">
-							<h2 className="text-xl font-semibold mb-4">Kinh nghiệm làm việc</h2>
-							{['Company A', 'Company B'].map((company, index) => (
-								<div key={index} className="mt-4">
-									<h3 className="text-lg font-semibold">{company}</h3>
-									<p className="text-gray-700">Position at {company}</p>
-									<p className="text-gray-700">Responsibilities at {company}</p>
+							<h2 className="text-xl font-semibold mb-4">Dự án</h2>
+							{(!data?.projects || data.projects.length === 0) && (
+								<div className="text-gray-500 italic mb-4">Chưa có dự án nào</div>
+							)}
+							{data?.projects.map((project: any, index: number) => (
+								<div key={index} className="mt-4 relative border-b pb-3 last:border-b-0">
+									<div className="flex justify-between items-start">
+										<div>
+											<h3 className="text-lg font-semibold mb-1">{project.title}</h3>
+											<div className="flex flex-wrap gap-4 mb-1 text-sm text-gray-700">
+												{project.role && (
+													<span>
+														<b>Vai trò:</b> {project.role}
+													</span>
+												)}
+												{project.year && (
+													<span>
+														<b>Năm:</b> {project.year}
+													</span>
+												)}
+											</div>
+											{project.description && (
+												<p className="text-gray-700 mb-1">
+													<b>Mô tả:</b> {project.description}
+												</p>
+											)}
+											{project.link && (
+												<a
+													href={project.link}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-blue-600 hover:underline text-sm"
+												>
+													{project.link}
+												</a>
+											)}
+										</div>
+										<div className="flex space-x-2">
+											<button
+												className="text-blue-500 hover:text-blue-700 focus:outline-none"
+												onClick={() => openModal(ModalType.PROJECTS, project)}
+												title="Chỉnh sửa dự án"
+											>
+												<FiEdit className="font-bold" />
+											</button>
+											<button
+												className="text-red-500 hover:text-red-700 focus:outline-none"
+												// onClick={...} // Xử lý xóa ở đây nếu cần
+												title="Xóa dự án"
+											>
+												<FiTrash className="font-bold" />
+											</button>
+										</div>
+									</div>
 								</div>
 							))}
-							<Tooltip title="Chỉnh sửa kinh nghiệm" placement="top">
-								<button
-									className="text-white mt-4 absolute top-0 right-2 border-none"
-									onClick={() => openModal(ModalType.EXPERIENCE)}
-								>
-									<FiEdit className="text-blue-500 font-bold" />
-								</button>
-							</Tooltip>
+							<button
+								className="absolute text-white mt-4 top-0 right-2 border-none"
+								onClick={() => openModal(ModalType.PROJECTS)}
+								title="Thêm dự án mới"
+							>
+								<FiPlus className="text-blue-500 font-bold" />
+							</button>
 						</section>
 
+						<section className="relative border bg-white p-4 mb-4 shadow-sm">
+							<h2 className="text-xl font-semibold mb-4">Kinh nghiệm làm việc</h2>
+
+							{!data?.workExperience || data.workExperience.length === 0 ? (
+								<div className="text-gray-500 italic mb-4">Chưa có kinh nghiệm làm việc nào</div>
+							) : (
+								data.workExperience.map((item: any, index: number) => (
+									<div key={index} className="mt-4 relative border-b pb-3 last:border-b-0">
+										<h3 className="text-lg font-semibold">{item.companyName}</h3>
+										<p className="text-gray-700">Vị trí: {item.position}</p>
+										<p className="text-gray-700">
+											Thời gian: {new Date(item.startDate).toLocaleDateString()} -{' '}
+											{item.endDate ? new Date(item.endDate).toLocaleDateString() : 'Hiện tại'}
+										</p>
+
+										{/* Nút sửa và xóa */}
+										<div className="absolute top-0 right-0 flex space-x-2">
+											<button
+												className="text-blue-500 hover:text-blue-700 focus:outline-none"
+												onClick={() => openModal(ModalType.EXPERIENCE, item)}
+												title="Chỉnh sửa kinh nghiệm"
+											>
+												<FiEdit className="font-bold" />
+											</button>
+											<button
+												className="text-red-500 hover:text-red-700 focus:outline-none"
+												onClick={() =>
+													handleDeleteArrayItem(
+														'workExperience',
+														item._id,
+														'Xóa kinh nghiệm thành công',
+													)
+												}
+												title="Xóa kinh nghiệm"
+											>
+												<FiTrash className="font-bold" />
+											</button>
+										</div>
+									</div>
+								))
+							)}
+
+							{/* Nút thêm mới */}
+							<button
+								className="absolute text-white mt-4 top-0 right-2 border-none"
+								onClick={() => openModal(ModalType.EXPERIENCE)}
+								title="Thêm kinh nghiệm mới"
+							>
+								<FiPlus className="text-blue-500 font-bold" />
+							</button>
+						</section>
+
+						{/* Certificates Section */}
+						<SectionListBlock<Certificate>
+							title="Chứng chỉ"
+							items={data?.certifications || []}
+							fields={['name', 'organization', 'year']}
+							onAdd={() => openModal(ModalType.CERTIFICATES)}
+							onEdit={(cert) => openModal(ModalType.CERTIFICATES, cert)}
+							onDelete={(cert) => {}}
+							emptyText="Chưa có chứng chỉ nào"
+						/>
+
+						{/* Awards Section */}
+						<SectionListBlock<Award>
+							title="Giải thưởng"
+							items={data?.awards || []}
+							fields={['name', 'organization', 'year']}
+							onAdd={() => openModal(ModalType.AWARDS)}
+							onEdit={(award) => openModal(ModalType.AWARDS, award)}
+							onDelete={(award) => {
+								// Tùy API, ví dụ:
+								// await userApi.deleteAward(award.id);
+								// queryClient.invalidateQueries({ queryKey: ['me'] });
+							}}
+							emptyText="Chưa có giải thưởng nào"
+						/>
+
 						<ModalGlobal visible={visible} close={closeModal} title={getModalTitle(modalType)}>
-							{RenderModalContent(modalType as ModalType, closeModal, modalData , handleSave)}
+							{RenderModalContent(modalType as ModalType, closeModal, modalData, (data: any) => {
+								console.log('data', data);
+								handleSave(data, modalType as ModalType);
+							})}
 						</ModalGlobal>
 					</div>
 				</div>
@@ -400,4 +656,3 @@ export const ProfileInfo = () => {
 };
 
 export default ProfileInfo;
-

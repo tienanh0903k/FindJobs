@@ -191,3 +191,16 @@ export interface IUserQuery{
 	isError: boolean;
 	error: any
 }
+
+
+
+export type Certificate = {
+  name: string;
+  organization: string;
+  year: string;
+};
+export type Award = {
+  name: string;
+  organization: string;
+  year: string;
+};

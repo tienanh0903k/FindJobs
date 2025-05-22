@@ -23,7 +23,7 @@ export class User {
   //   required: true,
   // })
   // role: string;
-  
+
   @Prop({
     type: Types.ObjectId,
     ref: 'Roles',
@@ -99,14 +99,20 @@ export class User {
     type: [
       {
         title: { type: String, required: true },
+        role: { type: String, required: true },
+        year: { type: String, required: true },
         description: { type: String, required: true },
+        link: { type: String, required: false },
       },
     ],
     default: [],
   })
   projects: {
     title: string;
+    role: string;
+    year: string;
     description: string;
+    link?: string;
   }[];
 
   @Prop({

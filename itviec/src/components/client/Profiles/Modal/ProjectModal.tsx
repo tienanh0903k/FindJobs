@@ -1,96 +1,92 @@
-import React, { useState } from 'react';
-import { DatePicker, Select } from 'antd';
+import React from 'react';
+import { Form, Input, Button, Select } from 'antd';
 
 const { Option } = Select;
 
-
-
 interface ProjectModalProps {
-  data: any; 
-  closeModal: () => void; 
+  data?: any;
+  closeModal: () => void;
+  handleSave?: (data: any) => void;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ data, closeModal })=> {
-  const [date, setDate] = useState(null);
-  const [month, setMonth] = useState(null);
-  const [year, setYear] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
+const currentYear = new Date().getFullYear();
+const yearOptions = Array.from({ length: 40 }, (_, i) => `${currentYear - i}`);
 
-  const handleDateChange = (value: any) => {
-    setDate(value);
-    setMonth(value.month() + 1);
-    setYear(value.year());
-  };
+const ProjectModal: React.FC<ProjectModalProps> = ({
+  data,
+  closeModal,
+  handleSave,
+}) => {
+  const [form] = Form.useForm();
 
-  const handleMonthChange = (value: any) => {
-    setMonth(value);
-  };
-
-  const handleYearChange = (value: any) => {
-    setYear(value);
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(e.target.checked);
+  const handleSubmit = (values: any) => {
+      console.log("Modal gửi lên:", values);  // phải hiện đúng data vừa nhập
+    handleSave && handleSave(values);
+    closeModal();
   };
 
   return (
-    <div>
-      <h2>Dự án cá nhân</h2>
-      <div>
-        <p>Thể hiện dự án liên quan đến kỹ năng và khả năng của bạn</p>
-        <div>
-          <div>
-            <label htmlFor="ten-du-an">Tên dự án:</label>
-            <input type="text" id="ten-du-an" />
-          </div>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                checked={isChecked}
-                onChange={handleCheckboxChange}
-              />
-              Tôi vẫn đang làm dự án này
-            </label>
-          </div>
-          <div>
-            <label>Ngày bắt đầu:</label>
-            <DatePicker
-              onChange={handleDateChange}
-              value={date}
-              format="MM/YYYY"
-              placeholder="Chọn ngày"
-            />
-          </div>
-          <div>
-            <label>Ngày kết thúc:</label>
-            <Select
-              value={month}
-              onChange={handleMonthChange}
-              style={{ width: '100px', marginRight: '10px' }}
-            >
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                <Option key={m} value={m}>
-                  Tháng {m}
-                </Option>
-              ))}
-            </Select>
-            <Select
-              value={year}
-              onChange={handleYearChange}
-              style={{ width: '100px' }}
-            >
-              {Array.from({ length: 10 }, (_, i) => 2023 - i).map((y) => (
-                <Option key={y} value={y}>
-                  {y}
-                </Option>
-              ))}
-            </Select>
-          </div>
-        </div>
+    <Form
+      form={form}
+      layout="vertical"
+      initialValues={data}
+      onFinish={handleSubmit}
+    >
+      <Form.Item
+        label="Tên dự án *"
+        name="title"
+        rules={[{ required: true, message: 'Vui lòng nhập tên dự án!' }]}
+      >
+        <Input placeholder="Nhập tên dự án" />
+      </Form.Item>
+
+      <Form.Item
+        label="Vai trò *"
+        name="role"
+        rules={[{ required: true, message: 'Vui lòng nhập vai trò của bạn!' }]}
+      >
+        <Input placeholder="Nhập vai trò (VD: Frontend, Leader...)" />
+      </Form.Item>
+
+      <Form.Item
+        label="Năm thực hiện *"
+        name="year"
+        rules={[{ required: true, message: 'Vui lòng chọn năm thực hiện!' }]}
+      >
+        <Select placeholder="Chọn năm">
+          {yearOptions.map((y) => (
+            <Option key={y} value={y}>{y}</Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        label="Mô tả dự án *"
+        name="description"
+        rules={[{ required: true, message: 'Vui lòng nhập mô tả dự án!' }]}
+      >
+        <Input.TextArea placeholder="Nhập mô tả dự án, công nghệ sử dụng, đóng góp..." rows={4} />
+      </Form.Item>
+
+      <Form.Item
+        label="Link demo/github"
+        name="link"
+        rules={[
+          { type: 'url', message: 'Đường dẫn không hợp lệ!', whitespace: true },
+        ]}
+      >
+        <Input placeholder="https://github.com/..." />
+      </Form.Item>
+
+      <div className="flex justify-between">
+        <Button onClick={closeModal} className="bg-gray-300 text-gray-800">
+          Hủy
+        </Button>
+        <Button type="primary" htmlType="submit" className="bg-red-500 text-white">
+          Lưu
+        </Button>
       </div>
-    </div>
+    </Form>
   );
 };
 
