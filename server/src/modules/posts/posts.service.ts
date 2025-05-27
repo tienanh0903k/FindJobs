@@ -1,8 +1,11 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './schemas/post.schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { AnyObject, Model } from 'mongoose';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { User } from '../user/schemas/user.schema';
+import { Transaction } from '../transaction/schemas/transiton.schema';
 // import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
 
 
@@ -11,6 +14,8 @@ import { AnyObject, Model } from 'mongoose';
 export class PostsService implements OnModuleInit {
   constructor(
     @InjectModel(Post.name) private postsModel: Model<Post>,
+    @InjectModel(User.name) private userModels: Model<User>,
+    @InjectModel(Transaction.name) private transactionModel: Model<Transaction>,
     // private readonly esService: ElasticSearchService,
   ) {}
 
@@ -62,8 +67,31 @@ export class PostsService implements OnModuleInit {
   //   }
   // }
 
+  async deductBalance(userId: string, amount: number, type = 'pay_post') {
+    const user = await this.userModels.findById(userId);
+    if (!user) throw new NotFoundException('User not found');
+    if (user.balance < amount) throw new Error('Số dư không đủ');
+  
+    user.balance -= amount;
+    await user.save();
+  
+    const transaction = await this.transactionModel.create({
+      userId,
+      amount: -amount,  
+      type: type,
+      status: 'success',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  
+    return { balance: user.balance, transaction };
+  }
+  
+
   async createJobPosting(createJobPostingDto: CreatePostDto): Promise<any> {
+    const POST_PRICE = 50000;
     try {
+      await this.deductBalance(createJobPostingDto.userId, POST_PRICE, 'pay_post');
       const newJobPosting = await this.postsModel.create(createJobPostingDto);
 
       return newJobPosting;
@@ -101,26 +129,96 @@ export class PostsService implements OnModuleInit {
   /**
    * Get posts for home page
    */
+  // async getPost(): Promise<any[]> {
+  //   try {
+  //     const posts = await this.postsModel 
+  //     .find()
+  //     .populate({
+  //       path: 'userId',
+  //       model: 'User',
+  //       populate: {
+  //         path: 'companyId',
+  //         model: 'Companies',
+  //         select: 'name logo',
+  //       },
+  //     })
+  //     .select('position location salary deadline numberOfPositions')
+  //     .exec();
+
+  //     console.log("-------------------posts",posts);
+
+  //     return posts;
+  //   } catch (error) {
+  //     console.error('⛔️ Lỗi: ', error);
+  //   }
+  // }
+
   async getPost(): Promise<any[]> {
     try {
       const posts = await this.postsModel
-      .find()
-      .populate({
-        path: 'userId',
-        model: 'User',
-        populate: {
-          path: 'companyId',
-          model: 'Companies',
-          select: 'name logo',
-        },
-      })
-      .select('position location salary deadline numberOfPositions')
-      .exec();
-
+        .find()
+        .populate({
+          path: 'userId',               // populate user trong post
+          model: 'User',
+          populate: {
+            path: 'companyId',          // tiếp tục populate company t  rong user
+            model: 'Companies',
+            select: 'name logo',       // lấy trường cần thiết
+          },
+          select: 'userName email companyId', // chọn trường user muốn lấy
+        })
+        .select('position location salary deadline numberOfPositions categories') // chọn trường post muốn lấy
+        .exec();
+  
+      console.log("Posts with user and company info:", posts);
+  
       return posts;
     } catch (error) {
-      console.error('⛔️ Lỗi: ', error);
+      console.error('⛔️ Lỗi khi lấy posts: ', error);
+      throw error;
     }
+  }
+
+  // async getPost(params: { categoryId?: string; location?: string }): Promise<any[]> {
+  //   try {
+  //     const filter: any = {};
+  //     if (params.categoryId) filter.category = params.categoryId;
+  //     if (params.location) filter.location = params.location; 
+  
+  //     const posts = await this.postsModel
+  //       .find(filter)
+  //       .populate({
+  //         path: 'userId',
+  //         model: 'User',
+  //         populate: {
+  //           path: 'companyId',
+  //           model: 'Companies',
+  //           select: 'name logo',
+  //         },
+  //         select: 'userName email companyId',
+  //       })
+  //       .select('position location salary deadline numberOfPositions category') // nhớ select thêm category/location nếu cần
+  //       .exec();
+  
+  //     console.log("Posts with user and company info:", posts);
+  //     return posts;
+  //   } catch (error) {
+  //     console.error('⛔️ Lỗi khi lấy posts: ', error);
+  //     throw error;
+  //   }
+  // }
+  
+
+
+
+
+
+
+  //========================= UPDATE POST =========================
+  async updatePost(id: string, updatePostDto: UpdatePostDto) {
+    const post = await this.postsModel.findByIdAndUpdate(id, updatePostDto, { new: true });
+    if (!post) throw new NotFoundException('Post not found');
+    return post;
   }
 
   /**

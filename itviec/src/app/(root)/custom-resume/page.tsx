@@ -53,7 +53,7 @@ const CustomResume = () => {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-100">
+		<div className="min-h-screen bg-gray-100 mt-[60px]">
 			<div className="flex">
 				<aside className="w-1/3 bg-white max-h-screen p-4 overflow-y-auto">
 					<h2 className="text-xl font-semibold mb-4">Chọn Mẫu CV</h2>

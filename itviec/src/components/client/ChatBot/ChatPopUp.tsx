@@ -307,6 +307,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { marked } from 'marked';
+import { KEY_AI } from '@/constants';
 
 export default function ChatPopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -339,115 +340,66 @@ export default function ChatPopup() {
     setInput('');
     setLoading(true);
 
-    // try {
-    //   let fileContent = '';
-
-    //   // Upload file nếu có
-    //   if (file) {
-    //     const formData = new FormData();
-    //     formData.append('file', file);
-
-    //     // Gửi tệp tới API để phân tích
-    //     const uploadRes = await fetch('http://localhost:3001/api/resume/pdf', {
-    //       method: 'POST',
-    //       body: formData,
-    //     });
-
-    //     const uploadData = await uploadRes.json();
-    //     fileContent = uploadData.text || '';
-    //   }
-
-    //   const analyzeRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    //     method: "POST",
-    //     headers: {
-    //       "Authorization": "Bearer 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", // Thay thế bằng API key của bạn
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       model: "deepseek/deepseek-prover-v2:free",
-    //       messages: [
-    //         {
-    //           role: "system",
-    //           content: "Bạn là chuyên gia tuyển dụng. Phân tích nội dung bên dưới: nêu rõ điểm mạnh, điểm yếu và gợi ý cải thiện."
-    //         },
-    //         {
-    //           role: "user",
-    //           content: fileContent || input.trim(),
-    //         }
-    //       ]
-    //     })
-    //   });
-
-    //   const analysis = await analyzeRes.json();
-    //   setMessages((prev) => [
-    //     ...prev,
-    //     { from: 'bot', text: analysis.choices[0]?.message?.content || 'Không thể phân tích.' },
-    //   ]);
-    // } catch {
-    //   setMessages((prev) => [
-    //     ...prev,
-    //     { from: 'bot', text: 'Đã có lỗi xảy ra khi xử lý.' },
-    //   ]);
-    // }
 
     try {
-  let fileContent = '';
+      let fileContent = '';
 
-  if (file) {
-    const formData = new FormData();
-    formData.append('file', file);
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
 
-    const uploadRes = await fetch('http://localhost:3001/api/resume/pdf', {
-      method: 'POST',
-      body: formData,
-    });
+        const uploadRes = await fetch('http://localhost:3001/api/resume/pdf', {
+          method: 'POST',
+          body: formData,
+        });
 
-    const uploadData = await uploadRes.json();
-    fileContent = uploadData.text || '';
-  }
+        const uploadData = await uploadRes.json();
+        fileContent = uploadData.text || '';
+      }
 
-  const analyzeRes = await fetch("https://openrouter.ai/api/v1/chat/completions ", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer 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",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "deepseek/deepseek-prover-v2:free",
-      messages: [
-        {
-          role: "system",
-          content: "Bạn là chuyên gia tuyển dụng. Phân tích nội dung bên dưới: nêu rõ điểm mạnh, điểm yếu và gợi ý cải thiện."
+      const analyzeRes = await fetch("https://openrouter.ai/api/v1/chat/completions ", {
+        method: "POST",
+        headers: {
+          // "Authorization": "Bearer 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",
+          Authorization: `Bearer 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`,
+          "Content-Type": "application/json"
         },
-        {
-          role: "user",
-          content: fileContent || input.trim(),
-        }
-      ]
-    })
-  });
+        body: JSON.stringify({
+          model: "deepseek/deepseek-prover-v2:free",
+          messages: [
+            {
+              role: "system",
+              content: "Bạn là chuyên gia tuyển dụng. Phân tích nội dung bên dưới: nêu rõ điểm mạnh, điểm yếu và gợi ý cải thiện."
+            },
+            {
+              role: "user",
+              content: fileContent || input.trim(),
+            }
+          ]
+        })
+      });
 
-  if (!analyzeRes.ok) {
-    throw new Error('Phân tích thất bại');
-  }
+      if (!analyzeRes.ok) {
+        throw new Error('Phân tích thất bại');
+      }
 
-  const analysis = await analyzeRes.json();
+      const analysis = await analyzeRes.json();
 
-  const botReply = analysis?.choices?.[0]?.message?.content 
-    || 'Không thể phân tích phản hồi từ máy chủ.';
+      const botReply = analysis?.choices?.[0]?.message?.content
+        || 'Không thể phân tích phản hồi từ máy chủ.';
 
-  setMessages((prev) => [
-    ...prev,
-    { from: 'bot', text: botReply },
-  ]);
+      setMessages((prev) => [
+        ...prev,
+        { from: 'bot', text: botReply },
+      ]);
 
-} catch (error) {
-  console.error(error);
-  setMessages((prev) => [
-    ...prev,
-    { from: 'bot', text: 'Đã có lỗi xảy ra khi xử lý.' },
-  ]);
-}
+    } catch (error) {
+      console.error(error);
+      setMessages((prev) => [
+        ...prev,
+        { from: 'bot', text: 'Đã có lỗi xảy ra khi xử lý.' },
+      ]);
+    }
 
     setLoading(false);
     setFile(null);
@@ -469,9 +421,9 @@ export default function ChatPopup() {
     <>
       <button
         onClick={togglePopup}
-        className="fixed bottom-4 right-4 z-50 bg-emerald-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-emerald-700 transition-all"
+        className="fixed bottom-8 right-4 z-50 bg-emerald-600 text-white mb-[72px] px-4 py-2 rounded-full shadow-lg hover:bg-emerald-700 transition-all"
       >
-        💬 Hỗ trợ
+        💬
       </button>
 
       {isOpen && (
@@ -487,11 +439,10 @@ export default function ChatPopup() {
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`px-3 py-2 rounded-lg w-fit max-w-[90%] ${
-                  msg.from === 'bot'
+                className={`px-3 py-2 rounded-lg w-fit max-w-[90%] ${msg.from === 'bot'
                     ? 'bg-gray-100 text-gray-800'
                     : 'bg-emerald-100 text-emerald-900 self-end ml-auto'
-                }`}
+                  }`}
               >
                 <div dangerouslySetInnerHTML={{ __html: marked(msg.text) }} />
               </div>

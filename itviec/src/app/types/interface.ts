@@ -14,6 +14,8 @@ export interface AuthState {
 export interface ProfileType {
 	avatar: string; 
 	fullName: string;
+	balance?: number
+
 	_id: string
 }
 
@@ -22,6 +24,7 @@ export interface UserType {
 	role: string;
 	email: string;
 	user?: ProfileType
+	balance?: number
 	access_token?: string;
 	refresh_token?: string;
 	permissions?: IPermissionItem[]
@@ -70,7 +73,9 @@ export interface IPost {
 	companyName: string;
 	location: string;
 	salary: string;
+	categories: string[];
 	level: string;
+	isUrgent: boolean;
 	workingHours: string;
 	deadline: string;
 	contactInfo: string;
@@ -149,6 +154,8 @@ export interface ICertification {
 	currentPosition: string;
 	email: string;
 	position: string;
+	languages: string[];
+	phone?: string;
 	projects: IProject[];
 	avatar: string; // URL of the avatar image
 	role: string; // If 'role' is an ID, you can define it as string; otherwise, create a Role interface
@@ -204,3 +211,52 @@ export type Award = {
   organization: string;
   year: string;
 };
+
+
+
+//cv
+export interface IWorkExperience {
+	companyName: string;
+	position: string;
+	startDate: string;
+	endDate: string;
+	_id: string;
+}
+
+export interface IProject {
+	title: string;
+	role: string;
+	year: string;
+	description: string;
+	_id: string;
+}
+
+export interface ICertification {
+	name: string;
+	issuedDate: Date;
+	_id: string;
+}
+
+export interface IUser {
+	_id: string;
+	userName: string;
+	email: string;
+	password: string;
+	role: string;
+	skills: string[];
+	create_at: string;
+	languages: string[];
+	update_at: string;
+	phone?: string;
+	education: any[];
+	workExperience: IWorkExperience[];
+	projects: IProject[];
+	certifications: ICertification[];
+	awards: any[];
+	avatar: string;
+	introduction: string;
+	address: string;
+	currentPosition: string;
+	status: number;
+	balance: number;
+}

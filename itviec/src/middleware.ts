@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { decodeToken } from './lib/helper';
 
-const privatePaths: string[] = ['/profile', '/admin', '/message'];
+const privatePaths: string[] = ['/profile', '/admin', '/message', '/wallets'];
 const authPaths: string[] = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
@@ -42,6 +42,7 @@ export async function middleware(request: NextRequest) {
 }
 export const config = {
 	matcher: [
+		'/wallets',
 		'/login',
 		'/register',
 		'/profile',

@@ -46,6 +46,31 @@ const userApi = {
 
 	assignRole: (id: string, role: string) =>
 		axiosClient.patch(`${URL_BACKEND}/api/user/${id}/role`, { role }),
+
+
+
+	//====================== APPLICANT ======================
+	getCandidates: async ({
+		page = 1,
+		limit = 10,
+	}: {
+		page?: number;
+		limit?: number;
+	}): Promise<any> => {
+		const response = await axiosClient.get(
+			`${URL_BACKEND}/api/user/applicant?page=${page}&limit=${limit}`,
+		);
+		return response.data;
+	},
+
+
+
+
+	//get balance
+	getBalance: async (id: string) => {
+		const response = await axiosClient.get(`${URL_BACKEND}/api/user/balance/${id}`);
+		return response.data;
+	}
 };
 
 export default userApi;

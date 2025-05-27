@@ -22,6 +22,8 @@ const Header: React.FC = () => {
 
 	const t = useTranslations();
 
+	const [selectedLocale, setSelectedLocale] = useState('en');
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [isScrolled, setIsScrolled] = useState(false);
 
@@ -41,12 +43,20 @@ const Header: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
+		const locale = localStorage.getItem('language') || 'vi'; 
+		setSelectedLocale(locale);
+	}, []);
+
+
+	useEffect(() => {
 		const handleScroll = () => {
 			window.scrollY > 100 ? setIsScrolled(true) : setIsScrolled(false);
 		};
 		window.addEventListener('scroll', handleScroll);
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
+
+
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -75,10 +85,22 @@ const Header: React.FC = () => {
 		};
 	}, [socket]);
 
+
+
 	const handleLanguageChange = async (event: any) => {
 		const selectedLocale = event.target.value;
-		await setLanguageValue(selectedLocale);
+		localStorage.setItem('language', selectedLocale);
+
+		await fetch('http://localhost:3000/api/auth/set-language', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ value: selectedLocale }),
+		});
+
+		window.location.reload();
 	};
+
+
 
 	//handle logout
 	const handleLogout = async () => {
@@ -326,7 +348,7 @@ const Header: React.FC = () => {
 						</li>
 
 						<li>
-							<select
+							{/* <select
 								onChange={handleLanguageChange}
 								className="bg-transparent text-white border-none focus:ring-0"
 							>
@@ -336,7 +358,23 @@ const Header: React.FC = () => {
 								<option className="text-black" value="vi">
 									VI
 								</option>
-							</select>
+							</select> */}
+							<select
+    value={selectedLocale}
+    onChange={(e) => {
+        setSelectedLocale(e.target.value);
+        handleLanguageChange(e);
+    }}
+    className="bg-transparent text-white border-none focus:ring-0"
+>
+    <option className="text-black" value="en">
+        EN
+    </option>
+    <option className="text-black" value="vi">
+        VI
+    </option>
+</select>
+
 						</li>
 					</ul>
 				</div>

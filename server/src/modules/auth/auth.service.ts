@@ -223,6 +223,7 @@ export class AuthService {
         _id: user._id,
         role: user.role.name,
         name: user.userName,
+        balance: user.balance,
       },
       company: user.companyId,
       permissions: user.role.permissions,

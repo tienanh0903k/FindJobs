@@ -1,6 +1,7 @@
 import { Button, Form, Input } from 'antd';
 import React, { useState, useEffect } from 'react';
-import ReactQuill from 'react-quill';
+import dynamic from 'next/dynamic';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
 const IntroduceModal = ({ data, closeModal, handleSave,  ...props }: { data: any; handleSave: (data: any) => void; closeModal: () => void }) => {

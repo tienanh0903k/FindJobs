@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -15,6 +16,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 // import { ElasticSearchService } from '../elasticsearch/elasticsearch.service';
 import { ResponseMessage } from '../auth/decorator/response_message.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -65,6 +67,14 @@ export class PostsController {
   getPostForHome() {
     return this.postsService.getPost();
   }
+  // @Get()
+  // async getPosts(
+  //   @Query('categoryId') categoryId?: string,
+  //   @Query('location') location?: string
+  // ) {
+  //   return this.postsService.getPost({ categoryId, location });
+  // }
+
 
   /**
    * GET: api/posts/:id
@@ -78,6 +88,20 @@ export class PostsController {
     }
     return post;
   }
+
+
+
+
+  //======================== UPDATE POST =========================
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postsService.updatePost(id, updatePostDto);
+  }
+
+
 
   /**
    * POST: api/posts/search

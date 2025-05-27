@@ -1,5 +1,7 @@
 'use client';
 import { transactionApi } from '@/api/transactionApi';
+import userApi from '@/api/userApi';
+import { useBalance } from '@/hook/useBalance';
 import { useAppSelector } from '@/hook/useSelector';
 import { RootState } from '@/redux/store';
 import React, { useState, useEffect } from 'react';
@@ -10,31 +12,35 @@ const WalletPage = () => {
 	const [transactions, setTransactions] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
+	// const [balance, setBalance] = useState(0);
 
 	const infoUser = useAppSelector((state: RootState) => state.auth.currentUser?.user);
 	
+	const liveBalance = useBalance(infoUser?._id);
+	
+
+	const fetchTransactions = async () => {
+		try {
+			const res = await transactionApi.getTransactionByMe();
+			setTransactions(res.data);
+		} catch (err) {
+			setTransactions([]);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useEffect(() => {
-		const fetchTransactions = async () => {
-			try {
-				const res = await transactionApi.getTransactionByMe();
-				setTransactions(res.data);
-			} catch (err) {
-				setTransactions([]);
-			} finally {
-				setLoading(false);
-			}
-		};
 		fetchTransactions();
 	}, []);
 
-	const calculateBalance = (transactions: any[]) => {
-		return transactions.reduce((sum, tx) => {
-			if (tx.type === 'deposit') return sum + tx.amount;
-			else if (tx.type === 'spend' || tx.type === 'withdraw') return sum - tx.amount;
-			return sum;
-		}, 0);
-	};
+	// const calculateBalance = (transactions: any[]) => {
+	// 	return transactions.reduce((sum, tx) => {
+	// 		if (tx.type === 'deposit') return sum + tx.amount;
+	// 		else if (tx.type === 'spend' || tx.type === 'withdraw') return sum - tx.amount;
+	// 		return sum;
+	// 	}, 0);
+	// };
 
 	// Xử lý chọn mức nạp
 	const handleSelectAmount = async (amount: number) => {
@@ -62,8 +68,8 @@ const WalletPage = () => {
 				<div className="text-center mb-6">
 					<h2 className="text-2xl font-bold">Số dư tài khoản</h2>
 					<p className="text-3xl text-green-500">
-						{calculateBalance(transactions).toLocaleString()}₫
-					</p>
+						{liveBalance.toLocaleString()}₫
+						</p>
 				</div>
 
 				{/* Lịch sử giao dịch */}
@@ -86,7 +92,7 @@ const WalletPage = () => {
 											({new Date(tx.createdAt).toLocaleString()})
 										</span>
 									</span>
-									<span className="text-green-500">
+									<span className={`${tx.type === 'deposit' ? 'text-green-500' : 'text-red-500'}`}>
 										{tx.type === 'deposit' ? '+' : '-'}
 										{tx.amount.toLocaleString()}₫
 									</span>

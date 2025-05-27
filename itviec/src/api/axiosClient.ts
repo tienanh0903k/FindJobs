@@ -49,6 +49,8 @@
                   console.error('Unauthorized request. Please login again.');
                   // Có thể xóa token nếu cần
                   // localStorage.removeItem('token');
+                  // localStorage.removeItem('user');
+                  // window.location.href = '/login';
               }
               console.error('Error response:', error.response);
           } else {

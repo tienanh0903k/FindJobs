@@ -120,7 +120,7 @@ const CompanyPage: React.FC = () => {
 
 	const handleOpenModal = (company?: ICompany) => {
 		setDataInit(company || null);
-		openModal(); // Mở modal
+		openModal(); 
 	};
 
 	const reloadTable = () => {

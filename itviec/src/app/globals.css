@@ -136,3 +136,8 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;  /* Chrome, Safari, Opera */
 }
+
+.scrollbar-none {
+  scrollbar-width: none; /* ẩn thanh cuộn cho Firefox */
+}
+

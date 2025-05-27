@@ -28,14 +28,11 @@ const statusColors: Record<StatusType, string> = {
 
 const ApplicationPage: React.FC = () => {
 
-
 	const [data, setData] = useState<any[]>([]);
 	const [isVisible, setIsVisible] = useState(false);
 	const [formData, setFormData] = useState(null);
-
 	const [searchTerm, setSearchTerm] = useState('');
 	const [status, setStatus] = useState<any>('');
-
 	const [isEmailDrawerVisible, setEmailDrawerVisible] = useState(false);
 	const [selectedApplicant, setSelectedApplicant] = useState(null);
 
@@ -55,7 +52,7 @@ const ApplicationPage: React.FC = () => {
 
 	useEffect(() => {
 		loadData();
-	}, 	[]);
+	}, []);
 
 	const filteredData = data?.filter((item: any) => {
 		const keyword = searchTerm.toLowerCase();
@@ -68,7 +65,7 @@ const ApplicationPage: React.FC = () => {
 
 		return matchSearchTerm && matchStatus;
 	});
-	  
+
 	const handleSendEmail = async (data: any) => {
 		try {
 			await applicationApi.sendMail(data);
@@ -79,103 +76,103 @@ const ApplicationPage: React.FC = () => {
 	}
 
 
-    const columns = [
-			{
-				title: 'Tên',
-				dataIndex: 'name',
-				key: 'name',
-			},
-			{
-				title: 'Email',
-				dataIndex: 'email',
-				key: 'email',
-			},
-			{
-				title: 'Vị trí',
-				dataIndex: ['jobId', 'position'],
-				key: 'position',
-			},
-			{
-				title: 'Hồ sơ',
-				key: 'resume_url',
-				render: (_: any, record: any) => (
-					<Tooltip title="Xem CV">
-						<a href={record.resume_url} target="_blank" rel="noopener noreferrer">
-							<FileTextOutlined />
-						</a>
-					</Tooltip>
-				),
-			},
-			{
-				title: 'Trạng thái',
-				dataIndex: 'status',
-				key: 'status',
-				render: (status: string) => {
-					// Ép kiểu trạng thái để đảm bảo nó là một `StatusType`
-					const tagColor = statusColors[status as StatusType] || 'default';
+	const columns = [
+		{
+			title: 'Tên',
+			dataIndex: 'name',
+			key: 'name',
+		},
+		{
+			title: 'Email',
+			dataIndex: 'email',
+			key: 'email',
+		},
+		{
+			title: 'Vị trí',
+			dataIndex: ['jobId', 'position'],
+			key: 'position',
+		},
+		{
+			title: 'Hồ sơ',
+			key: 'resume_url',
+			render: (_: any, record: any) => (
+				<Tooltip title="Xem CV">
+					<a href={record.resume_url} target="_blank" rel="noopener noreferrer">
+						<FileTextOutlined />
+					</a>
+				</Tooltip>
+			),
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'status',
+			key: 'status',
+			render: (status: string) => {
+				// Ép kiểu trạng thái để đảm bảo nó là một `StatusType`
+				const tagColor = statusColors[status as StatusType] || 'default';
 
-					return (
-						<Tag color={tagColor}>
-							{status === 'pending'
-								? 'Chờ xử lý'
-								: status === 'reviewing'
+				return (
+					<Tag color={tagColor}>
+						{status === 'pending'
+							? 'Chờ xử lý'
+							: status === 'reviewing'
 								? 'Đang xem xét'
 								: status === 'interview'
-								? 'Đã phỏng vấn'
-								: status === 'hired'
-								? 'Được nhận'
-								: status === 'rejected'
-								? 'Bị từ chối'
-								: 'Chờ xử lý'}
-						</Tag>
-					);
-				},
+									? 'Đã phỏng vấn'
+									: status === 'hired'
+										? 'Được nhận'
+										: status === 'rejected'
+											? 'Bị từ chối'
+											: 'Chờ xử lý'}
+					</Tag>
+				);
 			},
-			{
-				title: 'Ngày nộp',
-				dataIndex: 'appliedAt',
-				key: 'appliedAt',
-				render: (text: any) => new Date(text).toLocaleDateString(),
-			},
-			{
-				title: 'Tuy chon',
-				dataIndex: 'action',
-				key: 'action',
-				render: (_: any, record: any) => (
-					<div className="flex">
-						{/* <Button type="default" style={{ marginLeft: '8px', color: 'green' }}>
+		},
+		{
+			title: 'Ngày nộp',
+			dataIndex: 'appliedAt',
+			key: 'appliedAt',
+			render: (text: any) => new Date(text).toLocaleDateString(),
+		},
+		{
+			title: 'Tuy chon',
+			dataIndex: 'action',
+			key: 'action',
+			render: (_: any, record: any) => (
+				<div className="flex">
+					{/* <Button type="default" style={{ marginLeft: '8px', color: 'green' }}>
 							<EditOutlined />
 						</Button> */}
 
-						<Access permission={ALL_PERMISSIONS.APPLICATION.UPDATE} hideChildren={true}>
-							<Button
-								type="default"
-								onClick={() => {
-									setIsVisible(!isVisible);
-									setFormData(record);
-								}}
-							>
-								<EditOutlined />
-							</Button>
-						</Access>
-
+					<Access permission={ALL_PERMISSIONS.APPLICATION.UPDATE} hideChildren={true}>
 						<Button
 							type="default"
 							onClick={() => {
-								setSelectedApplicant(record);
-								setEmailDrawerVisible(true);
+								setIsVisible(!isVisible);
+								setFormData(record);
 							}}
 						>
-							Gửi Email
+							<EditOutlined />
 						</Button>
+					</Access>
 
-						<Button type="default" onClick={() => console.log('Edit:', record)}>
-							<DeleteOutlined style={{ fontSize: '20px', color: '#F44336' }} />
-						</Button>
-					</div>
-				),
-			},
-		];
+					<Button
+						type="default"
+						onClick={() => {
+							setSelectedApplicant(record);
+							setEmailDrawerVisible(true);
+						}}
+					>
+						Gửi Email
+					</Button>
+
+					<Button type="default" onClick={() => console.log('Edit:', record)}>
+						<DeleteOutlined style={{ fontSize: '20px', color: '#F44336' }} />
+					</Button>
+				</div>
+			),
+		},
+	];
 
 	return (
 		<>

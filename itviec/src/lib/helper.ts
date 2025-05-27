@@ -1,5 +1,6 @@
 import { jwtVerify, JWTVerifyResult } from 'jose';
 import { formatDistanceToNow } from 'date-fns';
+import moment from 'moment';
 /**
  * Decodes a JSON Web Token (JWT) with the given secret key.
  *
@@ -33,6 +34,7 @@ export function formatDate(date: any, locale = 'en-US', options: any) {
 	return new Date(date).toLocaleDateString(locale, options);
 }
 
+export const formatMonthYear = (date: any) => moment(date).format('M/YYYY');
 
 
 

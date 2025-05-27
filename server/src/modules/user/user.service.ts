@@ -11,6 +11,7 @@ import { User } from './schemas/user.schema';
 import { HashingUtil } from 'src/utils/bcrypt.util';
 import { UploadsService } from '../uploads/uploads.service';
 import { CreateProjectDto } from './dto/general-dto';
+import { role } from 'src/types';
 
 @Injectable()
 export class UserService {
@@ -173,6 +174,19 @@ export class UserService {
   //       return updated;
   //     }
 
+
+  //get balance 
+  async getBalance(userId: string): Promise<number> {
+    const user = await this.userModels.findById(userId).select('balance');
+    if (!user) throw new NotFoundException('User not found');
+    return user.balance ?? 0;
+  }
+
+
+
+
+
+
   async updateUserInfo(id: string, updateUserDto: UpdateUserDto) {
     const updateSetFields: Record<string, any> = {};
     const updatePushFields: Record<string, any> = {};
@@ -308,4 +322,34 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
+
+
+
+
+
+
+
+
+
+  //=========================APPLICANT============================
+  async getCandidates(page = 1, limit = 10) {
+
+    const query = { role: role.USER}; 
+    const skip = (page - 1) * limit;
+
+    const [results, total] = await Promise.all([
+      this.userModels.find(query).skip(skip).limit(limit).exec(),
+      this.userModels.countDocuments(query)
+    ]);
+
+    return {
+      results,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    };
+  }
+
+  
 }

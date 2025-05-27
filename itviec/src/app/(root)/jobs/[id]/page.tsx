@@ -9,14 +9,20 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import postsApi from '@/api/postsApi';
 import moment from 'moment';
+import AccessSection from '@/components/base/AccessSection';
+import { useAppSelector } from '@/hook/useSelector';
+import { RootState } from '@/redux/store';
 
 const cx = classNames.bind(styles);
 
 const JobListing = () => {
+
+	const infoUser = useAppSelector((state: RootState) => state.auth.currentUser?.user);
+
+
 	const { id } = useParams<{ id: string }>();
 	const [isScrollActive, setIsScrollActive] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
-	
 
 	// const fetch = async (id) => {
 	// 	const data =  await  postsApi.getPostById(id);
@@ -105,14 +111,19 @@ const JobListing = () => {
 								</div>
 								<div className="flex flex-col md:flex-row justify-between mt-4">
 									<div className="w-full md:w-[60%] flex">
-										<button
+										{/* <button
 											onClick={() => {
 												setIsModalVisible(true);
 											}}
 											className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
 										>
 											Nộp hồ sơ
-										</button>
+										</button> */}
+										<AccessSection user={infoUser} onAllowed={() => setIsModalVisible(true)}>
+											<button className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+												Nộp hồ sơ
+											</button>
+										</AccessSection>
 										<button className="flex items-center justify-center py-2 px-4 rounded-md border border-gray-300 hover:bg-gray-100 transition ml-2">
 											Lưu
 										</button>

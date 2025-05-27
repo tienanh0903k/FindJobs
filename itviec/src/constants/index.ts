@@ -7,6 +7,8 @@
 export const URL_NEXT = 'http://localhost:3000'
 export const URL_BACKEND = 'http://localhost:3001'
 
+export const KEY_AI = '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'
+
 
 /**
  * **************************MENU *****************************

@@ -254,7 +254,6 @@ const Companies = () => {
 						</div>
 					</div>
 					<div className="col-span-1 flex flex-col items-center justify-center space-y-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-md p-4">
-						{/* Hiển thị số sao bình chọn */}
 						<div className="flex items-center space-x-1">
 							<h2 className="text-xl font-bold">4.9</h2>
 							{[...Array(5)].map((_, index) => (
@@ -270,7 +269,6 @@ const Companies = () => {
 							))}
 						</div>
 
-						{/* Hiển thị số đánh giá */}
 						<div className="text-gray-600 text-sm">4.5 trên 5 sao (200 đánh giá)</div>
 					</div>
 				</div>
@@ -278,9 +276,7 @@ const Companies = () => {
 
 			<div className="mt-6 p-4">
 				<div className="grid grid-cols-10 gap-4">
-					{/* Thông tin chung chiếm 7 phần */}
 					<div className="col-span-7 p-4 space-y-4">
-						{/* Thông tin chung */}
 						<div className="border p-4 bg-white rounded-md shadow-sm">
 							<h2 className="text-lg font-semibold">Thông tin chung</h2>
 							<p>
@@ -295,7 +291,6 @@ const Companies = () => {
 							</p>
 						</div>
 
-						{/* Giới thiệu công ty */}
 						<div className="border p-4 bg-white rounded-md shadow-sm">
 							<h2 className="text-lg font-semibold border-b border-gray-300 pb-2">
 								Giới thiệu công ty
@@ -317,18 +312,21 @@ const Companies = () => {
 							</div>
 						</div>
 
-						{/* Chuyên môn của chúng tôi */}
 						<div className="border p-4 bg-white rounded-md shadow-sm">
 							<h2 className="text-lg font-semibold">Chuyên môn của chúng tôi</h2>
 							<p>... Nội dung chuyên môn ở đây ...</p>
 						</div>
 
+
+						{/*-------------------------- Review --------------------------------------*/}
 						<div ref={commentRef} className="comment border p-4 bg-white rounded-md shadow-sm">
-							<Appreciate />
+							<Appreciate targetId={
+								company?._id || ''
+							} />
 						</div>
 					</div>
 
-					{/* Các việc đang tuyển dụng chiếm 3 phần với cuộn dọc */}
+
 					<div className="col-span-3 p-4 overflow-y-auto h-screen">
 						<h2 className="text-xl font-semibold">Các việc đang tuyển dụng</h2>
 						<div className=" bg-orange-100 space-y-4">
@@ -363,9 +361,9 @@ const Companies = () => {
 							</div>
 							{/* Thêm các việc làm khác tại đây */}
 						</div>
-						<div className="space-y-4">
-							<MapLocation />
-						</div>
+						<MapLocation
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.2604040572227!2d105.71057761533163!3d9.780787529675702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a0f68a0a8c781d%3A0xa88c255d7d2648f0!2zVHLGsOG7nW5nIMSQ4bqhaSBDw6F5IMOibiwgUGjGsOG7nW5nIEhpw6puLCBIw6AgR2lhbmcsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1684845093647!5m2!1svi!2s"
+						/>
 					</div>
 				</div>
 			</div>

@@ -2,77 +2,54 @@ import { IsString, IsNotEmpty, IsBoolean, IsArray, IsOptional, IsDate } from 'cl
 import { Transform } from 'class-transformer';
 
 export class CreatePostDto {
-    @IsString()
-    @IsNotEmpty()
-    position: string; 
+  @IsString()
+  @IsNotEmpty()
+  position: string;
 
-    @IsString()
-    @IsNotEmpty()
-    description: string; 
+  @IsString()
+  @IsNotEmpty()
+  description: string;
 
-    // @IsString()
-    // requirements: string;
+  @IsString()
+  @IsNotEmpty()
+  location: string;
 
-    @IsString()
-    @IsNotEmpty()
-    companyName: string;
+  @IsString()
+  @IsNotEmpty()
+  salary: string;
 
-    @IsString()
-    @IsNotEmpty()
-    location: string;
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+  @IsNotEmpty()
+  deadline: Date;
 
-    @IsString()
-    @IsNotEmpty()
-    salary: string; 
+  @IsBoolean()
+  status: boolean = true;
 
-    // @IsString()
-    // workingHours: string; 
 
-    @Transform(({ value }) => new Date(value)) 
-    @IsDate()
-    @IsNotEmpty()
-    deadline: Date; 
+  @IsString()
+  experience: string;
 
-    // @IsString()
-    // @IsNotEmpty()
-    // contactInfo: string; 
+  // @IsNumber()
+  // @IsInt()
+  // @Min(1)
+  numberOfPositions: number;
 
-    @IsBoolean()
-    status: boolean = true; 
+  @IsArray()
+  tags: string[];
 
-    @Transform(({ value }) => new Date(value)) 
-    @IsDate()
-    postedDate: Date; 
+  @IsOptional()
+  @IsBoolean()
+  isHot?: boolean;
 
-    @IsString()
-    experience: string;
+  @IsOptional()
+  @IsBoolean()
+  isUrgent?: boolean = false;
 
-    // @IsNumber()
-    // @IsInt()
-    // @Min(1)
-    numberOfPositions: number;
+  // @IsString()
+  // @IsNotEmpty()
+  // companyId: string;
 
-    @IsArray()
-    tags: string[]; 
-
-    @IsOptional()
-    @IsString()
-    image?: string;
-
-    @IsOptional() 
-    @IsBoolean()
-    isHot?: boolean;
-
-    // @IsString()
-    // @IsNotEmpty()
-    // companyId: string;
-
-    @IsString()
-    @IsNotEmpty()
-    userId: string;
-
-    constructor() {
-        this.postedDate = this.postedDate ?? new Date();
-    }
-
-}
+  @IsString()
+  @IsNotEmpty()
+  userId: string;}

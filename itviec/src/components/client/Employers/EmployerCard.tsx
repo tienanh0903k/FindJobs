@@ -9,7 +9,7 @@ interface IEmployerCard {
 	job: ICompany;
 }
 
-export const EmployerCard: React.FC<IEmployerCard> = ({ job }) => {
+export const EmployerCard: React.FC<IEmployerCard> = ({ job }: IEmployerCard) => {
 	const router = useRouter();
 
 	// console.log('>>>list', list);

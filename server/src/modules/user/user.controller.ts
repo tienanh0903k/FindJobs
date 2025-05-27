@@ -224,11 +224,27 @@ export class UserController {
     return this.userService.findAllUsersByRoleId(roleId, status);
   }
 
+  
+  @Get('applicant')
+  async getCandidates(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    // console.log('page', page);
+    // console.log('limit', limit);
+    return this.userService.getCandidates(Number(page), Number(limit));
+  }
+
   @Get()
   @Roles('HR')
   @UseGuards(AuthGuard, PermissionsGuard)
   findAll() {
     return this.userService.findAll();
+  }
+
+  @Get('balance/:id')
+  async getBalance(@Param('id') id: string) {
+    return this.userService.getBalance(id); 
   }
 
   @Get('me')
@@ -361,4 +377,8 @@ export class UserController {
       throw new NotFoundException('Có lỗi khi xóa phần tử');
     }
   }
+
+
+
+
 }

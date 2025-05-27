@@ -19,9 +19,10 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-import { roles } from '@/constants';
+import { ALL_PERMISSIONS, roles } from '@/constants';
 import userApi from '@/api/userApi';
 import { IUserType } from '@/app/types/interface';
+import Access from '@/components/admins/permission/Access';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -269,6 +270,7 @@ useEffect(() => {
 		};
 
   return (
+	<Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATE} hideChildren={false}> 	
 		<div style={{ padding: '20px' }}>
 			<h2 className="text-xl font-semibold mb-4">Quản lý người dùng</h2>
 
@@ -358,6 +360,7 @@ useEffect(() => {
 				</Form>
 			</Modal>
 		</div>
+		</Access>
 	);
 };
 

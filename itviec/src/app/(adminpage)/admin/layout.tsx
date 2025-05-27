@@ -63,6 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 				{ key: '/admin/account', label: <Link href="/admin/account">Người dùng</Link> },
 				{ key: '/admin/posts', label: <Link href="/admin/posts">Bài đăng</Link> },
 				{ key: '/message', label: <Link href="/message">Tin nhắn</Link> },
+				{ key: '/admin/find-applicant', label: <Link href="/admin/find-applicant">Ứng viên</Link> },
 
 				...(view_Role
 					? [{ key: '/admin/roles', label: <Link href="/admin/roles">Vai trò</Link> }]

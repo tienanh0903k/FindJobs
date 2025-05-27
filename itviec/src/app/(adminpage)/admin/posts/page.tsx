@@ -6,6 +6,8 @@ import { ColumnsType } from 'antd/es/table';
 import JobPostingModal from '@/components/admins/posts/Post.modal';
 import postsApi from '@/api/postsApi'; 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { VscDebugRestart } from "react-icons/vsc";
 
 const JobPostingPage: React.FC = () => {
 	const [jobPostings, setJobPostings] = useState<any[]>([]);
@@ -116,16 +118,27 @@ const JobPostingPage: React.FC = () => {
 		);
 	};
 
+	const handleExtendDeadline = async (record: any) => {
+		if (!window.confirm('Bạn có chắc chắn muốn gia hạn thêm 7 ngày?')) return;
+		try {
+			const oldDeadline = dayjs(record.deadline);
+			const newDeadline = oldDeadline.add(7, 'day').toISOString();
+
+			//await postsApi.updatePost(record._id, { deadline: newDeadline });
+
+			alert('Gia hạn thành công!');
+			fetchData(); // reload lại dữ liệu bảng
+		} catch (error) {
+			alert('Lỗi khi gia hạn!');
+			console.error(error);
+		}
+	};
+
 	const columns: ColumnsType<any> = [
 		{
 			title: 'Tên vị trí',
 			dataIndex: 'position',
 			key: 'position',
-		},
-		{
-			title: 'Công ty',
-			dataIndex: 'companyName',
-			key: 'companyName',
 		},
 		{
 			title: 'Địa điểm',
@@ -136,6 +149,12 @@ const JobPostingPage: React.FC = () => {
 			title: 'Lương',
 			dataIndex: 'salary',
 			key: 'salary',
+		},
+		{
+			title: 'Hạn nộp',
+			dataIndex: 'deadline',
+			key: 'deadline',
+			render: (text) => dayjs(text).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Hành động',
@@ -150,9 +169,17 @@ const JobPostingPage: React.FC = () => {
 						}}
 					/>
 					<Button
+						title="Xóa"
+						style={{ color: 'red' }}
 						type="link"
 						icon={<DeleteOutlined />}
 						onClick={() => handleDelete(record._id)}
+					/>
+
+					<Button
+						type="dashed"
+						icon={<VscDebugRestart />}
+						onClick={() => handleExtendDeadline(record)}
 					/>
 				</div>
 			),
@@ -165,7 +192,7 @@ const JobPostingPage: React.FC = () => {
 
 	const handleCloseModal = () => {
 		setModalVisible(false);
-		// setFormData(null);
+		setFormData(null);
 	};
 
 	return (
@@ -214,6 +241,7 @@ const JobPostingPage: React.FC = () => {
 						formData={formData}
 						onClose={handleCloseModal}
 						onSubmit={handleSubmit}
+						onReload={fetchData}
 					/>
 				</>
 			)}

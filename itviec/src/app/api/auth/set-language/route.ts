@@ -1,19 +1,11 @@
-
 'use server';
 
 import { cookies } from 'next/headers';
 
-// export default async function setLanguageValue(value: string) {
-//   cookies().set('language', value);
-// }
-
-
 export async function POST(request: Request) {
   try {
       const { value } = await request.json();
-
-      cookies().set('language', value);
-
+      cookies().set('language', value, { path: '/', httpOnly: false }); // Thêm path: '/' và httpOnly: false để client có thể đọc
       return new Response(JSON.stringify({ message: 'Language set successfully' }), {
           status: 200,
       });

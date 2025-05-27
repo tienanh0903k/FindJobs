@@ -39,6 +39,9 @@ export class User {
   @Prop()
   phone: string;
 
+  @Prop({ type: [String], ref: 'Category', default: [] })
+  categories: string[];
+
   @Prop()
   address: string;
 
