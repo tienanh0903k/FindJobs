@@ -26,7 +26,9 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor() {
     this.redisClient = createClient({
-      url: 'redis://localhost:6379',
+      // url: 'redis://localhost:6379',
+            url: 'redis://redis:6379',
+
     });
 
     this.redisClient.connect();
