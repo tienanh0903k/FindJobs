@@ -1,23 +1,19 @@
-version: '3.8'
-
 services:
   frontend:
     build:
       context: ./itviec
       dockerfile: Dockerfile
     ports:
-      - "6000:3000" # Public cổng 6000 của VPS ra cổng 3000 container FE
-    env_file:
-      - ./itviec/.env
+      - "6000:3000" # Public cổng 6000 VPS ra cổng 3000 container FE
+    env_file: ./itviec/.env
 
   backend:
     build:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "6001:3001" # Có thể public cổng 6001 của VPS ra cổng 3001 container BE
-    env_file:
-      - ./server/.env
+      - "6001:3001" # Public cổng 6001 VPS ra cổng 3001 container BE
+    env_file: ./server/.env
     mem_limit: 512m
     cpus: 0.5
 
@@ -26,9 +22,8 @@ services:
       context: ./socket-gateway
       dockerfile: Dockerfile
     ports:
-      - "6002:3009" # Public cổng 6002 của VPS ra cổng 3009 container socket
-    env_file:
-      - ./socket-gateway/.env
+      - "6002:3009" # Public cổng 6002 VPS ra cổng 3009 container socket
+    env_file: ./socket-gateway/.env
     depends_on:
       - redis
     mem_limit: 256m
