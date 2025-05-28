@@ -144,7 +144,7 @@ const ApplicationPage: React.FC = () => {
 							<EditOutlined />
 						</Button> */}
 
-					<Access permission={ALL_PERMISSIONS.APPLICATION.UPDATE} hideChildren={true}>
+					<Access permissionProps={ALL_PERMISSIONS.APPLICATION.UPDATE} hideChildren={true}>
 						<Button
 							type="default"
 							onClick={() => {
