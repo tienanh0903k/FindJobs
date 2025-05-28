@@ -2,12 +2,18 @@
 
 import userApi from '@/api/userApi';
 import { add } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { notification } from 'antd';
 import { useRouter } from 'next/navigation';
+import { roles } from '@/constants';
+import companyApi from '@/api/companyApi';
+
+
+
 
 export default function RegisterForm() {
-  const [role, setRole] = useState<string>('66e8425f7f7f221ba7a995b6');
+  const [role, setRole] = useState<string>(roles.USER);
+  const [companies, setCompanies] = useState<{_id: string, name: string}[]>([]);
   const [formData, setFormData] = useState({
     userName: '',
     email: '',
@@ -20,6 +26,29 @@ export default function RegisterForm() {
 
   const router = useRouter()
 
+
+
+  //============= site for side effect =============
+  useEffect(() => {
+    if (role === roles.HR) {
+      const fetchCompanies = async () => {
+        try {
+          const res = await companyApi.getAllCompanySelect();
+          setCompanies(res || []);
+        } catch (error) {
+          console.error('Error fetching companies:', error);
+        }
+      };
+      fetchCompanies();
+    }
+    console.log('--------companies', companies);
+  }, [role]);
+
+
+
+  
+
+  //============= site for hanlde function =============
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -37,8 +66,8 @@ export default function RegisterForm() {
     }
 
     const userData = {
-      role,
       ...formData,
+      role: roles.USER,
     };
 
     console.log('Thông tin người dùng:', userData);
@@ -150,8 +179,8 @@ export default function RegisterForm() {
               onChange={(e) => setRole(e.target.value as 'user' | 'hr')}
               className="w-full border border-gray-200 rounded-md py-2 px-3 text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600"
             >
-              <option value="66e8425f7f7f221ba7a995b6">Người dùng</option>
-              <option value="hr">HR / Nhà tuyển dụng</option>
+              <option value={roles.USER}>Người dùng</option>
+              <option value={roles.HR}>HR / Nhà tuyển dụng</option>
             </select>
           </div>
 
@@ -202,7 +231,7 @@ export default function RegisterForm() {
           </div>
 
           {/* Công ty - chỉ hiện khi là HR */}
-          {role === 'hr' && (
+          {role === roles.HR && (
             <>
               <div className="mb-4">
                 <label htmlFor="companyName" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -212,15 +241,20 @@ export default function RegisterForm() {
                   <span className="absolute inset-y-0 left-3 flex items-center text-green-600">
                     <i className="fas fa-building"></i>
                   </span>
-                  <input
-                    id="companyName"
-                    name="companyName"
-                    type="text"
+                  <select
+                    id="companyId"
+                    name="companyId"
                     value={formData.companyId}
                     onChange={handleChange}
-                    placeholder="Tên công ty"
+                    required
                     className="w-full border border-gray-200 rounded-md py-2 pl-5 text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600"
-                  />
+                  >
+                    <option value="">Chọn công ty</option>
+                    {companies.map((comp) => (
+                      <option key={comp._id} value={comp._id}>{comp.name}</option>
+                    ))}
+                  </select>
+
                 </div>
               </div>
 
@@ -245,7 +279,7 @@ export default function RegisterForm() {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="companyAddress" className="block text-sm font-semibold text-gray-700 mb-1">
+                <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-1">
                   Địa chỉ công ty <span className="text-red-600">*</span>
                 </label>
                 <div className="relative">
@@ -253,8 +287,8 @@ export default function RegisterForm() {
                     <i className="fas fa-map-marker-alt"></i>
                   </span>
                   <input
-                    id="companyAddress"
-                    name="companyAddress"
+                    id="address"
+                    name="address"
                     type="text"
                     value={formData.address}
                     onChange={handleChange}

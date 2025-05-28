@@ -170,7 +170,7 @@ export class PostsService implements OnModuleInit {
         .select('position location salary deadline numberOfPositions categories') // chọn trường post muốn lấy
         .exec();
   
-      console.log("Posts with user and company info:", posts);
+      //console.log("Posts with user and company info:", posts);
   
       return posts;
     } catch (error) {

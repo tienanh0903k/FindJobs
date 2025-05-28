@@ -18,7 +18,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModels: Model<User>,
     private readonly uploadsService: UploadsService,
-  ) {}
+  ) { }
 
   //get all user
   // async findAllUsersByRoleId(roleId?: string) {
@@ -213,6 +213,9 @@ export class UserService {
       }
     });
 
+
+
+
     // Tạo object update cuối cùng
     const updateQuery: any = {};
     if (Object.keys(updateSetFields).length > 0) {
@@ -254,8 +257,6 @@ export class UserService {
 
     return updatedUser;
   }
-
-
 
 
 
@@ -334,7 +335,7 @@ export class UserService {
   //=========================APPLICANT============================
   async getCandidates(page = 1, limit = 10) {
 
-    const query = { role: role.USER}; 
+    const query = { role: role.USER };
     const skip = (page - 1) * limit;
 
     const [results, total] = await Promise.all([
@@ -351,5 +352,38 @@ export class UserService {
     };
   }
 
-  
+
+
+  //=========================BOOKMARK============================
+
+  async getBookmarks(userId: string): Promise<string[]> {
+    console.log('--------------userId', userId);
+    const user = await this.userModels.findById(userId).select('bookmark');
+    if (!user) throw new NotFoundException('User not found');
+    console.log(user.bookmark);
+    return user.bookmark || [];
+  }
+
+
+  async addBookmarkPost(userId: string, postId: string): Promise<User> {
+    console.log('userId, postId', userId, postId);
+    // Sử dụng $addToSet để không thêm trùng postId
+    return this.userModels.findByIdAndUpdate(
+      userId,
+      { $addToSet: { bookmark: postId } },
+      { new: true },
+    ).exec();
+  }
+
+  async removeBookmarkPost(userId: string, postId: string): Promise<User> {
+    // Sử dụng $pull để xóa postId
+    return this.userModels.findByIdAndUpdate(
+      userId,
+      { $pull: { bookmark: postId } },
+      { new: true },
+    ).exec();
+  }
+
+
+
 }

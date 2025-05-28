@@ -173,10 +173,10 @@ export class AuthService {
 
     if (!user) {
       throw new UnauthorizedException();
-    }
+    } console.log('user.status:', user, 'type:', typeof user.status);
 
-        console.log('user.status:', user, 'type:', typeof user.status);
 
+       
     if (Number(user.status) !== 1) {
       throw new UnauthorizedException(
         'Tài khoản chưa được kích hoạt hoặc đã bị khóa',
@@ -229,6 +229,16 @@ export class AuthService {
       permissions: user.role.permissions,
     };
   }
+
+
+
+
+
+
+
+
+
+
 
   async handleRefreshToken(token: string) {
     try {

@@ -39,9 +39,6 @@ export class User {
   @Prop()
   phone: string;
 
-  @Prop({ type: [String], ref: 'Category', default: [] })
-  categories: string[];
-
   @Prop()
   address: string;
 
@@ -162,6 +159,15 @@ export class User {
     required: false,
   })
   introduction: string;
+
+
+  @Prop({
+    type: [String],
+    ref: 'Posts',
+    required: false,
+    default: [],
+  })
+  bookmark?: string[];
 
   @Prop({
     type: Types.ObjectId,

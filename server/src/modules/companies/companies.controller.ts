@@ -29,6 +29,11 @@ export class CompaniesController {
     return this.companiesService.findAllCompanyHome(lim);
   }
 
+  @Get()
+  async getAllCompanies() {
+    return this.companiesService.getALL();
+  }
+
   @Post()
   // @Roles('ADMIN')
   // @UseGuards(AuthGuard, RolesGuard)

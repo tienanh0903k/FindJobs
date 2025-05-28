@@ -134,7 +134,7 @@ const CompanyPage: React.FC = () => {
 
 	return (
 		<div>
-			<Access permission={ALL_PERMISSIONS.COMPANIES.GET_PAGINATE} hideChildren={false}>
+			<Access permissionProps={ALL_PERMISSIONS.COMPANIES.GET_PAGINATE} hideChildren={false}>
 				<div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
 					<Select
 						value={statusFilter}

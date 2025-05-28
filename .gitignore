@@ -1,5 +1,5 @@
 *.txt
-document/
+document/*
 node_modules/*
 
 

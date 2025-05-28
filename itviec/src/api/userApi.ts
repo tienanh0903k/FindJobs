@@ -16,6 +16,12 @@ const userApi = {
 	//     }
 	// }),
 
+
+	getBookmarks: async () => {
+		const response = await axiosClient.get(`${URL_BACKEND}/api/user/bookmark`);
+		return response;
+	},
+
 	create: (data: any) => {
 		// return axiosClient.post(`${URL_BACKEND}/api/user`, data, {
 		//     headers: {
@@ -39,8 +45,10 @@ const userApi = {
 		return response.data;
 	},
 
-	updateStatus: (id: string, status: number) =>
-		axiosClient.patch(`${URL_BACKEND}/api/user/${id}/status`, { status }),
+	updateStatus: async(id: string, status: number) => {
+		const response = await axiosClient.patch(`${URL_BACKEND}/api/user/${id}/status`, { status });
+		return response.data;
+	},
 
 	updateUser: (id: string, data: any) => axiosClient.patch(`${URL_BACKEND}/api/user/${id}`, data),
 
@@ -70,7 +78,24 @@ const userApi = {
 	getBalance: async (id: string) => {
 		const response = await axiosClient.get(`${URL_BACKEND}/api/user/balance/${id}`);
 		return response.data;
-	}
+	},
+
+
+	// bookmark bài viết
+	bookmarkPost: async (postId: string): Promise<any> => {
+		const response = await axiosClient.post(
+			`${URL_BACKEND}/api/user/bookmark/${postId}`
+		);
+		return response.data;
+	},
+
+	// Xoá bookmark bài viết
+	unBookmarkPost: async (postId: string): Promise<any> => {
+		const response = await axiosClient.delete(
+			`${URL_BACKEND}/api/user/bookmark/${postId}`
+		);
+		return response.data;
+	},
 };
 
 export default userApi;

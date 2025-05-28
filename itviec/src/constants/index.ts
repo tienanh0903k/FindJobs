@@ -82,10 +82,10 @@ export const ALL_PERMISSIONS = {
 		DELETE: { method: 'DELETE', apiPath: '/api/roles/:id', module: 'ROLES' },
 	},
 	USERS: {
-		GET_PAGINATE: { method: 'GET', apiPath: '/api/users', module: 'USERS' },
-		CREATE: { method: 'POST', apiPath: '/api/users', module: 'USERS' },
-		UPDATE: { method: 'PATCH', apiPath: '/api/users/:id', module: 'USERS' },
-		DELETE: { method: 'DELETE', apiPath: '/api/users/:id', module: 'USERS' },
+		GET_PAGINATE: { method: 'GET', apiPath: '/api/user', module: 'USER' },
+		CREATE: { method: 'POST', apiPath: '/api/user', module: 'USER' },
+		UPDATE: { method: 'PATCH', apiPath: '/api/user/:id', module: 'USER' },
+		DELETE: { method: 'DELETE', apiPath: '/api/user/:id', module: 'USER' },
 	},
 };
 

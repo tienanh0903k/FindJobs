@@ -46,28 +46,28 @@ const LoginForm = () => {
 		} catch (error: any) {
 			// Lấy thông tin lỗi từ Axios error
 			const statusCode = error?.status || 0;
-			const errorMessage = error?.message || 'Đăng nhập thất bại';
+			const errorMessage = error?.status + error?.message || 'Đăng nhập thất bại';
 			console.log("login form", error);
+			
+			// switch (statusCode) {
+			// 	case 401:
+			// 		enqueueSnackbar("Bạn không có quyền truy cập", { variant: 'error' });
+			// 		break;
+			// 	case 403:
+			// 		enqueueSnackbar('Bạn không có quyền truy cập', { variant: 'error' });
+			// 		break;
+			// 	case 500:
+			// 		enqueueSnackbar('Lỗi máy chủ, vui lòng thử lại sau', { variant: 'error' });
+			// 		break;
+			// 	default:
+			// 		enqueueSnackbar(errorMessage, { variant: 'error' });
+			// }
 
-			switch (statusCode) {
-				case 401:
-					enqueueSnackbar("Bạn không có quyền truy cập", { variant: 'error' });
-					break;
-				case 403:
-					enqueueSnackbar('Bạn không có quyền truy cập', { variant: 'error' });
-					break;
-				case 500:
-					enqueueSnackbar('Lỗi máy chủ, vui lòng thử lại sau', { variant: 'error' });
-					break;
-				default:
-					enqueueSnackbar(errorMessage, { variant: 'error' });
-			}
-
-			// enqueueSnackbar(errorMessage, {
-			// 	autoHideDuration: 3000,
-			// 	variant: 'error',
-			// 	anchorOrigin: { vertical: 'top', horizontal: 'right' },
-			// });
+			enqueueSnackbar("Đăng nhập không thành công", {
+				autoHideDuration: 3000,
+				variant: 'error',
+				anchorOrigin: { vertical: 'top', horizontal: 'right' },
+			});
 		} finally {
 			setIsLoading(false);
 		}

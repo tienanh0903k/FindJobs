@@ -30,6 +30,9 @@ export class Post {
   @Prop({ required: true })
   deadline: Date;
 
+  @Prop({ type: [String], ref: 'Category', default: [] })
+  categories: string[];
+
   @Prop({ required: false })
   contactInfo: string;
 

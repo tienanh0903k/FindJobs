@@ -43,12 +43,12 @@ const SearchHome = () => {
 				<h1 className="text-3xl font-bold mb-4">{t('home.search')}</h1>
 
 				<form className="flex items-center max-w-[95%] gap-2" onSubmit={handleSearch}>
-					<select className="bg-white text-black placeholder-black px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+					{/* <select className="bg-white text-black placeholder-black px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
 						<option>{t('home.nameSelect')}</option>
 						<option value="1">Hà Nội</option>
 						<option value="2">Hồ Chí Minh</option>
 						<option value="3">Đà Nẵng</option>
-					</select>
+					</select> */}
 
 					<input
 						type="text"

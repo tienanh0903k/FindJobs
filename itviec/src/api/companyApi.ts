@@ -12,6 +12,11 @@ const companyApi = {
 		return response.data;
 	},
 
+	getAllCompanySelect: async (): Promise<any> => {
+		const response = await axiosClient.get(`${URL_BACKEND}/api/companies`);
+		return response.data;
+	},
+
 	getAllCompany: async ({
 		page = 1,
 		limit = 10,

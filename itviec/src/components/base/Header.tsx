@@ -145,7 +145,7 @@ const Header: React.FC = () => {
 							</Link>
 						</li>
 						<li>
-							<Link href="/services" className="text-gray-400 hover:text-gray-700">
+							<Link href="/blog" className="text-gray-400 hover:text-gray-700">
 								{t('header.item3')}
 							</Link>
 						</li>

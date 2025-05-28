@@ -193,6 +193,8 @@ import {
   UploadedFile,
   UseInterceptors,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -207,7 +209,7 @@ import { CreateProjectDto } from './dto/general-dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   // --------------------API GET--------------------------//
 
@@ -216,6 +218,22 @@ export class UserController {
   // async getUsersByRoleId(@Query('roleId') roleId?: string) {
   //   return this.userService.findAllUsersByRoleId(roleId);
   // }
+
+  @Get('bookmark')
+  @UseGuards(AuthGuard)
+  async getBookmarks(@Req() req: any) {
+    const userId = req.user?.sub;
+    if (!userId) {
+      throw new HttpException('User not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    console.log('getBookmarks userId:', userId); // Debug
+    const bookmarks = await this.userService.getBookmarks(userId);
+    return { bookmark: bookmarks };
+  }
+
+
+
+  
   @Get('by-role')
   async getUsersByRoleId(
     @Query('roleId') roleId?: string,
@@ -224,7 +242,7 @@ export class UserController {
     return this.userService.findAllUsersByRoleId(roleId, status);
   }
 
-  
+
   @Get('applicant')
   async getCandidates(
     @Query('page') page = 1,
@@ -244,7 +262,7 @@ export class UserController {
 
   @Get('balance/:id')
   async getBalance(@Param('id') id: string) {
-    return this.userService.getBalance(id); 
+    return this.userService.getBalance(id);
   }
 
   @Get('me')
@@ -380,5 +398,49 @@ export class UserController {
 
 
 
+  // bookma
+
+
+  @Post('bookmark/:postId')
+  @UseGuards(AuthGuard)
+  async addBookmarkPost(@Req() req: any, @Param('postId') postId: string) {
+    const userId = req.user?.sub; // Sửa từ req.user._id thành req.user.sub
+    if (!userId) {
+      throw new HttpException('User not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    if (!postId || !postId.match(/^[0-9a-fA-F]{24}$/)) {
+      throw new HttpException('Invalid Post ID', HttpStatus.BAD_REQUEST);
+    }
+    console.log('addBookmarkPost userId:', userId, 'postId:', postId); // Debug
+    const user = await this.userService.addBookmarkPost(userId, postId);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return {
+      message: 'Đã bookmark bài viết',
+      bookmark: user.bookmark || [],
+    };
+  }
+
+  @Delete('bookmark/:postId')
+  @UseGuards(AuthGuard)
+  async removeBookmarkPost(@Req() req: any, @Param('postId') postId: string) {
+    const userId = req.user?.sub; // Sửa từ req.user._id thành req.user.sub
+    if (!userId) {
+      throw new HttpException('User not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    if (!postId || !postId.match(/^[0-9a-fA-F]{24}$/)) {
+      throw new HttpException('Invalid Post ID', HttpStatus.BAD_REQUEST);
+    }
+    console.log('removeBookmarkPost userId:', userId, 'postId:', postId); // Debug
+    const user = await this.userService.removeBookmarkPost(userId, postId);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return {
+      message: 'Đã hủy bookmark bài viết',
+      bookmark: user.bookmark || [],
+    };
+  }
 
 }

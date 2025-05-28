@@ -10,6 +10,7 @@ import Footer from '@/components/base/Footer';
 import dynamic from 'next/dynamic';
 import Header from '@/components/base/Header';
 import ChatPopup from '@/components/client/ChatBot/ChatPopUp';
+import JobSaveButton from '@/components/client/JobSave/JobSaveButton';
 
 // Import Header component và tắt SSR
 // const Header = dynamic(() => import('@/components/base/Header'), {
@@ -40,6 +41,7 @@ export default function RootLayout({
 						<div className="flex-grow" id="mt-[65px]">
 							{children}
 						</div>
+						<JobSaveButton />
 						<ChatPopup />	
 					<Footer />
 					

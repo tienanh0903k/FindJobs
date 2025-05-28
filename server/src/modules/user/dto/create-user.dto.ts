@@ -175,4 +175,11 @@ export class CreateUserDto {
     description: string;
     awardedDate: Date;
   }[];
+
+  @IsArray()
+  @IsOptional()
+  @IsString({
+    each: true
+  })
+  bookmark?: string[];
 }

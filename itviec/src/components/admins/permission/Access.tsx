@@ -7,26 +7,26 @@ import { useAppSelector } from '@/hook/useSelector';
 interface IProps {
 	hideChildren?: boolean;
 	children: React.ReactNode;
-	permission: { method: string; apiPath: string; module: string };
+	permissionProps: { method: string; apiPath: string; module: string };
 }
 
-const Access = ({ permission, hideChildren = false, children }: IProps) => {
+const Access = ({ permissionProps, hideChildren = false, children }: IProps) => {
 	// Set default: hideChildren = false => render children, hideChildren = true => không render children
 	const [allow, setAllow] = useState<boolean>(false);
 
 	const permissions = useAppSelector((state) => state.auth.currentUser?.permissions);
 	// console.log('permissions', permissions);
 	useEffect(() => {
-		console.log('permissions', permissions);
+		console.log('[Access] permissions', permissions);
 	}, [permissions]); 
 
 	useEffect(() => {
 		if (permissions && permissions.length) {
 			const check = permissions.find(
 				(item) =>
-					item.apiPath === permission.apiPath &&
-					item.method === permission.method &&
-					item.module === permission.module,
+					item.apiPath === permissionProps.apiPath &&
+					item.method === permissionProps.method &&
+					item.module === permissionProps.module,
 			);
 			if (check) {
 				setAllow(true);
@@ -34,7 +34,7 @@ const Access = ({ permission, hideChildren = false, children }: IProps) => {
 				setAllow(false);
 			}
 		}
-	}, [permissions, permission]);
+	}, [permissions, permissionProps]);
 
 	return (
 		<>

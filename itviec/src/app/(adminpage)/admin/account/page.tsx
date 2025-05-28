@@ -212,14 +212,21 @@ useEffect(() => {
     }
   };
 
-  const handleUpdateStatus = (id: string, status: boolean) => {
-    setUsers(
-      users.map((user) =>
-        user.id === id ? { ...user, status } : user
-      )
-    );
-    message.success('Cập nhật trạng thái thành công!');
-  };
+	const handleUpdateStatus = async (id: string, status: boolean) => {
+		try {
+			await userApi.updateStatus(id, status ? 1 : 0);
+
+			setUsers(
+				users.map((user) =>
+					user.id === id ? { ...user, status } : user
+				)
+			);
+			message.success('Cập nhật trạng thái thành công!');
+		} catch (err) {
+			message.error('Lỗi khi cập nhật trạng thái!');
+		}
+	};
+
 
   const [form] = Form.useForm();
 
@@ -270,7 +277,7 @@ useEffect(() => {
 		};
 
   return (
-	<Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATE} hideChildren={false}> 	
+	<Access permissionProps={ALL_PERMISSIONS.USERS.GET_PAGINATE} hideChildren={false}> 	
 		<div style={{ padding: '20px' }}>
 			<h2 className="text-xl font-semibold mb-4">Quản lý người dùng</h2>
 
@@ -283,16 +290,16 @@ useEffect(() => {
 					style={{ width: 300 }}
 				/>
   
-				<Select 
-          value={activeUser}
-          placeholder="Chọn trạng thái"
-          allowClear
-          onChange={(value) => setActiveUser(value)}
-          style={{ width: 200 }}
-        >
-					<Option value="0">Inactive</Option>
-					<Option value="1">Active</Option>
-				</Select>
+				  <Select
+					  value={activeUser}
+					  placeholder="Chọn trạng thái"
+					  allowClear
+					  onChange={(value) => setActiveUser(value)}
+					  style={{ width: 200 }}
+				  >
+					  <Option value="0">Inactive</Option>
+					  <Option value="1">Active</Option>
+				  </Select>
 
 				<Select
 					style={{ width: 200 }}

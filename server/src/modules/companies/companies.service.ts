@@ -24,6 +24,12 @@ export class CompaniesService {
     return randomCompanies;
   }
 
+
+  //get all companies for select 
+  async getALL() {
+    return this.companyModels.find({});
+  }
+
   async create(
     createCompanyDto: CreateCompanyDto,
     image?: Express.Multer.File,
